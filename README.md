@@ -27,6 +27,23 @@ pio run -e esp32c3supermini -t upload
 .\tools\flash.ps1 -Profile esp32c3supermini -Action upload -Port COM6
 ```
 
+## CI/CD de firmware
+
+El workflow `.github/workflows/firmware-build-release.yml` automatiza:
+
+- Build en GitHub Actions para `esp32c3supermini`, `esp32dev`, `esp32s3`.
+- Generacion de artefactos `.zip` por entorno (incluye `firmware.bin` y binarios de flash cuando existen).
+- Publicacion automatica de artefactos en la release al crear un tag o al publicar una release.
+- Archivo `SHA256SUMS.txt` con checksums de todos los artefactos.
+
+Eventos que lo disparan:
+
+- `pull_request`
+- `push` a `main`
+- `push` de tags
+- `release` publicada
+- `workflow_dispatch` manual
+
 ## Arquitectura rapida
 
 - **2 tareas FreeRTOS**: `controlTask` (core0, ~10 ms) y `renderTask` (core1, ~16 ms / ~62.5 FPS)
@@ -88,6 +105,7 @@ docs/
 - [Roadmap](https://github.com/duxman/DUXMAN-LED-FIRMWARE-PLATFORMIO/wiki/Roadmap)
 - Memoria tecnica: `docs/MEMORIA_PROYECTO.md`
 - Checklist serial C3: `firmware/CHECKLIST_SERIAL_ESP32C3.md`
+- Workflow build/release: `.github/workflows/firmware-build-release.yml`
 
 ### Mirror local de Wiki
 
