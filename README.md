@@ -49,6 +49,7 @@ Eventos que lo disparan:
 
 - Archivo fuente: `CHANGELOG.md`.
 - En cada PR se exige actualizar `CHANGELOG.md` via `.github/workflows/changelog-check.yml`.
+- Checklist operativa de release: `docs/RELEASE_CHECKLIST.md`.
 - Para publicar una release por tag, debe existir seccion en changelog con formato:
 
 ```markdown
@@ -117,6 +118,7 @@ docs/
 - [Esquema de configuracion](https://github.com/duxman/DUXMAN-LED-FIRMWARE-PLATFORMIO/wiki/Configuration-Schema)
 - [Roadmap](https://github.com/duxman/DUXMAN-LED-FIRMWARE-PLATFORMIO/wiki/Roadmap)
 - Memoria tecnica: `docs/MEMORIA_PROYECTO.md`
+- Checklist de release: `docs/RELEASE_CHECKLIST.md`
 - Checklist serial C3: `firmware/CHECKLIST_SERIAL_ESP32C3.md`
 - Workflow build/release: `.github/workflows/firmware-build-release.yml`
 

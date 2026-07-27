@@ -9,6 +9,7 @@ The format is based on Keep a Changelog.
 ### Added
 - Changelog governance with required `CHANGELOG.md` updates in pull requests.
 - Release pipeline publishes notes from versioned changelog sections.
+- Fast operational release checklist in `docs/RELEASE_CHECKLIST.md`.
 
 ## [0.6.4-beta] - 2026-07-27
 
