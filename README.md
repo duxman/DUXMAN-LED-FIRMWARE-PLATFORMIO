@@ -34,6 +34,7 @@ El workflow `.github/workflows/firmware-build-release.yml` automatiza:
 - Build en GitHub Actions para `esp32c3supermini`, `esp32dev`, `esp32s3`.
 - Generacion de artefactos `.zip` por entorno (incluye `firmware.bin` y binarios de flash cuando existen).
 - Publicacion automatica de artefactos en la release al crear un tag o al publicar una release.
+- Notas de release generadas desde `CHANGELOG.md` (seccion de version del tag).
 - Archivo `SHA256SUMS.txt` con checksums de todos los artefactos.
 
 Eventos que lo disparan:
@@ -43,6 +44,18 @@ Eventos que lo disparan:
 - `push` de tags
 - `release` publicada
 - `workflow_dispatch` manual
+
+## Changelog y releases
+
+- Archivo fuente: `CHANGELOG.md`.
+- En cada PR se exige actualizar `CHANGELOG.md` via `.github/workflows/changelog-check.yml`.
+- Para publicar una release por tag, debe existir seccion en changelog con formato:
+
+```markdown
+## [0.6.4-alpha] - 2026-07-27
+```
+
+Si faltase esa seccion, el workflow de release falla para evitar releases sin trazabilidad.
 
 ## Arquitectura rapida
 
