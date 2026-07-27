@@ -24,7 +24,7 @@
 #endif
 
 #ifndef DUX_FW_DATE
-#define DUX_FW_DATE "2026-05-10"
+#define DUX_FW_DATE "2026-07-23"
 #endif
 
 #ifndef DUX_FW_BRANCH
