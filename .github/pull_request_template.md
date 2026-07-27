@@ -14,6 +14,7 @@ Describe brevemente que cambia este PR.
 
 - [ ] Compila localmente
 - [ ] Pruebas manuales realizadas (si aplica)
+- [ ] CHANGELOG actualizado (`CHANGELOG.md`)
 
 ## Checklist Wiki
 

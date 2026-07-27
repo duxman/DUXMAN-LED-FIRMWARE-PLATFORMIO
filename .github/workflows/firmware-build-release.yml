@@ -84,6 +84,9 @@ jobs:
       contents: write
 
     steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
       - name: Download build artifacts
         uses: actions/download-artifact@v4
         with:
@@ -108,11 +111,38 @@ jobs:
             echo "value=${GITHUB_REF_NAME}" >> "$GITHUB_OUTPUT"
           fi
 
+      - name: Build release notes from CHANGELOG
+        id: notes
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          TAG="${{ steps.tag.outputs.value }}"
+          VERSION="${TAG#v}"
+
+          if ! grep -qE "^## \[${VERSION}\]" CHANGELOG.md; then
+            echo "ERROR: Missing CHANGELOG section for version ${VERSION}."
+            echo "Expected heading: ## [${VERSION}] - YYYY-MM-DD"
+            exit 1
+          fi
+
+          awk -v version="$VERSION" '
+            BEGIN { in_section=0 }
+            $0 ~ "^## \\\[" version "\\\]" { in_section=1; print; next }
+            $0 ~ "^## \\\[" && in_section==1 { exit }
+            in_section==1 { print }
+          ' CHANGELOG.md > dist/RELEASE_NOTES.md
+
+          if [ ! -s dist/RELEASE_NOTES.md ]; then
+            echo "ERROR: Could not extract release notes from CHANGELOG.md"
+            exit 1
+          fi
+
       - name: Create or update release and upload assets
         uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ steps.tag.outputs.value }}
-          generate_release_notes: true
+          body_path: dist/RELEASE_NOTES.md
           files: |
             dist/*.zip
             dist/SHA256SUMS.txt
