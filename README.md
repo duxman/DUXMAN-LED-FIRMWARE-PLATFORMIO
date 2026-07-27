@@ -85,6 +85,31 @@ docs/
 - Memoria tecnica: `docs/MEMORIA_PROYECTO.md`
 - Checklist serial C3: `firmware/CHECKLIST_SERIAL_ESP32C3.md`
 
+### Mirror local de Wiki
+
+La Wiki de GitHub se gestiona en un repo separado (`<repo>.wiki.git`).
+
+Para mantener una copia versionada en este workspace usa `tools/wiki-sync.ps1` con mirror local en `docs/wiki`:
+
+```powershell
+# Wiki remota -> docs/wiki
+powershell -ExecutionPolicy Bypass -File .\tools\wiki-sync.ps1 -Mode pull
+
+# docs/wiki -> Wiki remota
+powershell -ExecutionPolicy Bypass -File .\tools\wiki-sync.ps1 -Mode push
+```
+
+Referencia completa: `tools/README.md`
+
+Tambien tienes tasks de VS Code en `.vscode/tasks.json`:
+
+- `Wiki: Pull to docs/wiki`
+- `Wiki: Push from docs/wiki`
+- `Wiki: Check sync drift`
+
+Y validacion automatica en CI con `.github/workflows/wiki-sync-check.yml`.
+Ademas, el PR template en `.github/pull_request_template.md` incluye checklist de sincronizacion de wiki.
+
 ## Repos relacionados
 
 | Proyecto | Estado |

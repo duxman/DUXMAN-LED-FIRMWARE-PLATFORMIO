@@ -37,3 +37,30 @@ Ejemplos:
 	python -m esptool --chip auto --port COM7 chip-id
 2. Leer flash detectada:
 	python -m esptool --chip auto --port COM7 flash-id
+
+## wiki-sync.ps1
+
+Sincroniza la Wiki de GitHub con un mirror local en `docs/wiki`.
+
+Ejemplos:
+
+1. Traer contenido desde la wiki remota a local:
+	powershell -ExecutionPolicy Bypass -File .\tools\wiki-sync.ps1 -Mode pull
+2. Enviar cambios locales a la wiki remota:
+	powershell -ExecutionPolicy Bypass -File .\tools\wiki-sync.ps1 -Mode push
+3. Commit local sin push:
+	powershell -ExecutionPolicy Bypass -File .\tools\wiki-sync.ps1 -Mode push -NoPush
+4. Forzar URL de wiki:
+	powershell -ExecutionPolicy Bypass -File .\tools\wiki-sync.ps1 -Mode pull -WikiUrl https://github.com/<owner>/<repo>.wiki.git
+
+Integracion adicional:
+
+- Tasks de VS Code en `.vscode/tasks.json` para pull/push/check.
+- Workflow de CI en `.github/workflows/wiki-sync-check.yml` que falla si `docs/wiki` no refleja la wiki remota.
+
+## wiki-check-drift.ps1
+
+Ejecuta `wiki-sync.ps1 -Mode pull` y falla con mensaje claro si detecta drift en `docs/wiki`.
+
+Ejemplo:
+	powershell -ExecutionPolicy Bypass -File .\tools\wiki-check-drift.ps1

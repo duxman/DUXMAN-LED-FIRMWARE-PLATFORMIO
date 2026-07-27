@@ -1,0 +1,51 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Wiki: Pull to docs/wiki",
+      "type": "shell",
+      "command": "powershell",
+      "args": [
+        "-NoProfile",
+        "-ExecutionPolicy",
+        "Bypass",
+        "-File",
+        "${workspaceFolder}\\tools\\wiki-sync.ps1",
+        "-Mode",
+        "pull"
+      ],
+      "group": "none",
+      "problemMatcher": []
+    },
+    {
+      "label": "Wiki: Push from docs/wiki",
+      "type": "shell",
+      "command": "powershell",
+      "args": [
+        "-NoProfile",
+        "-ExecutionPolicy",
+        "Bypass",
+        "-File",
+        "${workspaceFolder}\\tools\\wiki-sync.ps1",
+        "-Mode",
+        "push"
+      ],
+      "group": "none",
+      "problemMatcher": []
+    },
+    {
+      "label": "Wiki: Check sync drift",
+      "type": "shell",
+      "command": "powershell",
+      "args": [
+        "-NoProfile",
+        "-ExecutionPolicy",
+        "Bypass",
+        "-File",
+        "${workspaceFolder}\\tools\\wiki-check-drift.ps1"
+      ],
+      "group": "test",
+      "problemMatcher": []
+    }
+  ]
+}
