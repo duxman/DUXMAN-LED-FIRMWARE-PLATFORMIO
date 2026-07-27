@@ -10,6 +10,17 @@ The format is based on Keep a Changelog.
 - Changelog governance with required `CHANGELOG.md` updates in pull requests.
 - Release pipeline publishes notes from versioned changelog sections.
 
+## [0.6.4-beta] - 2026-07-27
+
+### Added
+- Beta validation release for automated artifact generation and publication pipeline.
+
+### Changed
+- Firmware release marker updated from alpha to beta for first release workflow validation.
+
+### Notes
+- Includes all changes listed under `0.6.4-alpha`.
+
 ## [0.6.4-alpha] - 2026-07-27
 
 ### Added
