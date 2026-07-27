@@ -42,7 +42,7 @@ Base: `http://<ip>/api/v1`
 | Grupo | Rutas principales |
 |---|---|
 | Estado | `GET/PATCH /state`, `POST /system/restart`, `GET /diag` |
-| Config | `GET/PATCH /config/{network,gpio,microphone,debug}`, `GET/POST /config/all` |
+| Config | `GET/PATCH /config/{network,gpio,microphone,general}`, `GET/PATCH /config/debug`, `GET/POST /config/all` |
 | Sync | `GET /sync/state`, `GET/PATCH /sync/config`, `PATCH /sync/mode` |
 | Perfiles | `GET /profiles`, `/profiles/{save,apply,default,delete,clone}` |
 | Efectos | `GET /effects`, `/effects/startup/save`, `/effects/sequence/{add,delete}` |
@@ -54,10 +54,13 @@ Referencia completa: [wiki/API-v1](https://github.com/duxman/DUXMAN-LED-FIRMWARE
 ## Configuracion persistida
 
 - `NetworkConfig`: WiFi (AP/STA), IP, DNS, NTP
-- `GpioConfig`: hasta 4 salidas LED + limitacion de consumo software
+- `GpioConfig`: hasta 4 salidas LED + bloque `power` (consumo/voltaje/termica)
 - `MicrophoneConfig`: I2S, sample rate, fftSize, gain, noise floor, pins
-- `DebugConfig`: heartbeat, logging
+- `GeneralConfig`: idioma, region, debugEnabled, heartbeatMs
+- `SyncConfig`: modo sync, protocolo y puertos
 - Perfiles de usuario, paletas, estado runtime y secuencias de efectos
+
+Esquema completo de configuracion: `docs/wiki/Configuration-Schema.md`
 
 ## Estructura del repositorio
 
@@ -81,6 +84,7 @@ docs/
 - [Wiki del proyecto](https://github.com/duxman/DUXMAN-LED-FIRMWARE-PLATFORMIO/wiki)
 - [Arquitectura](https://github.com/duxman/DUXMAN-LED-FIRMWARE-PLATFORMIO/wiki/Architecture)
 - [API v1 completa](https://github.com/duxman/DUXMAN-LED-FIRMWARE-PLATFORMIO/wiki/API-v1)
+- [Esquema de configuracion](https://github.com/duxman/DUXMAN-LED-FIRMWARE-PLATFORMIO/wiki/Configuration-Schema)
 - [Roadmap](https://github.com/duxman/DUXMAN-LED-FIRMWARE-PLATFORMIO/wiki/Roadmap)
 - Memoria tecnica: `docs/MEMORIA_PROYECTO.md`
 - Checklist serial C3: `firmware/CHECKLIST_SERIAL_ESP32C3.md`
