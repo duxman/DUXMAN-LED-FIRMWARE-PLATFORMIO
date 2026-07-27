@@ -6,6 +6,7 @@ Bienvenido a la documentacion tecnica del firmware ESP32 DUXMAN-LED (v0.6.3-alph
 
 - [Arquitectura general](./Architecture)
 - [API REST v1](./API-v1)
+- [Esquema de configuracion](./Configuration-Schema)
 - [Roadmap y evolucion](./Roadmap)
 - [Perfiles GPIO](./GPIO-Profiles)
 - [Paletas de color](./Palettes)

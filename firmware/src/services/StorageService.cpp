@@ -13,11 +13,26 @@
 
 namespace {
 constexpr const char *kStatePath = "/state.json";
-// Fichero de configuración unificada (network + gpio + microphone + debug)
+// Fichero de configuracion unificada (network + gpio + microphone + general + sync)
 constexpr const char *kConfigPath = "/config.json";
 // Paths legacy para migración automática
 constexpr const char *kLegacyNetworkPath = "/device-config.json";
 constexpr const char *kLegacyGpioPath    = "/gpio-config.json";
+
+String buildGeneralPayloadFromLegacyDebug(const JsonVariantConst &legacyDebug) {
+  JsonDocument payloadDoc;
+  JsonObject general = payloadDoc["general"].to<JsonObject>();
+  if (!legacyDebug["enabled"].isNull()) {
+    general["debugEnabled"] = legacyDebug["enabled"];
+  }
+  if (!legacyDebug["heartbeatMs"].isNull()) {
+    general["heartbeatMs"] = legacyDebug["heartbeatMs"];
+  }
+
+  String payload;
+  serializeJson(payloadDoc, payload);
+  return payload;
+}
 } // namespace
 
 StorageService::StorageService(CoreState &state, NetworkConfig &networkConfig,
@@ -69,10 +84,10 @@ bool StorageService::saveConfig() {
   deserializeJson(micDoc, microphoneConfig_.toJson());
   doc["microphone"] = micDoc["microphone"];
 
-  // debug
-  JsonDocument debugDoc;
-  deserializeJson(debugDoc, debugConfig_.toJson());
-  doc["debug"] = debugDoc["debug"];
+  // general
+  JsonDocument generalDoc;
+  deserializeJson(generalDoc, debugConfig_.toJson());
+  doc["general"] = generalDoc["general"];
 
   // sync
   JsonDocument syncDoc;
@@ -116,6 +131,7 @@ bool StorageService::loadConfig() {
     gpioConfig_       = GpioConfig::defaults();
     microphoneConfig_ = MicrophoneConfig::defaults();
     debugConfig_      = GeneralConfig::defaults();
+    syncConfig_       = SyncConfig::defaults();
     return saveConfig();
   }
 
@@ -161,17 +177,24 @@ bool StorageService::loadConfig() {
     }
   }
 
-  // debug
-  if (!doc["debug"].isNull()) {
-    String dbgPayload;
-    { JsonDocument d; d["debug"] = doc["debug"]; serializeJson(d, dbgPayload); }
+  // general (canonical) with legacy debug alias support
+  if (!doc["general"].isNull() || !doc["debug"].isNull()) {
+    String generalPayload;
+    if (!doc["general"].isNull()) {
+      JsonDocument d;
+      d["general"] = doc["general"];
+      serializeJson(d, generalPayload);
+    } else {
+      generalPayload = buildGeneralPayloadFromLegacyDebug(doc["debug"]);
+    }
+
     String err;
     GeneralConfig candidate = GeneralConfig::defaults();
-    candidate.applyPatchJson(dbgPayload, &err);
+    candidate.applyPatchJson(generalPayload, &err);
     if (err.isEmpty()) {
       debugConfig_ = candidate;
     } else {
-      Serial.print("[storage] config.json debug error: "); Serial.println(err);
+      Serial.print("[storage] config.json general error: "); Serial.println(err);
     }
   }
 
@@ -206,9 +229,9 @@ bool StorageService::migrateFromLegacyFiles() {
           String p; JsonDocument d; d["network"] = doc["network"]; serializeJson(d, p);
           String err; networkConfig_.applyPatchJson(p, &err);
         }
-        // debug (estaba embebido en network legacy)
+        // debug legacy -> general (compatible with old schemas)
         if (!doc["debug"].isNull()) {
-          String p; JsonDocument d; d["debug"] = doc["debug"]; serializeJson(d, p);
+          String p = buildGeneralPayloadFromLegacyDebug(doc["debug"]);
           String err; debugConfig_.applyPatchJson(p, &err);
         }
         // microphone (estaba embebido en network legacy)

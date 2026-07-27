@@ -12,7 +12,7 @@
 #include "services/StorageService.h"
 
 // PersistenceSchedulerService gestiona la escritura différée de la configuración.
-// Toda la config (network, gpio, microphone, debug) se guarda como un bloque en /config.json.
+// Toda la config (network, gpio, microphone, general, sync) se guarda como un bloque en /config.json.
 class PersistenceSchedulerService {
 public:
   explicit PersistenceSchedulerService(StorageService &storageService);
