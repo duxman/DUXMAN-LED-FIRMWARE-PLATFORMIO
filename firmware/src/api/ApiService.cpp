@@ -8,6 +8,7 @@
 #include "api/ApiService.h"
 #include "core/BuildProfile.h"
 #include "core/PaletteRegistry.h"
+#include "services/LanguageManager.h"
 #include "services/UserPaletteService.h"
 
 #include "effects/EffectRegistry.h"
@@ -260,6 +261,7 @@ void ApiService::processCommand(const String &command) {
     }
 
     if (changed) {
+      gLanguageManager.setLanguage(generalConfig_.language);
       persistenceSchedulerService_.requestSaveConfig();
     }
 
@@ -724,6 +726,7 @@ void ApiService::processCommand(const String &command) {
     microphoneConfig_ = micCandidate;
     generalConfig_ = debugCandidate;
     syncConfig_ = syncCandidate;
+    gLanguageManager.setLanguage(generalConfig_.language);
     persistenceSchedulerService_.requestSaveConfig();
     profileService_.syncDefaultProfileFromActiveConfig();
     wifiService_.applyConfig();
@@ -1156,6 +1159,7 @@ void ApiService::handleHttpNetworkRoute() {
     }
 
     if (changed) {
+      gLanguageManager.setLanguage(generalConfig_.language);
       persistenceSchedulerService_.requestSaveConfig();
     }
 
@@ -1206,6 +1210,7 @@ void ApiService::handleHttpMicrophoneRoute() {
     }
 
     if (changed) {
+      gLanguageManager.setLanguage(generalConfig_.language);
       persistenceSchedulerService_.requestSaveConfig();
     }
 
@@ -2025,6 +2030,7 @@ void ApiService::handleHttpConfigAllRoute() {
     microphoneConfig_ = micCandidate;
     generalConfig_ = debugCandidate;
     syncConfig_ = syncCandidate;
+    gLanguageManager.setLanguage(generalConfig_.language);
 
     persistenceSchedulerService_.requestSaveConfig();
 

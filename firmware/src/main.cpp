@@ -18,6 +18,7 @@
 #include "effects/EffectManager.h"
 #include "services/AudioService.h"
 #include "services/EffectPersistenceService.h"
+#include "services/LanguageManager.h"
 #include "services/PersistenceSchedulerService.h"
 #include "services/ProfileService.h"
 #include "services/StorageService.h"
@@ -121,6 +122,7 @@ void setup() {
   effectPersistenceService.begin();
   profileService.begin();
   userPaletteService.begin();
+  gLanguageManager.begin(debugConfig.language);
   String appliedProfileId;
   String profileError;
   const bool startupProfileApplied = profileService.applyStartupProfile(&appliedProfileId, &profileError);

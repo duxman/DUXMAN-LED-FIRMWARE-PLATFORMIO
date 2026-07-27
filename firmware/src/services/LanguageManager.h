@@ -2,7 +2,6 @@
 #define LANGUAGE_MANAGER_H
 
 #include <Arduino.h>
-#include <unordered_map>
 
 /**
  * @file LanguageManager.h
@@ -67,12 +66,14 @@ public:
 private:
   String currentLanguage_;
   Language currentLanguageEnum_;
+  String currentPackJson_;
+  String fallbackPackJson_;
   
   // Load language pack from PROGMEM (embedded in firmware)
-  bool loadEmbeddedPack_(const String& languageCode);
+  bool loadEmbeddedPack_(const String& languageCode, String* target);
   
   // Load language pack from LittleFS (optional override)
-  bool loadFromLittleFS_(const String& languageCode);
+  bool loadFromLittleFS_(const String& languageCode, String* target);
   
   // Parse JSON and extract string
   String getFromJson_(const String& jsonData, const String& key) const;

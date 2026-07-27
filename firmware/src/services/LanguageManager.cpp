@@ -1,116 +1,56 @@
 #include "LanguageManager.h"
-#include <ArduinoJson.h>
 
-// Embedded language packs (will be in separate files in production)
-// For now, these are minimal examples embedded as PROGMEM strings
+#include <ArduinoJson.h>
+#include <LittleFS.h>
+
+namespace {
+constexpr const char *kLittleFsI18nPrefix = "/ui/i18n/";
+constexpr const char *kJsonPathSeparator = ".";
+}
+
+// Embedded fallback packs. LittleFS remains the primary source of truth.
 
 static const char* packEN PROGMEM = R"({
-  "ui": {
-    "nav": {
-      "home": "Home",
-      "effects": "Effects",
-      "settings": "Settings",
-      "advanced": "Advanced"
-    },
-    "button": {
-      "save": "Save",
-      "cancel": "Cancel",
-      "apply": "Apply",
-      "delete": "Delete",
-      "back": "Back",
-      "next": "Next"
-    },
-    "label": {
-      "brightness": "Brightness",
-      "speed": "Speed",
-      "color": "Color",
-      "effect": "Effect",
-      "palette": "Palette",
-      "mode": "Mode",
-      "enabled": "Enabled",
-      "disabled": "Disabled"
-    },
-    "settings": {
-      "general": "General Settings",
-      "network": "Network",
-      "power": "Power Management",
-      "effects": "Effects",
-      "language": "Language",
-      "region": "Region",
-      "debug": "Debug Options",
-      "debugEnabled": "Enable Debug"
-    },
-    "message": {
-      "saving": "Saving...",
-      "saved": "Saved successfully",
-      "error": "Error",
-      "warning": "Warning",
-      "success": "Success"
-    }
+  "lang": "en",
+  "name": "English",
+  "nav": {
+    "home": "Home",
+    "config": "Config",
+    "api": "API",
+    "settings": "Settings",
+    "advanced": "Advanced",
+    "help": "Help"
   },
-  "api": {
-    "effects": {
-      "fixed": "Fixed Color",
-      "gradient": "Gradient",
-      "breath": "Breathing",
-      "rainbow": "Rainbow",
-      "chase": "Chase"
-    }
+  "common": {
+    "save": "Save",
+    "cancel": "Cancel",
+    "apply": "Apply",
+    "delete": "Delete",
+    "loading": "Loading...",
+    "error": "Error",
+    "success": "Success"
   }
 })";
 
 static const char* packES PROGMEM = R"({
-  "ui": {
-    "nav": {
-      "home": "Inicio",
-      "effects": "Efectos",
-      "settings": "Configuración",
-      "advanced": "Avanzado"
-    },
-    "button": {
-      "save": "Guardar",
-      "cancel": "Cancelar",
-      "apply": "Aplicar",
-      "delete": "Eliminar",
-      "back": "Atrás",
-      "next": "Siguiente"
-    },
-    "label": {
-      "brightness": "Brillo",
-      "speed": "Velocidad",
-      "color": "Color",
-      "effect": "Efecto",
-      "palette": "Paleta",
-      "mode": "Modo",
-      "enabled": "Activado",
-      "disabled": "Desactivado"
-    },
-    "settings": {
-      "general": "Configuración General",
-      "network": "Red",
-      "power": "Gestión de Potencia",
-      "effects": "Efectos",
-      "language": "Idioma",
-      "region": "Región",
-      "debug": "Opciones de Debug",
-      "debugEnabled": "Activar Debug"
-    },
-    "message": {
-      "saving": "Guardando...",
-      "saved": "Guardado correctamente",
-      "error": "Error",
-      "warning": "Advertencia",
-      "success": "Éxito"
-    }
+  "lang": "es",
+  "name": "Español",
+  "nav": {
+    "home": "Inicio",
+    "config": "Config",
+    "api": "API",
+    "settings": "Configuración",
+    "advanced": "Avanzado",
+    "help": "Ayuda"
   },
-  "api": {
-    "effects": {
-      "fixed": "Color Fijo",
-      "gradient": "Gradiente",
-      "breath": "Respiración",
-      "rainbow": "Arcoíris",
-      "chase": "Persecución"
-    }
+  "common": {
+    "save": "Guardar",
+    "cancel": "Cancelar",
+    "apply": "Aplicar",
+    "delete": "Eliminar",
+    "loading": "Cargando...",
+    "error": "Error",
+    "success": "Éxito"
   }
 })";
 
@@ -119,26 +59,36 @@ LanguageManager gLanguageManager;
 
 LanguageManager::LanguageManager() 
     : currentLanguage_(DEFAULT_LANGUAGE), 
-      currentLanguageEnum_(Language::ENGLISH) {}
+  currentLanguageEnum_(Language::ENGLISH),
+  currentPackJson_(String(packEN)),
+  fallbackPackJson_(String(packEN)) {}
 
 void LanguageManager::begin(const String& language) {
   setLanguage(language);
 }
 
 void LanguageManager::setLanguage(const String& languageCode) {
-  currentLanguage_ = languageCode;
-  currentLanguageEnum_ = getLanguageEnum(languageCode);
-  
-  // Try to load from LittleFS first, then fallback to embedded
-  if (!loadFromLittleFS_(languageCode)) {
-    if (!loadEmbeddedPack_(languageCode)) {
-      // If target language failed, try fallback
-      Serial.printf("[i18n] Language '%s' not found, falling back to '%s'\n", 
-                   languageCode.c_str(), FALLBACK_LANGUAGE);
-      loadEmbeddedPack_(FALLBACK_LANGUAGE);
-      currentLanguage_ = FALLBACK_LANGUAGE;
-    }
+  String fallbackPack;
+  if (!loadFromLittleFS_(FALLBACK_LANGUAGE, &fallbackPack) &&
+      !loadEmbeddedPack_(FALLBACK_LANGUAGE, &fallbackPack)) {
+    fallbackPack = String(packEN);
   }
+  fallbackPackJson_ = fallbackPack;
+
+  String currentPack;
+  if (loadFromLittleFS_(languageCode, &currentPack) || loadEmbeddedPack_(languageCode, &currentPack)) {
+    currentLanguage_ = languageCode;
+    currentLanguageEnum_ = getLanguageEnum(languageCode);
+    currentPackJson_ = currentPack;
+    Serial.printf("[i18n] Language active: %s\n", currentLanguage_.c_str());
+    return;
+  }
+
+  Serial.printf("[i18n] Language '%s' not found, falling back to '%s'\n",
+                languageCode.c_str(), FALLBACK_LANGUAGE);
+  currentLanguage_ = FALLBACK_LANGUAGE;
+  currentLanguageEnum_ = getLanguageEnum(FALLBACK_LANGUAGE);
+  currentPackJson_ = fallbackPackJson_;
 }
 
 LanguageManager::Language LanguageManager::getLanguageEnum(const String& code) const {
@@ -154,18 +104,18 @@ String LanguageManager::t(const char* key) const {
   if (!key || strlen(key) == 0) {
     return String(key);
   }
-  
-  // For now, return key itself (template for actual implementation)
-  // In production, this would parse loaded JSON and extract value
-  // For the MVP, we'll return the key as untranslated
-  
-  // This is a placeholder - actual implementation would:
-  // 1. Load the currentLanguage_ JSON pack
-  // 2. Parse the dot-notation key (e.g., "ui.button.save")
-  // 3. Extract value from nested JSON
-  // 4. Fallback to FALLBACK_LANGUAGE if not found
-  
-  return String(key);  // TODO: implement translation lookup
+
+  const String translated = getFromJson_(currentPackJson_, key);
+  if (!translated.isEmpty()) {
+    return translated;
+  }
+
+  const String fallback = getFromJson_(fallbackPackJson_, key);
+  if (!fallback.isEmpty()) {
+    return fallback;
+  }
+
+  return String(key);
 }
 
 String LanguageManager::getEffectName(uint8_t effectId) const {
@@ -179,10 +129,22 @@ String LanguageManager::getPaletteName(uint8_t paletteId) const {
 }
 
 String LanguageManager::formatNumber(int32_t value, bool includeSign) const {
-  // Format number according to locale
-  // For EN: 1,234,567  For ES: 1.234.567
-  String result = String(value);
-  if (includeSign && value >= 0) {
+  const bool negative = value < 0;
+  uint32_t absValue = static_cast<uint32_t>(negative ? -value : value);
+  String digits = String(absValue);
+  String result;
+  const char separator = currentLanguage_ == "en" ? ',' : '.';
+
+  for (int i = static_cast<int>(digits.length()) - 1, group = 0; i >= 0; --i, ++group) {
+    if (group > 0 && group % 3 == 0) {
+      result = String(separator) + result;
+    }
+    result = String(digits.charAt(i)) + result;
+  }
+
+  if (negative) {
+    result = "-" + result;
+  } else if (includeSign) {
     result = "+" + result;
   }
   return result;
@@ -228,38 +190,94 @@ String LanguageManager::formatFileSize(uint32_t bytes) const {
   return String(buffer);
 }
 
-bool LanguageManager::loadEmbeddedPack_(const String& languageCode) {
+bool LanguageManager::loadEmbeddedPack_(const String& languageCode, String* target) {
+  if (target == nullptr) {
+    return false;
+  }
   if (languageCode == "en") {
-    // In production, would parse packEN
+    *target = String(packEN);
     Serial.println("[i18n] Loaded embedded EN language pack");
     return true;
   }
   if (languageCode == "es") {
-    // In production, would parse packES
+    *target = String(packES);
     Serial.println("[i18n] Loaded embedded ES language pack");
     return true;
   }
   return false;
 }
 
-bool LanguageManager::loadFromLittleFS_(const String& languageCode) {
-  // Placeholder for LittleFS loading
-  // In production, would try to load from data/lang/i18n_{code}.json
-  return false;
+bool LanguageManager::loadFromLittleFS_(const String& languageCode, String* target) {
+  if (target == nullptr || languageCode.isEmpty()) {
+    return false;
+  }
+
+  const String path = String(kLittleFsI18nPrefix) + languageCode + ".json";
+  if (!LittleFS.exists(path)) {
+    return false;
+  }
+
+  File file = LittleFS.open(path, "r");
+  if (!file) {
+    return false;
+  }
+
+  const String content = file.readString();
+  file.close();
+  if (content.isEmpty()) {
+    return false;
+  }
+
+  *target = content;
+  Serial.printf("[i18n] Loaded LittleFS language pack: %s\n", path.c_str());
+  return true;
 }
 
 String LanguageManager::getFromJson_(const String& jsonData, const String& key) const {
-  // Placeholder for JSON extraction
-  // Would use ArduinoJson to parse and navigate dot-notation keys
-  return key;
+  if (jsonData.isEmpty() || key.isEmpty()) {
+    return String();
+  }
+
+  JsonDocument doc;
+  if (deserializeJson(doc, jsonData)) {
+    return String();
+  }
+
+  JsonVariantConst current = doc.as<JsonVariantConst>();
+  int start = 0;
+  while (start < static_cast<int>(key.length())) {
+    const int separatorPos = key.indexOf(kJsonPathSeparator, start);
+    const String part = separatorPos < 0 ? key.substring(start) : key.substring(start, separatorPos);
+    JsonObjectConst object = current.as<JsonObjectConst>();
+    if (object.isNull()) {
+      return String();
+    }
+
+    current = object[part.c_str()];
+    if (current.isNull()) {
+      return String();
+    }
+
+    if (separatorPos < 0) {
+      break;
+    }
+    start = separatorPos + 1;
+  }
+
+  if (current.is<const char*>()) {
+    return String(current.as<const char*>());
+  }
+  if (current.is<String>()) {
+    return current.as<String>();
+  }
+
+  String out;
+  serializeJson(current, out);
+  return out;
 }
 
 String LanguageManager::getAllStringsJson() const {
-  // Return the appropriate language pack as JSON
-  if (currentLanguage_ == "es") {
-    return String(packES);
-  }
-  return String(packEN);
+  return currentPackJson_.isEmpty() ? fallbackPackJson_ : currentPackJson_;
 }
 
 String LanguageManager::getLanguageName(const String& code) const {
