@@ -30,13 +30,32 @@ function Invoke-Git {
         [string]$WorkingDirectory
     )
 
+    function ConvertTo-WindowsArgument {
+        param([AllowNull()][string]$Value)
+
+        if ($null -eq $Value) {
+            return '""'
+        }
+
+        if ($Value -notmatch '[\s"]') {
+            return $Value
+        }
+
+        # Escape quotes and trailing backslashes following Windows command-line parsing rules.
+        $escaped = $Value -replace '(\\*)"', '$1$1\\"'
+        $escaped = $escaped -replace '(\\+)$', '$1$1'
+        return '"' + $escaped + '"'
+    }
+
     $stdoutFile = [System.IO.Path]::GetTempFileName()
     $stderrFile = [System.IO.Path]::GetTempFileName()
 
     try {
+        $argumentList = ($Args | ForEach-Object { ConvertTo-WindowsArgument -Value $_ }) -join ' '
+
         $startParams = @{
             FilePath               = 'git'
-            ArgumentList           = $Args
+            ArgumentList           = $argumentList
             NoNewWindow            = $true
             Wait                   = $true
             PassThru               = $true
