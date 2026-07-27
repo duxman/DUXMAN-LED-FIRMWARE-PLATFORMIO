@@ -52,15 +52,16 @@ Backends seleccionables en compilacion:
 
 - `NetworkConfig` — WiFi, IP (AP/STA), DNS, NTP
 - `GpioConfig` — hasta 4 salidas LED independientes
-- `GpioConfig.powerLimit` — limitacion de consumo software
+- `GpioConfig.power` — limitacion de consumo + optimizacion de voltaje/termica
 - `MicrophoneConfig` — I2S, sample rate, fftSize, gain, noise floor, pins
-- `DebugConfig` — heartbeat, logging
+- `GeneralConfig` — idioma, region, debugEnabled, heartbeatMs
+- `SyncConfig` — modo de sync, protocolo, puertos y timing
 
 ## Persistencia
 
 Entidades guardadas en LittleFS:
 
-- Config activa (network/gpio/microphone/debug)
+- Config activa unificada en `/config.json` (network/gpio/microphone/general/sync)
 - Perfil de arranque y perfiles de usuario
 - Paletas de usuario
 - Estado runtime y datos de efectos/secuencias

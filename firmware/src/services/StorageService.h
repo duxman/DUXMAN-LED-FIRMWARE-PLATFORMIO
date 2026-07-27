@@ -11,7 +11,7 @@
 #include "core/Config.h"
 
 // StorageService gestiona la persistencia del estado y la configuración.
-// Toda la configuración (network, gpio, microphone, debug) se guarda en un único
+// Toda la configuracion (network, gpio, microphone, general, sync) se guarda en un unico
 // fichero /config.json. El estado de ejecución se guarda en /state.json.
 class StorageService {
 public:

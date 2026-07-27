@@ -24,10 +24,14 @@ Los metodos PATCH y POST se aceptan como equivalentes en todos los endpoints de 
 | PATCH, POST | `/config/microphone` | Actualizar microfono |
 | GET | `/config/gpio` | Configuracion GPIO/LED |
 | PATCH, POST | `/config/gpio` | Actualizar GPIO/LED |
+| GET | `/config/general` | Configuracion general (idioma, region, debug) |
+| PATCH, POST | `/config/general` | Actualizar configuracion general |
 | GET | `/config/debug` | Configuracion debug |
 | PATCH, POST | `/config/debug` | Actualizar debug |
 | GET | `/config/all` | Toda la configuracion en un solo JSON |
 | POST | `/config/all` | Aplicar configuracion completa |
+
+`/config/all` usa el esquema canónico documentado en [Configuration-Schema](./Configuration-Schema).
 
 ## Sincronizacion
 

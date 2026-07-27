@@ -1,4 +1,4 @@
-/*
+﻿/*
  * duxman-led next - v0.3.7-beta
  * Licensed under the Apache License 2.0
  * File: firmware/src/api/ApiService.cpp
@@ -92,6 +92,42 @@ String normalizeJsonPayload(const String &rawPayload) {
     }
   }
 
+  return payload;
+}
+
+String buildGeneralPayloadFromRoot(const JsonObjectConst &root) {
+  JsonDocument payloadDoc;
+  JsonObject general = payloadDoc["general"].to<JsonObject>();
+
+  if (!root["general"].isNull()) {
+    JsonObjectConst input = root["general"].as<JsonObjectConst>();
+    if (!input["language"].isNull()) {
+      general["language"] = input["language"];
+    }
+    if (!input["regionCode"].isNull()) {
+      general["regionCode"] = input["regionCode"];
+    }
+    if (!input["debugEnabled"].isNull()) {
+      general["debugEnabled"] = input["debugEnabled"];
+    }
+    if (!input["heartbeatMs"].isNull()) {
+      general["heartbeatMs"] = input["heartbeatMs"];
+    }
+  }
+
+  // /config/debug endpoint uses this compact shape.
+  if (!root["debug"].isNull()) {
+    JsonObjectConst input = root["debug"].as<JsonObjectConst>();
+    if (!input["enabled"].isNull()) {
+      general["debugEnabled"] = input["enabled"];
+    }
+    if (!input["heartbeatMs"].isNull()) {
+      general["heartbeatMs"] = input["heartbeatMs"];
+    }
+  }
+
+  String payload;
+  serializeJson(payloadDoc, payload);
   return payload;
 }
 
@@ -629,8 +665,16 @@ void ApiService::processCommand(const String &command) {
       return;
     }
 
+    JsonDocument requestDoc;
+    if (deserializeJson(requestDoc, command.substring(payloadPos))) {
+      Serial.println("{\"error\":\"invalid_json\"}");
+      return;
+    }
+
+    const String generalPayload = buildGeneralPayloadFromRoot(requestDoc.as<JsonObjectConst>());
+
     String error;
-    const bool changed = generalConfig_.applyPatchJson(command.substring(payloadPos), &error);
+    const bool changed = generalConfig_.applyPatchJson(generalPayload, &error);
     if (!error.isEmpty()) {
       Serial.print("{\"error\":\"");
       Serial.print(error);
@@ -705,11 +749,10 @@ void ApiService::processCommand(const String &command) {
       return;
     }
 
-    String debugPayload;
-    { JsonDocument d; d["debug"] = root["debug"]; serializeJson(d, debugPayload); }
-    debugCandidate.applyPatchJson(debugPayload, &error);
+    const String generalPayload = buildGeneralPayloadFromRoot(root);
+    debugCandidate.applyPatchJson(generalPayload, &error);
     if (!error.isEmpty()) {
-      Serial.print("{\"error\":\"debug_"); Serial.print(error); Serial.println("\"}");
+      Serial.print("{\"error\":\"general_"); Serial.print(error); Serial.println("\"}");
       return;
     }
 
@@ -1676,14 +1719,22 @@ void ApiService::handleHttpDebugRoute() {
   }
 
   if (method == HTTP_PATCH || method == HTTP_POST) {
-    const String payload = httpServer_.arg("plain");
+    const String payload = normalizeJsonPayload(httpServer_.arg("plain"));
     if (payload.isEmpty()) {
       httpServer_.send(400, "application/json", "{\"error\":\"invalid_payload\"}");
       return;
     }
 
+    JsonDocument requestDoc;
+    if (deserializeJson(requestDoc, payload)) {
+      httpServer_.send(400, "application/json", "{\"error\":\"invalid_json\"}");
+      return;
+    }
+
+    const String generalPayload = buildGeneralPayloadFromRoot(requestDoc.as<JsonObjectConst>());
+
     String error;
-    const bool changed = generalConfig_.applyPatchJson(payload, &error);
+    const bool changed = generalConfig_.applyPatchJson(generalPayload, &error);
     if (!error.isEmpty()) {
       String response = "{\"error\":\"";
       response += error;
@@ -1920,18 +1971,18 @@ String ApiService::buildFullConfigJson() const {
   const String networkJson = unwrapRootJsonValue(networkConfig_.toJson());
   const String gpioJson = unwrapRootJsonValue(gpioConfig_.toJson());
   const String microphoneJson = unwrapRootJsonValue(microphoneConfig_.toJson());
-  const String debugJson = unwrapRootJsonValue(generalConfig_.toJson());
+  const String generalJson = unwrapRootJsonValue(generalConfig_.toJson());
   const String syncJson = unwrapRootJsonValue(syncConfig_.toJson());
 
-  out.reserve(networkJson.length() + gpioJson.length() + microphoneJson.length() + debugJson.length() + syncJson.length() + 80);
+  out.reserve(networkJson.length() + gpioJson.length() + microphoneJson.length() + generalJson.length() + syncJson.length() + 80);
   out = "{\"network\":";
   out += networkJson;
   out += ",\"gpio\":";
   out += gpioJson;
   out += ",\"microphone\":";
   out += microphoneJson;
-  out += ",\"debug\":";
-  out += debugJson;
+  out += ",\"general\":";
+  out += generalJson;
   out += ",\"sync\":";
   out += syncJson;
   out += '}';
@@ -2002,11 +2053,10 @@ void ApiService::handleHttpConfigAllRoute() {
       return;
     }
 
-    String debugPayload;
-    { JsonDocument d; d["debug"] = root["debug"]; serializeJson(d, debugPayload); }
-    debugCandidate.applyPatchJson(debugPayload, &error);
+    const String generalPayload = buildGeneralPayloadFromRoot(root);
+    debugCandidate.applyPatchJson(generalPayload, &error);
     if (!error.isEmpty()) {
-      String response = "{\"error\":\"debug_";
+      String response = "{\"error\":\"general_";
       response += error;
       response += "\"}";
       httpServer_.send(400, "application/json", response);
@@ -2266,7 +2316,7 @@ String ApiService::buildOpenApiJson() const {
 }
 
 // ---------------------------------------------------------------------------
-// Shared navigation bar � included verbatim in every page builder.
+// Shared navigation bar ´┐¢ included verbatim in every page builder.
 // CSS uses .gen-* prefix to avoid collision with per-page styles.
 // ---------------------------------------------------------------------------
 String ApiService::buildCommonCss() const {
@@ -5306,7 +5356,7 @@ __NAV__
 
       // Hero
       document.getElementById('svgVersion').textContent = rel.version || '';
-      document.getElementById('fwBranch').textContent = (rel.branch || '') + ' � ' + (rel.board || '');
+      document.getElementById('fwBranch').textContent = (rel.branch || '') + ' ´┐¢ ' + (rel.board || '');
 
       // Release card
       document.getElementById('gridRelease').innerHTML =

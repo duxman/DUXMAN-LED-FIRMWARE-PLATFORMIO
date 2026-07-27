@@ -2,7 +2,7 @@
 
 ## Que es un perfil
 
-Un perfil es un snapshot completo de configuracion de dispositivo (network + gpio + microphone + debug), con foco en la topologia LED.
+Un perfil es un snapshot completo de configuracion de dispositivo (network + gpio + microphone + general + sync), con foco en la topologia LED.
 
 ## Tipos
 
@@ -38,15 +38,18 @@ Un perfil es un snapshot completo de configuracion de dispositivo (network + gpi
         { "pin": 8, "ledType": "ws2812b", "colorOrder": "GRB", "ledCount": 60 },
         { "pin": 16, "ledType": "digital", "colorOrder": "R", "ledCount": 1 }
       ],
-      "powerLimit": {
-        "enabled": true,
-        "maxCurrentmA": 2000,
-        "milliAmpsPerLed": 20
+      "power": {
+        "powerLimitEnabled": true,
+        "maxTotalCurrentmA": 2000,
+        "milliAmpsPerLedBase": 20,
+        "voltageSagCorrectionEnabled": false,
+        "thermalThrottlingEnabled": false,
+        "smartDimmingEnabled": false
       }
     },
     "network": { "wifi": { "mode": "ap" } },
     "microphone": { "enabled": false },
-    "debug": { "enabled": false }
+    "general": { "debugEnabled": false }
   }
 }
 ```
@@ -54,4 +57,4 @@ Un perfil es un snapshot completo de configuracion de dispositivo (network + gpi
 ## Notas
 
 - Al aplicar un perfil, el driver LED se reconfigura en caliente sin reinicio.
-- La limitacion de consumo (`powerLimit`) es software; no reemplaza proteccion de hardware.
+- La limitacion de consumo (`power`) es software; no reemplaza proteccion de hardware.
