@@ -1,0 +1,23 @@
+name: Wiki Sync Check
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  check-wiki-sync:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Check wiki/docs drift
+        shell: pwsh
+        run: |
+          ./tools/wiki-check-drift.ps1 -WikiUrl "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.wiki.git"
