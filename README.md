@@ -30,6 +30,7 @@ pio run -e esp32c3supermini -t upload
 ## Documentacion
 
 - Memoria tecnica: `docs/MEMORIA_PROYECTO.md`
+- Traspaso de contexto desde monorepo: `docs/CONTEXT_TRANSFER_FROM_MONOREPO.md`
 - Checklist serial C3: `firmware/CHECKLIST_SERIAL_ESP32C3.md`
 
 ## Repos relacionados
