@@ -11,6 +11,9 @@ The format is based on Keep a Changelog.
 - Release pipeline publishes notes from versioned changelog sections.
 - Fast operational release checklist in `docs/RELEASE_CHECKLIST.md`.
 
+### Docs
+- New sync compatibility guide for LedFx/WLED/E1.31/MQTT at `docs/wiki/Sync-Compatibility.md`.
+
 ## [0.6.4-beta] - 2026-07-27
 
 ### Added

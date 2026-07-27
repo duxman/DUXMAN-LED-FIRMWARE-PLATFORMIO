@@ -92,3 +92,4 @@ Rutas principales:
 
 - API completa: [API-v1](./API-v1)
 - Perfil GPIO detallado: [GPIO-Profiles](./GPIO-Profiles)
+- Compatibilidad de sincronizacion: [Sync-Compatibility](./Sync-Compatibility)

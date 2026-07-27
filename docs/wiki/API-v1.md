@@ -43,6 +43,8 @@ Los metodos PATCH y POST se aceptan como equivalentes en todos los endpoints de 
 | PATCH, POST | `/sync/config` | Actualizar configuracion de sync |
 | PATCH, POST | `/sync/mode` | Cambiar modo (master/slave/standalone) |
 
+Guia de interoperabilidad y ejemplos listos para LedFx/WLED/E1.31/MQTT: [Sync-Compatibility](./Sync-Compatibility).
+
 ## Perfiles
 
 | Metodo | Ruta | Descripcion |
