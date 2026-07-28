@@ -1,6 +1,6 @@
 # DUXMAN-LED-FIRMWARE-PLATFORMIO
 
-**v0.6.4-beta** — Firmware modular para control LED en ESP32 con API REST/Serial, UI embebida, motor de efectos visual/audio y sincronizacion multi-nodo.
+**v0.6.5-beta** — Firmware modular para control LED en ESP32 con API REST/Serial, UI embebida, motor de efectos visual/audio y sincronizacion multi-nodo.
 
 Repositorio activo y prioritario del proyecto.
 
@@ -48,6 +48,8 @@ Eventos que lo disparan:
 ## Changelog y releases
 
 - Archivo fuente: `CHANGELOG.md`.
+- Historico consolidado de versiones legacy: `docs/wiki/Release-History.md`.
+- Archivo de origen legacy (monorepo): `docs/old/CHANGELOG.md`.
 - En cada PR se exige actualizar `CHANGELOG.md` via `.github/workflows/changelog-check.yml`.
 - Checklist operativa de release: `docs/RELEASE_CHECKLIST.md`.
 - Para publicar una release por tag, debe existir seccion en changelog con formato:

@@ -1,6 +1,6 @@
 # DUXMAN-LED-FIRMWARE-PLATFORMIO
 
-Bienvenido a la documentacion tecnica del firmware ESP32 DUXMAN-LED (v0.6.3-alpha).
+Bienvenido a la documentacion tecnica del firmware ESP32 DUXMAN-LED (v0.6.5-beta).
 
 ## Contenido
 
@@ -9,6 +9,7 @@ Bienvenido a la documentacion tecnica del firmware ESP32 DUXMAN-LED (v0.6.3-alph
 - [Esquema de configuracion](./Configuration-Schema)
 - [Compatibilidad de sincronizacion](./Sync-Compatibility)
 - [Roadmap y evolucion](./Roadmap)
+- [Historial de releases](./Release-History)
 - [Perfiles GPIO](./GPIO-Profiles)
 - [Paletas de color](./Palettes)
 - [Preguntas frecuentes](./FAQ)

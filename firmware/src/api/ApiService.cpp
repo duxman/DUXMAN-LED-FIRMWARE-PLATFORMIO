@@ -1033,8 +1033,18 @@ void ApiService::setupHttpRoutes() {
       return;
     }
 
+    if (uri == "/ui/common.css") {
+      String css = loadTemplateFromLittleFs("/ui/common.css.html");
+      css.replace("<style>", "");
+      css.replace("</style>", "");
+      css.trim();
+      httpServer_.send(200, "text/css; charset=utf-8", css);
+      return;
+    }
+
     if (uri == "/ui/common.css.html") {
-      httpServer_.send(200, "text/html", buildCommonCss());
+      const String f = loadTemplateFromLittleFs("/ui/common.css.html");
+      httpServer_.send(200, "text/html", f.isEmpty() ? buildCommonCss() : f);
       return;
     }
 
@@ -2320,6 +2330,15 @@ String ApiService::buildOpenApiJson() const {
 // CSS uses .gen-* prefix to avoid collision with per-page styles.
 // ---------------------------------------------------------------------------
 String ApiService::buildCommonCss() const {
+  // Return a tiny external <link> tag instead of inlining the full CSS.
+  // Inlining 18 KB into a 34 KB template requires ~104 KB of contiguous heap
+  // which the ESP32 runtime cannot satisfy, causing replace() to fail silently.
+  // The CSS content is now served at /ui/common.css directly from LittleFS.
+  return "<link rel='stylesheet' href='/ui/common.css'>";
+}
+
+// Kept as fallback for /ui/common.css.html direct-serve path.
+String ApiService::buildInlineCss() const {
   const String fileCss = loadTemplateFromLittleFs("/ui/common.css.html");
   if (!fileCss.isEmpty()) {
     return fileCss;

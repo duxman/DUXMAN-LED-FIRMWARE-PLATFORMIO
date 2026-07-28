@@ -91,6 +91,7 @@ private:
   String buildFullConfigJson() const;
   String buildOpenApiJson() const;
   String buildCommonCss() const;
+  String buildInlineCss() const;
   String buildNavMountHtml() const;
   String buildNavHtml() const;
   String buildHomeHtml() const;

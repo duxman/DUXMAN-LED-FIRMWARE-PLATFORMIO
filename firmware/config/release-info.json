@@ -1,7 +1,7 @@
 {
-  "version": "0.6.4-alpha",
-  "versionCode": 21,
-  "buildDate": "2026-07-23",
+  "version": "0.6.5-beta",
+  "versionCode": 22,
+  "buildDate": "2026-07-28",
   "branch": "main",
   "features": [
     "Fase 4A: FreeRTOS dual-core architecture (TaskControl + TaskRender)",
@@ -64,7 +64,8 @@
       "Discoverability of embedded UI with direct help access from the navigation",
       "Home screen runtime visibility with connected-client sync banner and live polling",
       "Effect timing consistency by routing supported animations through a synchronized global clock",
-      "Sync health diagnostics with timeout, polling saturation, FPS and clock offset telemetry"
+      "Sync health diagnostics with timeout, polling saturation, FPS and clock offset telemetry",
+      "Home page CSS delivery changed from inline template replacement to external /ui/common.css to avoid heap-fragmentation issues on large templates"
     ],
     "fixed": [
       "Potential CoreState corruption during concurrent API + render access",
