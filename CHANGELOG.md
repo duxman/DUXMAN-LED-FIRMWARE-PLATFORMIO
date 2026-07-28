@@ -14,6 +14,19 @@ The format is based on Keep a Changelog.
 ### Docs
 - New sync compatibility guide for LedFx/WLED/E1.31/MQTT at `docs/wiki/Sync-Compatibility.md`.
 
+## [0.6.5-beta] - 2026-07-28
+
+### Changed
+- Firmware version markers bumped to `0.6.5-beta` (`platformio.ini`, `release-info.json`).
+- Shared UI CSS injection changed from large inline replacement to external stylesheet link (`/ui/common.css`) to reduce heap pressure on large templates.
+
+### Fixed
+- Home page no longer renders literal `__CSS__` marker when `home.html` is loaded from LittleFS.
+
+### Docs
+- Updated root README and wiki Home version references to `0.6.5-beta`.
+- Added release-history timeline entry for `0.6.5-beta` and documented the Home CSS delivery fix.
+
 ## [0.6.4-beta] - 2026-07-27
 
 ### Added
@@ -47,3 +60,20 @@ The format is based on Keep a Changelog.
 
 ### Notes
 - Baseline firmware version in `platformio.ini` before changelog enforcement.
+
+## Historical Releases (Imported)
+
+Legacy release history from monorepo era was consolidated from:
+
+- `docs/old/CHANGELOG.md`
+- `docs/old/RELEASE_NOTES.md`
+- `docs/old/GITHUB_RELEASE_0.6.3-alpha.es.md`
+
+Quick index (see full summary in `docs/wiki/Release-History.md`):
+
+- `0.6.3-alpha` (2026-05-02): Sync stack S1-S6 completed (DDP, E1.31/sACN, cluster sync, shared clock).
+- `0.6.2-alpha` (2026-05-03): Initial sync sprint with `SyncConfig`, `SyncService`, and `/api/v1/sync/*` endpoints.
+- `0.6.1-alpha` (2026-05-02): UI navigation hardening and global version alignment.
+- `0.6.0-alpha` (2026-04-30): Full i18n and move from debug config semantics to general config.
+- `0.5.0-alpha` (2026-04-30): `VoltageOptimizer` and advanced power/thermal config.
+- `0.4.2-beta` to `0.3.2-beta` (2026-04): UI migration to LittleFS templates, new audio-reactive effects, palette services, and API/architecture stabilization.
