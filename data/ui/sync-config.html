@@ -25,7 +25,7 @@
   <main>
     <div class='card'>
       <h1>Configuracion Sync</h1>
-      <p class='hint'>Control de sincronizacion externa y cluster. Incluye puertos configurables para DDP y UDP Sync.</p>
+      <p class='hint'>Configura Sync por uso: <strong>LedFx (entrada externa)</strong> separado de <strong>Cluster Sync</strong> (sincronizacion entre nodos).</p>
       <div class='actions'>
         <button class='btn alt' onclick='loadConfigAndState()'>Recargar</button>
         <button class='btn' onclick='saveConfig()'>Guardar Configuracion</button>
@@ -36,6 +36,14 @@
     <div class='card'>
       <h2>Activacion y rol</h2>
       <div class='row'>
+        <div class='col field'>
+          <label for='syncUsage'>Uso de Sync</label>
+          <select id='syncUsage'>
+            <option value='ledfx_input'>LedFx input (DDP/E1.31)</option>
+            <option value='cluster'>Cluster sync (nodos)</option>
+            <option value='local_only'>Solo efectos locales</option>
+          </select>
+        </div>
         <div class='col field'>
           <label for='enabled'>Sync activada</label>
           <select id='enabled'>
@@ -58,6 +66,7 @@
           </select>
         </div>
       </div>
+      <p id='usageHint' class='hint'></p>
     </div>
 
     <div class='card'>
@@ -225,6 +234,38 @@
       setValue('clockSmoothing', sync.clockSmoothing || 'soft');
       setValue('e131UniverseStart', sync.e131UniverseStart == null ? 1 : sync.e131UniverseStart);
       setValue('e131UniverseCount', sync.e131UniverseCount == null ? 1 : sync.e131UniverseCount);
+
+      var mode = sync.mode || 'off';
+      var usage = 'local_only';
+      if (mode === 'ledfx_realtime') usage = 'ledfx_input';
+      else if (mode === 'cluster_sync') usage = 'cluster';
+      setValue('syncUsage', usage);
+      updateUsageUi();
+    }
+
+    function updateUsageUi() {
+      var usage = byId('syncUsage').value;
+      var role = byId('role');
+      var protocol = byId('inputProtocol');
+      var hint = byId('usageHint');
+
+      if (usage === 'ledfx_input') {
+        role.value = 'client';
+        role.disabled = true;
+        protocol.disabled = false;
+        hint.textContent = 'LedFx: este nodo consume tramas externas por DDP/E1.31 (siempre como client).';
+        return;
+      }
+
+      role.disabled = false;
+      if (usage === 'cluster') {
+        protocol.disabled = true;
+        hint.textContent = 'Cluster: sincronizacion entre nodos ESP32 por UDP Sync; no depende de DDP/E1.31.';
+        return;
+      }
+
+      protocol.disabled = true;
+      hint.textContent = 'Local only: se desactiva la entrada/salida de sync y se usan solo efectos locales.';
     }
 
     function fillState(payload) {
@@ -263,10 +304,24 @@
     function readPayload() {
       var enabled = byId('enabled').value === 'true';
       var role = byId('role').value;
+      var usage = byId('syncUsage').value;
+      var mode = 'off';
+
+      if (enabled) {
+        if (usage === 'ledfx_input') {
+          mode = 'ledfx_realtime';
+          role = 'client';
+        } else if (usage === 'cluster') {
+          mode = 'cluster_sync';
+        } else {
+          mode = 'local_effects';
+        }
+      }
+
       return {
         sync: {
           enabled: enabled,
-          mode: enabled ? (role === 'server' ? 'cluster_sync' : 'ledfx_realtime') : 'off',
+          mode: mode,
           role: role,
           inputProtocol: byId('inputProtocol').value,
           ddpPort: Number(byId('ddpPort').value || 0),
@@ -348,6 +403,7 @@
       }
     }
 
+    byId('syncUsage').addEventListener('change', updateUsageUi);
     byId('autoRefreshInterval').addEventListener('change', updateAutoRefresh);
     loadConfigAndState();
     updateAutoRefresh();

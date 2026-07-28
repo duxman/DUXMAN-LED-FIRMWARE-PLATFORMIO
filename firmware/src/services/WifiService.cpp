@@ -59,6 +59,26 @@ String normalizedWifiMode(String mode) {
   return mode;
 }
 
+void registerDiscoveryServices() {
+  // Generic API discovery.
+  MDNS.addService("http", "tcp", 80);
+  MDNS.addServiceTxt("http", "tcp", "path", "/");
+  MDNS.addServiceTxt("http", "tcp", "api", "/api/v1");
+
+  // Dedicated LedFx external-frame discovery (DDP).
+  MDNS.addService("ddp", "udp", 4048);
+  MDNS.addServiceTxt("ddp", "udp", "integration", "ledfx");
+  MDNS.addServiceTxt("ddp", "udp", "mode", "external_frame");
+
+  // Optional E1.31 listener discovery.
+  MDNS.addService("e131", "udp", 5568);
+  MDNS.addServiceTxt("e131", "udp", "integration", "ledfx");
+
+  // Cluster sync service is published separately from LedFx integration.
+  MDNS.addService("duxsync", "udp", 21324);
+  MDNS.addServiceTxt("duxsync", "udp", "mode", "cluster_sync");
+}
+
 void printIpDetails(const char *label, const IPAddress &ip, const IPAddress &gateway,
                     const IPAddress &subnet, const IPAddress &dns1, const IPAddress &dns2) {
   Serial.print("[wifi] ");
@@ -127,9 +147,11 @@ bool WifiService::begin() {
   // Activar mDNS si hay hostname
   if (!networkConfig_.dns.hostname.isEmpty()) {
     if (MDNS.begin(networkConfig_.dns.hostname.c_str())) {
+      registerDiscoveryServices();
       Serial.print("[mdns] responder iniciado: ");
       Serial.print(networkConfig_.dns.hostname);
       Serial.println(".local");
+      Serial.println("[mdns] services: _http._tcp, _ddp._udp (LedFx), _e131._udp, _duxsync._udp");
     } else {
       Serial.println("[mdns] error al iniciar responder");
     }
