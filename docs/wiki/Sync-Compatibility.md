@@ -1,6 +1,6 @@
 # Compatibilidad de sincronizacion (LedFx, WLED, E1.31, MQTT)
 
-Version: v0.6.4-beta
+Version: v0.6.5-beta
 
 ## Resumen rapido
 
@@ -10,6 +10,8 @@ Este firmware soporta entrada de frames externos por protocolos estandar de ilum
 - E1.31 / sACN (universos DMX sobre UDP)
 
 Tambien soporta sincronizacion de estado entre nodos del propio firmware mediante `cluster_sync`.
+
+La integracion LedFx queda separada de `cluster_sync` en la UI y en el flujo operativo.
 
 ## Matriz de compatibilidad actual
 
@@ -34,6 +36,17 @@ Para recibir datos de LedFx de forma estable:
 5. Verificar conectividad en:
    - `GET /api/v1/sync/state`
    - `GET /api/v1/sync/connected`
+
+### Descubrimiento automatico (mDNS)
+
+El firmware publica servicios mDNS para hacerlo descubrible sin confundirlo con cluster sync:
+
+- `_ddp._udp` puerto `4048` (integracion LedFx)
+- `_e131._udp` puerto `5568` (entrada E1.31)
+- `_duxsync._udp` puerto `21324` (cluster sync entre nodos)
+- `_http._tcp` puerto `80` (API/UI)
+
+Esto permite identificar claramente que `_ddp/_e131` son para entrada externa (LedFx) y `_duxsync` para sincronizacion interna de cluster.
 
 ## Ejemplos de configuracion por API
 
@@ -128,6 +141,7 @@ Checklist de validacion cuando no entra video/frames:
 - Este documento refleja el estado real del firmware en la rama principal.
 - DDP y E1.31 son rutas de entrada soportadas para pixel streaming.
 - MQTT y protocolo nativo WLED no forman parte del stack de sincronizacion actual.
+- Pendiente de probar: validacion manual con instancia real de LedFx para confirmar descubrimiento mDNS automatico y flujo completo de reproduccion.
 
 ## Referencias
 

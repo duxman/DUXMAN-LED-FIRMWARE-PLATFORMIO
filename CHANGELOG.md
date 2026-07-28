@@ -10,6 +10,13 @@ The format is based on Keep a Changelog.
 - Changelog governance with required `CHANGELOG.md` updates in pull requests.
 - Release pipeline publishes notes from versioned changelog sections.
 - Fast operational release checklist in `docs/RELEASE_CHECKLIST.md`.
+- mDNS service advertisement for sync discoverability: `_ddp._udp` (LedFx), `_e131._udp`, `_duxsync._udp`, `_http._tcp`.
+
+### Changed
+- Sync UI now separates LedFx external input usage from cluster sync usage to avoid ambiguous role/mode combinations.
+
+### Validation
+- Pending manual validation in real LedFx environment for mDNS auto-discovery flow (`_ddp._udp` / `_e131._udp`) and end-to-end frame ingestion.
 
 ### Docs
 - New sync compatibility guide for LedFx/WLED/E1.31/MQTT at `docs/wiki/Sync-Compatibility.md`.

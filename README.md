@@ -67,6 +67,7 @@ Si faltase esa seccion, el workflow de release falla para evitar releases sin tr
 - **UI**: plantillas HTML/CSS en LittleFS (`data/ui`) con fallback a HTML embebido
 - **Backends LED**: NeoPixelBus (principal), FastLED (alternativo), Digital
 - **Sync stack S1-S6**: DDP, E1.31, cluster sync, reloj de fase compartido, telemetria runtime
+- **Descubrimiento mDNS**: `_ddp._udp` y `_e131._udp` para LedFx (entrada externa) y `_duxsync._udp` para sync interno de cluster
 
 ## API v1 (resumen)
 
