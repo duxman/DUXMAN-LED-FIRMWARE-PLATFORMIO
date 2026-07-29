@@ -26,6 +26,7 @@
 #include "services/UserPaletteService.h"
 #include "services/WatchdogService.h"
 #include "services/WifiService.h"
+#include "services/RenderMetricsService.h"
 
 namespace {
 CoreState state = CoreState::defaults();
@@ -101,10 +102,12 @@ void renderTask(void *parameter) {
 
   while (true) {
     watchdogService.feed();  // Reset watchdog timer
+    gRenderMetrics.frameBegin();
     const CoreState stateSnapshot = state.snapshot();
     if (!syncService.renderExternalFrame(ledDriver, stateSnapshot)) {
       effectManager.renderFrame();
     }
+    gRenderMetrics.frameEnd();
     vTaskDelayUntil(&lastWake, kRenderIntervalTicks);
   }
 }

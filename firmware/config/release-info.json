@@ -1,7 +1,7 @@
 {
-  "version": "0.6.5-beta",
-  "versionCode": 22,
-  "buildDate": "2026-07-28",
+  "version": "0.6.6-beta",
+  "versionCode": 23,
+  "buildDate": "2026-07-29",
   "branch": "main",
   "features": [
     "Fase 4A: FreeRTOS dual-core architecture (TaskControl + TaskRender)",

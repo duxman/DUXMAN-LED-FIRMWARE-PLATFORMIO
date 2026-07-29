@@ -187,6 +187,7 @@ void ApiService::begin() {
   Serial.println("[api] ready: GET /api/v1/palettes | POST /api/v1/palettes/apply {json} | POST /api/v1/palettes/save {json} | POST /api/v1/palettes/delete {json}");
   Serial.println("[api] ready: POST /api/v1/system/restart");
   Serial.println("[api] ready: GET /api/v1/hardware");
+  Serial.println("[api] ready: GET /api/v1/metrics | POST /api/v1/metrics/reset");
   Serial.println("[api] ready: GET /api/v1/release");
   Serial.println("[api] ui: GET / | GET /config | GET /config/network | GET /config/microphone | GET /config/gpio | GET /config/sync | GET /config/palettes | GET /config/debug | GET /config/manual | GET /api | GET /version");
 
@@ -367,6 +368,17 @@ void ApiService::processCommand(const String &command) {
 
   if (command == "GET /api/v1/hardware") {
     Serial.println(HardwareInfo::toJson());
+    return;
+  }
+
+  if (command == "GET /api/v1/metrics") {
+    Serial.println(gRenderMetrics.toJson());
+    return;
+  }
+
+  if (command == "POST /api/v1/metrics/reset") {
+    gRenderMetrics.reset();
+    Serial.println("{\"reset\":true}");
     return;
   }
 
@@ -1019,6 +1031,15 @@ void ApiService::setupHttpRoutes() {
 
   httpServer_.on("/api/v1/hardware", HTTP_GET, [this]() {
     handleHttpHardwareRoute();
+  });
+
+  httpServer_.on("/api/v1/metrics", HTTP_GET, [this]() {
+    handleHttpMetricsRoute();
+  });
+
+  httpServer_.on("/api/v1/metrics/reset", HTTP_POST, [this]() {
+    gRenderMetrics.reset();
+    httpServer_.send(200, "application/json", "{\"reset\":true}");
   });
 
   httpServer_.on("/api/v1/release", HTTP_GET, [this]() {
@@ -2130,6 +2151,15 @@ void ApiService::handleHttpHardwareRoute() {
   httpServer_.send(405, "application/json", "{\"error\":\"method_not_allowed\"}");
 }
 
+void ApiService::handleHttpMetricsRoute() {
+  if (httpServer_.method() == HTTP_GET) {
+    httpServer_.send(200, "application/json", gRenderMetrics.toJson());
+    return;
+  }
+
+  httpServer_.send(405, "application/json", "{\"error\":\"method_not_allowed\"}");
+}
+
 String ApiService::buildOpenApiJson() const {
   JsonDocument doc;
   doc["openapi"] = "3.0.0-lite";
@@ -2318,6 +2348,8 @@ String ApiService::buildOpenApiJson() const {
   serialCommands.add("GET /api/v1/config/all");
   serialCommands.add("POST /api/v1/config/all {json_completo}");
   serialCommands.add("GET /api/v1/hardware");
+  serialCommands.add("GET /api/v1/metrics");
+  serialCommands.add("POST /api/v1/metrics/reset");
   serialCommands.add("GET /api/v1/release");
 
   String out;

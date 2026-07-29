@@ -10,6 +10,14 @@ Fuentes integradas:
 
 ## Linea de tiempo
 
+## [0.6.6-beta] - 2026-07-29
+
+### Clave
+- `RenderMetricsService`: nuevo servicio de metricas del render loop con FPS, frame timing y heap.
+- Nuevos endpoints `GET /api/v1/metrics` y `POST /api/v1/metrics/reset`.
+- Infraestructura de baseline F0 completada: escenas de prueba, plantilla de captura, guia paso a paso.
+- Roadmap de mejoras de efectos inspirado en analisis comparativo con WLED.
+
 ## [0.6.5-beta] - 2026-07-28
 
 ### Clave
