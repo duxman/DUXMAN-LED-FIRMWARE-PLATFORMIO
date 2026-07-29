@@ -21,6 +21,22 @@ The format is based on Keep a Changelog.
 ### Docs
 - New sync compatibility guide for LedFx/WLED/E1.31/MQTT at `docs/wiki/Sync-Compatibility.md`.
 
+## [0.6.6-beta] - 2026-07-29
+
+### Added
+- `RenderMetricsService` — nuevo servicio de metricas del render loop: FPS (ventana deslizante 1 s), frame time min/max/avg (microsegundos via `esp_timer`), heap libre, stack headroom del renderTask.
+- Endpoints `GET /api/v1/metrics` y `POST /api/v1/metrics/reset` accesibles por HTTP y Serial.
+- Infraestructura de baseline F0 en `docs/baseline/`: escenas de prueba (`test-scenes.json`), plantilla de captura (`BASELINE_CAPTURE_TEMPLATE.md`) y guia paso a paso (`HOW-TO-BASELINE.md`).
+- Analisis comparativo WLED vs motor de efectos propio con roadmap de mejoras en `docs/IMPLEMENTACION_EFECTOS_WLED_ROADMAP.md`.
+
+### Changed
+- `renderTask` en `main.cpp` instrumentado con `gRenderMetrics.frameBegin()` / `frameEnd()` para medir el ciclo real de render.
+- Firmware version markers bumped to `0.6.6-beta` (`platformio.ini`, `release-info.json`).
+
+### Docs
+- Updated root README and wiki Home/Release-History version references to `0.6.6-beta`.
+- F0 del roadmap de mejoras de efectos marcado como completado.
+
 ## [0.6.5-beta] - 2026-07-28
 
 ### Changed

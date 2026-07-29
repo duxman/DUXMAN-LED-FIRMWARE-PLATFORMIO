@@ -1,6 +1,6 @@
 # DUXMAN-LED-FIRMWARE-PLATFORMIO
 
-**v0.6.5-beta** — Firmware modular para control LED en ESP32 con API REST/Serial, UI embebida, motor de efectos visual/audio y sincronizacion multi-nodo.
+**v0.6.6-beta** — Firmware modular para control LED en ESP32 con API REST/Serial, UI embebida, motor de efectos visual/audio y sincronizacion multi-nodo.
 
 Repositorio activo y prioritario del proyecto.
 
@@ -81,7 +81,7 @@ Base: `http://<ip>/api/v1`
 | Perfiles | `GET /profiles`, `/profiles/{save,apply,default,delete,clone}` |
 | Efectos | `GET /effects`, `/effects/startup/save`, `/effects/sequence/{add,delete}` |
 | Paletas | `GET /palettes`, `/palettes/{apply,save,delete}` |
-| Sistema | `GET /hardware`, `GET /release`, `GET /openapi.json` |
+| Sistema | `GET /hardware`, `GET /release`, `GET /metrics`, `POST /metrics/reset`, `GET /openapi.json` |
 
 Referencia completa: [wiki/API-v1](https://github.com/duxman/DUXMAN-LED-FIRMWARE-PLATFORMIO/wiki/API-v1)
 

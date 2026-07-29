@@ -20,6 +20,7 @@
 #include "services/StorageService.h"
 #include "services/SyncService.h"
 #include "services/UserPaletteService.h"
+#include "services/RenderMetricsService.h"
 #include "services/WatchdogService.h"
 #include "services/WifiService.h"
 
@@ -70,6 +71,7 @@ private:
   void handleHttpDiagRoute();
   void handleHttpConfigAllRoute();
   void handleHttpHardwareRoute();
+  void handleHttpMetricsRoute();
   // Rutas de perfiles (cobertura completa de configuración)
   void handleHttpProfilesRoute();
   void handleHttpProfilesSaveRoute();

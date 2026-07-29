@@ -1,6 +1,6 @@
 # DUXMAN-LED-FIRMWARE-PLATFORMIO
 
-Bienvenido a la documentacion tecnica del firmware ESP32 DUXMAN-LED (v0.6.5-beta).
+Bienvenido a la documentacion tecnica del firmware ESP32 DUXMAN-LED (v0.6.6-beta).
 
 ## Contenido
 

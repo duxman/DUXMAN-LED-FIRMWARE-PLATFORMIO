@@ -1,0 +1,57 @@
+{
+  "_comment": "Escenas de prueba para el baseline de F0. Cada escena se aplica con PATCH /api/v1/state.",
+  "_version": "v0.4.x",
+  "scenes": {
+    "smooth": {
+      "_description": "Escena tranquila de ambiente. Bajo movimiento, pocos LEDs activos. Estres bajo en el render.",
+      "payload": {
+        "power": true,
+        "brightness": 120,
+        "effect": "lava_flow",
+        "sectionCount": 3,
+        "effectSpeed": 24,
+        "effectLevel": 3,
+        "primaryColors": ["#FF4D00", "#FFD400", "#002BFF"],
+        "backgroundColor": "#020202"
+      }
+    },
+    "show": {
+      "_description": "Escena dinamica de espectaculo. Velocidad media, colores saturados. Estres medio.",
+      "payload": {
+        "power": true,
+        "brightness": 170,
+        "effect": "triple_chase",
+        "sectionCount": 4,
+        "effectSpeed": 56,
+        "effectLevel": 6,
+        "primaryColors": ["#FF0040", "#00FF80", "#0040FF"],
+        "backgroundColor": "#000000"
+      }
+    },
+    "aggressive": {
+      "_description": "Escena agresiva: alta velocidad, muchos calculos, reactivo a audio. Estres maximo del render.",
+      "payload": {
+        "power": true,
+        "brightness": 220,
+        "effect": "audio_neon_eq",
+        "sectionCount": 6,
+        "effectSpeed": 86,
+        "effectLevel": 9,
+        "primaryColors": ["#FF0000", "#00FF00", "#0000FF"],
+        "backgroundColor": "#000000"
+      }
+    }
+  },
+  "howToApply": {
+    "http": "curl -X PATCH http://<device-ip>/api/v1/state -H 'Content-Type: application/json' -d '<payload>'",
+    "serial": "PATCH /api/v1/state <payload>"
+  },
+  "howToCapture": {
+    "step1": "Aplicar escena con el payload correspondiente.",
+    "step2": "Esperar 10 segundos para que el sistema estabilice.",
+    "step3": "Leer metricas: GET /api/v1/metrics",
+    "step4": "Esperar 30 segundos mas (para min/max robustos).",
+    "step5": "Leer metricas de nuevo y registrar en BASELINE_CAPTURE_TEMPLATE.md",
+    "step6": "Resetear contadores para la proxima escena: POST /api/v1/metrics/reset"
+  }
+}
