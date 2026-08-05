@@ -1,15 +1,7 @@
 ﻿
-<!doctype html>
-<html>
-<head>
-  <meta charset='utf-8'>
-  <meta name='viewport' content='width=device-width,initial-scale=1'>
-  <title>DUXMAN - Config Manual</title>
+<!doctype html><html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>DUXMAN - Config Manual</title>
   __CSS__
-</head>
-<body>
-<div class='gen-page-outer'>
-<script>
+</head><body><div class='gen-page-outer'><script>
   (function() {
     try {
       var request = new XMLHttpRequest();
@@ -22,44 +14,8 @@
     } catch (_) {}
     document.write("<nav class='gen-nav' style='padding:12px 16px;'>Navigation unavailable</nav>");
   })();
-</script>
-  <main>
-    <div class='card'>
-      <h1 data-i18n='manualConfig.title'>Configuracion Manual</h1>
-      <p class='hint' data-i18n='manualConfig.hint'>Edita, exporta o importa toda la configuracion del dispositivo como JSON. La importacion solo se aplica si el JSON es completamente valido.</p>
-      <p id='status' class='status-live' aria-live='polite'></p>
-    </div>
-
-    <div class='card'>
-      <h2 data-i18n='manualConfig.sections.editor'>Editor JSON</h2>
-      <div class='actions'>
-        <button class='btn alt' onclick='loadConfig()' data-i18n='manualConfig.actions.load'>Cargar del dispositivo</button>
-        <button class='btn' onclick='applyConfig()' data-i18n='manualConfig.actions.apply'>Aplicar al dispositivo</button>
-        <button class='btn alt' onclick='downloadConfig()' data-i18n='manualConfig.actions.download'>Descargar .json</button>
-        <button class='btn danger' onclick='validateOnly()' data-i18n='manualConfig.actions.validate'>Solo validar</button>
-      </div>
-      <textarea id='editor'></textarea>
-    </div>
-
-    <div class='card'>
-      <h2 data-i18n='manualConfig.sections.import'>Importar archivo</h2>
-      <div class='file-row'>
-        <input type='file' id='fileInput' accept='.json,application/json'>
-        <button class='btn alt' onclick='loadFile()' data-i18n='manualConfig.actions.loadIntoEditor'>Cargar en editor</button>
-      </div>
-      <p class='hint' data-i18n='manualConfig.importHint'>Carga un archivo .json en el editor. Luego pulsa "Aplicar al dispositivo" para importarlo.</p>
-    </div>
-
-    <div class='card json-card'>
-      <h2 data-i18n='manualConfig.sections.result'>Resultado</h2>
-      <pre id='resultOut'>Sin operaciones aun.</pre>
-    </div>
-  </main>
-
-  <script>
-    if(localStorage.getItem('dux_show_json')==='1') document.body.classList.add('show-json');
-
-    function byId(id) { return document.getElementById(id); }
+</script><main><div class='card'><h1 data-i18n='manualConfig.title'>Configuracion Manual</h1><p class='hint' data-i18n='manualConfig.hint'>Edita, exporta o importa toda la configuracion del dispositivo como JSON. La importacion solo se aplica si el JSON es completamente valido.</p><p id='status' class='status-live' aria-live='polite'></p></div><div class='card'><h2 data-i18n='manualConfig.sections.editor'>Editor JSON</h2><div class='actions'><button class='btn alt' onclick='loadConfig()' data-i18n='manualConfig.actions.load'>Cargar del dispositivo</button><button class='btn' onclick='applyConfig()' data-i18n='manualConfig.actions.apply'>Aplicar al dispositivo</button><button class='btn alt' onclick='downloadConfig()' data-i18n='manualConfig.actions.download'>Descargar .json</button><button class='btn danger' onclick='validateOnly()' data-i18n='manualConfig.actions.validate'>Solo validar</button></div><textarea id='editor'></textarea></div><div class='card'><h2 data-i18n='manualConfig.sections.import'>Importar archivo</h2><div class='file-row'><input type='file' id='fileInput' accept='.json,application/json'><button class='btn alt' onclick='loadFile()' data-i18n='manualConfig.actions.loadIntoEditor'>Cargar en editor</button></div><p class='hint' data-i18n='manualConfig.importHint'>Carga un archivo .json en el editor. Luego pulsa "Aplicar al dispositivo" para importarlo.</p></div><div class='card json-card'><h2 data-i18n='manualConfig.sections.result'>Resultado</h2><pre id='resultOut'>Sin operaciones aun.</pre></div></main><script>
+    if(localStorage.getItem('dux_show_json')==='1') document.body.classList.add('show-json');`n    function byId(id) { return document.getElementById(id); }
     function tx(key, params, fallback) { return window.duxT ? window.duxT(key, params, fallback) : (fallback || key); }
     function setStatus(msg, isErr) {
       const el = byId('status');
@@ -68,9 +24,7 @@
         return;
       }
       el.textContent = msg || '';
-    }
-
-    async function loadConfig() {
+    }`n    async function loadConfig() {
       setStatus(tx('manualConfig.status.loading', null, 'Loading configuration...'), false);
       try {
         const res = await fetch('/api/v1/config/all');
@@ -84,9 +38,7 @@
         byId('resultOut').textContent = String(err);
         setStatus(tx('manualConfig.status.loadError', null, 'Error loading configuration.'), true);
       }
-    }
-
-    function validateOnly() {
+    }`n    function validateOnly() {
       const raw = byId('editor').value.trim();
       if (!raw) { setStatus(tx('manualConfig.status.emptyEditor', null, 'Editor is empty.'), true); return; }
       try {
@@ -98,9 +50,7 @@
         setStatus(tx('manualConfig.status.invalidJson', { message: err.message }, 'Invalid JSON: ' + err.message), true);
         byId('resultOut').textContent = tx('manualConfig.status.invalidJsonDetail', { message: err.message }, 'JSON syntax error:\n' + err.message);
       }
-    }
-
-    async function applyConfig() {
+    }`n    async function applyConfig() {
       const raw = byId('editor').value.trim();
       if (!raw) { setStatus(tx('manualConfig.status.emptyEditor', null, 'Editor is empty.'), true); return; }
       let parsed;
@@ -130,9 +80,7 @@
         byId('resultOut').textContent = String(err);
         setStatus(tx('manualConfig.status.networkError', null, 'Network error while applying.'), true);
       }
-    }
-
-    function downloadConfig() {
+    }`n    function downloadConfig() {
       const raw = byId('editor').value.trim();
       if (!raw) { setStatus(tx('manualConfig.status.nothingToDownload', null, 'Nothing to download.'), true); return; }
       const blob = new Blob([raw], { type: 'application/json' });
@@ -142,9 +90,7 @@
       a.click();
       URL.revokeObjectURL(a.href);
       setStatus(tx('manualConfig.status.downloaded', null, 'File downloaded.'), false);
-    }
-
-    function loadFile() {
+    }`n    function loadFile() {
       const file = byId('fileInput').files[0];
       if (!file) { setStatus(tx('manualConfig.status.selectFile', null, 'Select a file first.'), true); return; }
       const reader = new FileReader();
@@ -161,11 +107,5 @@
         }
       };
       reader.readAsText(file);
-    }
-
-    loadConfig();
-  </script>
-</div>
-</body>
-</html>
-
+    }`n    loadConfig();
+  </script></div></body></html>`n

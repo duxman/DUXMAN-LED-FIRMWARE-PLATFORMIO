@@ -1,15 +1,7 @@
 ﻿
-<!doctype html>
-<html>
-<head>
-  <meta charset='utf-8'>
-  <meta name='viewport' content='width=device-width,initial-scale=1'>
-  <title>DUXMAN Perfiles</title>
+<!doctype html><html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>DUXMAN Perfiles</title>
   __CSS__
-</head>
-<body>
-<div class='gen-page-outer'>
-<script>
+</head><body><div class='gen-page-outer'><script>
   (function() {
     try {
       var request = new XMLHttpRequest();
@@ -22,75 +14,7 @@
     } catch (_) {}
     document.write("<nav class='gen-nav' style='padding:12px 16px;'>Navigation unavailable</nav>");
   })();
-</script>
-<main>
-  <div class='card'>
-    <h1 style='margin:0 0 6px' data-i18n='profilesConfig.title'>Perfiles de Configuracion</h1>
-    <p class='hint' data-i18n='profilesConfig.hint'>Un perfil guarda toda la configuracion del dispositivo: red Wi-Fi, GPIO, microfono y debug. El perfil <strong>default</strong> siempre refleja la configuracion activa en el dispositivo.</p>
-    <div class='actions'>
-      <button class='btn alt' onclick='loadProfiles()' data-i18n='profilesConfig.actions.refresh'>&#8635; Actualizar lista</button>
-    </div>
-    <p id='status' class='status-live' aria-live='polite'></p>
-  </div>
-
-  <div class='card'>
-    <h2 data-i18n='profilesConfig.sections.save'>Guardar configuracion actual como perfil</h2>
-    <p class='hint' data-i18n='profilesConfig.saveHint'>Captura un snapshot completo de toda la configuracion activa (red, GPIO, microfono, debug) y lo guarda con el nombre indicado. No tienes que escribir ningun JSON.</p>
-    <div class='row'>
-      <div class='field'>
-        <label for='newId'>ID del perfil <span style='color:#a12626'>*</span></label>
-        <input id='newId' type='text' placeholder='salon_luces' maxlength='48'>
-        <span class='hint'>Solo minusculas, numeros, guiones y guion bajo.</span>
-      </div>
-      <div class='field'>
-        <label for='newName' data-i18n='profilesConfig.fields.name'>Nombre</label>
-        <input id='newName' type='text' placeholder='Salon luces RGB'>
-      </div>
-    </div>
-    <div class='field'>
-      <label for='newDesc' data-i18n='profilesConfig.fields.descriptionOptional'>Descripcion (opcional)</label>
-      <input id='newDesc' type='text' placeholder='4 tiras WS2812B, microfono I2S, red Casa...'>
-    </div>
-    <div class='actions'>
-      <button class='btn' onclick='saveCurrentAsProfile()' data-i18n='profilesConfig.actions.saveCurrent'>Guardar como perfil</button>
-    </div>
-  </div>
-
-  <div class='card'>
-    <h2 data-i18n='profilesConfig.sections.available'>Perfiles disponibles</h2>
-    <p class='hint' data-i18n='profilesConfig.availableHint'>Haz clic en <em>Activar</em> para cargar un perfil y aplicarlo al dispositivo. <em>Ver config</em> muestra el JSON completo guardado.</p>
-    <div id='profileList'><p class='hint'>Cargando...</p></div>
-  </div>
-
-  <div id='editPanel' class='card' style='display:none'>
-    <h2 style='margin:0 0 6px'><span data-i18n='profilesConfig.edit.title'>Editar perfil:</span> <span id='editPanelId' style='color:var(--accent);font-family:Consolas,monospace'></span></h2>
-    <p class='hint' data-i18n='profilesConfig.edit.hint'>Modifica el JSON y pulsa <strong>Guardar cambios</strong>. Solo se sobrescriben los campos que edites.</p>
-    <div class='row' style='margin-bottom:8px'>
-      <div class='field'>
-        <label for='editName' data-i18n='profilesConfig.fields.name'>Nombre</label>
-        <input id='editName' type='text'>
-      </div>
-      <div class='field'>
-        <label for='editDesc' data-i18n='profilesConfig.fields.description'>Descripcion</label>
-        <input id='editDesc' type='text'>
-      </div>
-    </div>
-    <div class='field'>
-      <label data-i18n='profilesConfig.edit.json'>JSON completo del perfil (editable)</label>
-      <textarea id='editJson' rows='14' style='font-family:Consolas,monospace;font-size:12px;resize:vertical'></textarea>
-    </div>
-    <div class='actions'>
-      <button class='btn' onclick='saveEditedProfile()' data-i18n='common.save'>Guardar cambios</button>
-      <button class='btn alt' onclick='closeEditPanel()' data-i18n='common.cancel'>Cancelar</button>
-    </div>
-  </div>
-
-  <div class='resp-card card'>
-    <h3 style='margin:0 0 8px' data-i18n='common.response'>Respuesta</h3>
-    <pre id='resultOut'>Sin llamadas aun.</pre>
-  </div>
-</main>
-<script>
+</script><main><div class='card'><h1 style='margin:0 0 6px' data-i18n='profilesConfig.title'>Perfiles de Configuracion</h1><p class='hint' data-i18n='profilesConfig.hint'>Un perfil guarda toda la configuracion del dispositivo: red Wi-Fi, GPIO, microfono y debug. El perfil <strong>default</strong> siempre refleja la configuracion activa en el dispositivo.</p><div class='actions'><button class='btn alt' onclick='loadProfiles()' data-i18n='profilesConfig.actions.refresh'>&#8635; Actualizar lista</button></div><p id='status' class='status-live' aria-live='polite'></p></div><div class='card'><h2 data-i18n='profilesConfig.sections.save'>Guardar configuracion actual como perfil</h2><p class='hint' data-i18n='profilesConfig.saveHint'>Captura un snapshot completo de toda la configuracion activa (red, GPIO, microfono, debug) y lo guarda con el nombre indicado. No tienes que escribir ningun JSON.</p><div class='row'><div class='field'><label for='newId'>ID del perfil <span style='color:#a12626'>*</span></label><input id='newId' type='text' placeholder='salon_luces' maxlength='48'><span class='hint'>Solo minusculas, numeros, guiones y guion bajo.</span></div><div class='field'><label for='newName' data-i18n='profilesConfig.fields.name'>Nombre</label><input id='newName' type='text' placeholder='Salon luces RGB'></div></div><div class='field'><label for='newDesc' data-i18n='profilesConfig.fields.descriptionOptional'>Descripcion (opcional)</label><input id='newDesc' type='text' placeholder='4 tiras WS2812B, microfono I2S, red Casa...'></div><div class='actions'><button class='btn' onclick='saveCurrentAsProfile()' data-i18n='profilesConfig.actions.saveCurrent'>Guardar como perfil</button></div></div><div class='card'><h2 data-i18n='profilesConfig.sections.available'>Perfiles disponibles</h2><p class='hint' data-i18n='profilesConfig.availableHint'>Haz clic en <em>Activar</em> para cargar un perfil y aplicarlo al dispositivo. <em>Ver config</em> muestra el JSON completo guardado.</p><div id='profileList'><p class='hint'>Cargando...</p></div></div><div id='editPanel' class='card' style='display:none'><h2 style='margin:0 0 6px'><span data-i18n='profilesConfig.edit.title'>Editar perfil:</span><span id='editPanelId' style='color:var(--accent);font-family:Consolas,monospace'></span></h2><p class='hint' data-i18n='profilesConfig.edit.hint'>Modifica el JSON y pulsa <strong>Guardar cambios</strong>. Solo se sobrescriben los campos que edites.</p><div class='row' style='margin-bottom:8px'><div class='field'><label for='editName' data-i18n='profilesConfig.fields.name'>Nombre</label><input id='editName' type='text'></div><div class='field'><label for='editDesc' data-i18n='profilesConfig.fields.description'>Descripcion</label><input id='editDesc' type='text'></div></div><div class='field'><label data-i18n='profilesConfig.edit.json'>JSON completo del perfil (editable)</label><textarea id='editJson' rows='14' style='font-family:Consolas,monospace;font-size:12px;resize:vertical'></textarea></div><div class='actions'><button class='btn' onclick='saveEditedProfile()' data-i18n='common.save'>Guardar cambios</button><button class='btn alt' onclick='closeEditPanel()' data-i18n='common.cancel'>Cancelar</button></div></div><div class='resp-card card'><h3 style='margin:0 0 8px' data-i18n='common.response'>Respuesta</h3><pre id='resultOut'>Sin llamadas aun.</pre></div></main><script>
   function byId(id) { return document.getElementById(id); }
   function tx(key, params, fallback) { return window.duxT ? window.duxT(key, params, fallback) : (fallback || key); }
   function setStatus(msg, isErr) {
@@ -100,9 +24,7 @@
       return;
     }
     el.textContent = msg || '';
-  }
-
-  async function loadProfiles() {
+  }`n  async function loadProfiles() {
     setStatus(tx('profilesConfig.status.loading', null, 'Cargando perfiles...'), false);
     try {
       const res = await fetch('/api/v1/profiles');
@@ -113,9 +35,7 @@
     } catch (err) {
       setStatus(tx('profilesConfig.status.loadError', { error: err }, 'Error cargando perfiles: ' + err), true);
     }
-  }
-
-  function renderProfiles(data) {
+  }`n  function renderProfiles(data) {
     const container = byId('profileList');
     const items = (((data || {}).profiles || {}).items) || [];
     const defaultId = ((data || {}).profiles || {}).defaultId || '';
@@ -153,9 +73,7 @@
     }
     container.innerHTML = '';
     container.appendChild(grid);
-  }
-
-  async function saveCurrentAsProfile() {
+  }`n  async function saveCurrentAsProfile() {
     const id = byId('newId').value.trim();
     if (!id) { setStatus(tx('profilesConfig.status.idRequired', null, 'El ID del perfil es obligatorio.'), true); return; }
     const payload = { profile: {
@@ -170,15 +88,11 @@
       byId('newDesc').value = '';
       await loadProfiles();
     }
-  }
-
-  async function activateProfile(id) {
+  }`n  async function activateProfile(id) {
     if (!confirm(tx('profilesConfig.status.confirmActivate', { id: id }, 'Activar el perfil "' + id + '"?\n\nEsto reemplazara toda la configuracion activa del dispositivo (red, GPIO, microfono, debug).'))) return;
     const ok = await callJson('/api/v1/profiles/apply', { profile: { id: id } }, tx('profilesConfig.status.activating', { id: id }, 'Activando perfil "' + id + '"...'));
     if (ok) await loadProfiles();
-  }
-
-  async function viewProfile(id) {
+  }`n  async function viewProfile(id) {
     setStatus(tx('profilesConfig.status.loadingProfileConfig', { id: id }, 'Cargando configuracion del perfil "' + id + '"...'), false);
     try {
       const res = await fetch('/api/v1/profiles/get?id=' + encodeURIComponent(id));
@@ -193,23 +107,17 @@
     } catch (err) {
       setStatus(tx('profilesConfig.status.profileLoadError', { error: err }, 'Error cargando perfil: ' + err), true);
     }
-  }
-
-  async function deleteProfile(id) {
+  }`n  async function deleteProfile(id) {
     if (!confirm(tx('profilesConfig.status.confirmDelete', { id: id }, 'Borrar el perfil "' + id + '"?\n\nEsta accion no se puede deshacer.'))) return;
     const ok = await callJson('/api/v1/profiles/delete', { profile: { id: id } }, tx('profilesConfig.status.deleting', { id: id }, 'Borrando perfil "' + id + '"...'));
     if (ok) await loadProfiles();
-  }
-
-  async function cloneProfile(id) {
+  }`n  async function cloneProfile(id) {
     const newId = prompt(tx('profilesConfig.status.clonePromptId', null, 'ID para el perfil clonado (sin espacios):'), id + '_copia');
     if (!newId) return;
     const newName = prompt(tx('profilesConfig.status.clonePromptName', null, 'Nombre del perfil clonado:'), newId);
     const ok = await callJson('/api/v1/profiles/clone', { profile: { id: id, newId: newId.trim(), name: newName || newId.trim() } }, tx('profilesConfig.status.cloning', { id: id }, 'Clonando perfil "' + id + '"...'));
     if (ok) await loadProfiles();
-  }
-
-  async function editProfile(id) {
+  }`n  async function editProfile(id) {
     setStatus(tx('profilesConfig.status.loadingProfile', { id: id }, 'Cargando perfil "' + id + '"...'), false);
     try {
       const res = await fetch('/api/v1/profiles/get?id=' + encodeURIComponent(id));
@@ -226,9 +134,7 @@
     } catch (err) {
       setStatus(tx('profilesConfig.status.profileLoadError', { error: err }, 'Error cargando perfil: ' + err), true);
     }
-  }
-
-  async function saveEditedProfile() {
+  }`n  async function saveEditedProfile() {
     let parsed;
     try { parsed = JSON.parse(byId('editJson').value); } catch (e) {
       setStatus(tx('profilesConfig.status.invalidJson', { message: e.message }, 'JSON invalido: ' + e.message), true); return;
@@ -237,13 +143,9 @@
     parsed.description = byId('editDesc').value.trim() || parsed.description;
     const ok = await callJson('/api/v1/profiles/save', { profile: parsed }, tx('profilesConfig.status.savingChanges', { id: parsed.id }, 'Guardando cambios en "' + parsed.id + '"...'));
     if (ok) { closeEditPanel(); await loadProfiles(); }
-  }
-
-  function closeEditPanel() {
+  }`n  function closeEditPanel() {
     byId('editPanel').style.display = 'none';
-  }
-
-  async function callJson(url, payload, statusLabel) {
+  }`n  async function callJson(url, payload, statusLabel) {
     setStatus(statusLabel, false);
     try {
       const res = await fetch(url, {
@@ -269,11 +171,5 @@
       setStatus(tx('profilesConfig.status.networkError', { error: err }, 'Error de red: ' + err), true);
       return false;
     }
-  }
-
-  loadProfiles();
-</script>
-</div>
-</body>
-</html>
-
+  }`n  loadProfiles();
+</script></div></body></html>`n
