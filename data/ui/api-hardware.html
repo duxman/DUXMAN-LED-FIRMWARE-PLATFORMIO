@@ -1,15 +1,7 @@
 ﻿
-<!doctype html>
-<html>
-<head>
-  <meta charset='utf-8'>
-  <meta name='viewport' content='width=device-width,initial-scale=1'>
-  <title>DUXMAN API - Hardware</title>
+<!doctype html><html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>DUXMAN API - Hardware</title>
   __CSS__
-</head>
-<body>
-<div class='gen-page-outer'>
-<script>
+</head><body><div class='gen-page-outer'><script>
   (function() {
     try {
       var request = new XMLHttpRequest();
@@ -22,15 +14,7 @@
     } catch (_) {}
     document.write("<nav class='gen-nav' style='padding:12px 16px;'>Navigation unavailable</nav>");
   })();
-</script>
-  <main>
-    <div class='card'>
-      <h1>API Hardware</h1>
-      <button onclick='getHardware()'>GET /api/v1/hardware</button>
-    </div>
-    <div class='card'><pre id='out'>Cargando...</pre></div>
-  </main>
-  <script>
+</script><main><div class='card'><h1>API Hardware</h1><button onclick='getHardware()'>GET /api/v1/hardware</button></div><div class='card'><pre id='out'>Cargando...</pre></div></main><script>
     async function getHardware() {
       const res = await fetch('/api/v1/hardware');
       const text = await res.text();
@@ -39,8 +23,4 @@
       document.getElementById('out').textContent = 'GET /api/v1/hardware -> HTTP ' + res.status + '\n\n' + parsed;
     }
     getHardware();
-  </script>
-</div>
-</body>
-</html>
-
+  </script></div></body></html>`n
