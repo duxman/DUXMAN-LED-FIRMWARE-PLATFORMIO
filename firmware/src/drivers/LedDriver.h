@@ -51,7 +51,7 @@ struct LedDriverOutputConfig {
 
 class LedDriver {
 public:
-  virtual ~LedDriver() = default;
+  virtual ~LedDriver();
 
   void configure(const GpioConfig &config);
   virtual void begin() = 0;
@@ -80,6 +80,9 @@ public:
     return outputCount_;
   }
 
+  uint16_t outputLogicalPixelCount(uint8_t outputIndex) const;
+  uint32_t outputPixelColor(uint8_t outputIndex, uint16_t pixelIndex) const;
+
   const LedDriverOutputConfig &outputConfig(uint8_t outputIndex) const;
 
 protected:
@@ -96,8 +99,14 @@ protected:
   bool logNextShow_ = false;
 
 private:
+  void releaseFrameCache();
+
   LedDriverOutputConfig outputs_[kMaxLedOutputs];
   uint8_t outputLevels_[kMaxLedOutputs] = {0, 0, 0, 0};
+  uint16_t outputLogicalCounts_[kMaxLedOutputs] = {0, 0, 0, 0};
+  uint32_t outputOffsets_[kMaxLedOutputs] = {0, 0, 0, 0};
   uint8_t outputCount_ = 0;
+  uint32_t logicalPixelCount_ = 0;
+  uint32_t *frameColors_ = nullptr;
   float powerLimitScale_ = 1.0f;
 };

@@ -7,6 +7,8 @@
 
 #include "drivers/LedDriver.h"
 
+#include <cstring>
+
 namespace {
 LedDriverType parseLedType(const String &value) {
 	if (value == "digital") {
@@ -79,14 +81,21 @@ bool isRgbwOutput(LedDriverType ledType, LedDriverColorOrder colorOrder) {
 }
 } // namespace
 
+LedDriver::~LedDriver() {
+	releaseFrameCache();
+}
+
 void LedDriver::configure(const GpioConfig &config) {
 	outputCount_ = config.outputCount > kMaxLedOutputs ? kMaxLedOutputs : config.outputCount;
 	level_ = 0;
 	powerLimitScale_ = 1.0f;
+	logicalPixelCount_ = 0;
 
 	for (uint8_t i = 0; i < kMaxLedOutputs; ++i) {
 		outputs_[i] = LedDriverOutputConfig();
 		outputLevels_[i] = 0;
+		outputLogicalCounts_[i] = 0;
+		outputOffsets_[i] = 0;
 	}
 
 	uint32_t totalAddressableLeds = 0;
@@ -102,8 +111,21 @@ void LedDriver::configure(const GpioConfig &config) {
 		target.colorOrder = parseColorOrder(source.colorOrder);
 		target.isDigital = target.ledType == LedDriverType::Digital;
 		target.isRgbw = isRgbwOutput(target.ledType, target.colorOrder);
+		if (target.enabled) {
+			outputOffsets_[i] = logicalPixelCount_;
+			outputLogicalCounts_[i] = (target.isDigital || !isAddressableType(target.ledType)) ? 1 : target.ledCount;
+			logicalPixelCount_ += outputLogicalCounts_[i];
+		}
 		if (target.enabled && !target.isDigital && isAddressableType(target.ledType)) {
 			totalAddressableLeds += target.ledCount;
+		}
+	}
+
+	releaseFrameCache();
+	if (logicalPixelCount_ > 0) {
+		frameColors_ = new uint32_t[logicalPixelCount_];
+		if (frameColors_ != nullptr) {
+			memset(frameColors_, 0, sizeof(uint32_t) * logicalPixelCount_);
 		}
 	}
 
@@ -141,12 +163,69 @@ void LedDriver::setOutputColor(uint8_t outputIndex, uint32_t color) {
 	if (outputIndex >= outputCount_) {
 		return;
 	}
-	outputLevels_[outputIndex] = colorLevel(applyPowerLimit(color));
+	const uint32_t limitedColor = applyPowerLimit(color);
+	outputLevels_[outputIndex] = colorLevel(limitedColor);
+
+	if (frameColors_ == nullptr || outputLogicalCounts_[outputIndex] == 0) {
+		return;
+	}
+
+	const uint32_t offset = outputOffsets_[outputIndex];
+	const uint16_t logicalCount = outputLogicalCounts_[outputIndex];
+	for (uint16_t pixelIndex = 0; pixelIndex < logicalCount; ++pixelIndex) {
+		frameColors_[offset + pixelIndex] = limitedColor;
+	}
 }
 
 void LedDriver::setPixelColor(uint8_t outputIndex, uint16_t pixelIndex, uint32_t color) {
-	(void)pixelIndex;
-	setOutputColor(outputIndex, color);
+	if (outputIndex >= outputCount_) {
+		return;
+	}
+
+	const uint32_t limitedColor = applyPowerLimit(color);
+	outputLevels_[outputIndex] = colorLevel(limitedColor);
+
+	if (frameColors_ == nullptr || outputLogicalCounts_[outputIndex] == 0) {
+		return;
+	}
+
+	uint16_t logicalIndex = 0;
+	if (supportsPerPixelColor(outputIndex)) {
+		if (pixelIndex >= outputLogicalCounts_[outputIndex]) {
+			return;
+		}
+		logicalIndex = pixelIndex;
+	}
+
+	frameColors_[outputOffsets_[outputIndex] + logicalIndex] = limitedColor;
+}
+
+uint16_t LedDriver::outputLogicalPixelCount(uint8_t outputIndex) const {
+	if (outputIndex >= outputCount_) {
+		return 0;
+	}
+	return outputLogicalCounts_[outputIndex];
+}
+
+uint32_t LedDriver::outputPixelColor(uint8_t outputIndex, uint16_t pixelIndex) const {
+	if (frameColors_ == nullptr || outputIndex >= outputCount_) {
+		return 0;
+	}
+
+	const uint16_t logicalCount = outputLogicalCounts_[outputIndex];
+	if (logicalCount == 0) {
+		return 0;
+	}
+
+	uint16_t logicalIndex = 0;
+	if (supportsPerPixelColor(outputIndex)) {
+		if (pixelIndex >= logicalCount) {
+			return 0;
+		}
+		logicalIndex = pixelIndex;
+	}
+
+	return frameColors_[outputOffsets_[outputIndex] + logicalIndex];
 }
 
 const LedDriverOutputConfig &LedDriver::outputConfig(uint8_t outputIndex) const {
@@ -201,4 +280,9 @@ uint32_t LedDriver::applyPowerLimit(uint32_t color) const {
 	return (static_cast<uint32_t>(rr) << 16) |
 				 (static_cast<uint32_t>(gg) << 8) |
 				 static_cast<uint32_t>(bb);
+}
+
+void LedDriver::releaseFrameCache() {
+  delete[] frameColors_;
+  frameColors_ = nullptr;
 }

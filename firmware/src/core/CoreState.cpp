@@ -62,6 +62,44 @@ int16_t parsePaletteId(JsonVariantConst value, int16_t fallback) {
 
   return fallback;
 }
+
+uint8_t parseTransitionStyle(JsonVariantConst value, uint8_t fallback) {
+  if (value.isNull()) {
+    return fallback;
+  }
+
+  if (value.is<const char *>()) {
+    const String style = String(value.as<const char *>());
+    if (style == "wipe") {
+      return 1;
+    }
+    if (style == "fade") {
+      return 0;
+    }
+    return fallback;
+  }
+
+  if (value.is<String>()) {
+    const String style = value.as<String>();
+    if (style == "wipe") {
+      return 1;
+    }
+    if (style == "fade") {
+      return 0;
+    }
+    return fallback;
+  }
+
+  if (value.is<int>()) {
+    return static_cast<uint8_t>(constrain(value.as<int>(), 0, 1));
+  }
+
+  return fallback;
+}
+
+const char *transitionStyleName(uint8_t style) {
+  return style == 1 ? "wipe" : "fade";
+}
 } // namespace
 
 CoreState CoreState::defaults() {
@@ -117,6 +155,8 @@ String CoreState::toJson() const {
   doc["sectionCount"] = sectionCount;
   doc["effectSpeed"] = effectSpeed;
   doc["effectLevel"] = effectLevel;
+  doc["effectTransitionMs"] = effectTransitionMs;
+  doc["effectTransitionStyle"] = transitionStyleName(effectTransitionStyle);
   doc["paletteId"] = paletteId;
   doc["palette"] = PaletteRegistry::keyFor(paletteId);
   doc["paletteLabel"] = PaletteRegistry::labelFor(paletteId);
@@ -187,6 +227,14 @@ bool CoreState::applyPatchJson(const String &payload) {
     next.effectLevel = static_cast<uint8_t>(constrain(root["effectLevel"].as<int>(), 1, 10));
   }
 
+  if (!root["effectTransitionMs"].isNull()) {
+    next.effectTransitionMs = static_cast<uint16_t>(constrain(root["effectTransitionMs"].as<int>(), 0, 1500));
+  }
+
+  if (!root["effectTransitionStyle"].isNull()) {
+    next.effectTransitionStyle = parseTransitionStyle(root["effectTransitionStyle"], next.effectTransitionStyle);
+  }
+
   if (!root["paletteId"].isNull()) {
     next.paletteId = parsePaletteId(root["paletteId"], next.paletteId);
     if (next.paletteId >= 0) {
@@ -214,6 +262,8 @@ bool CoreState::applyPatchJson(const String &payload) {
   bool changed = next.power != power || next.brightness != brightness ||
                  next.effectId != effectId || next.sectionCount != sectionCount ||
                  next.effectSpeed != effectSpeed || next.effectLevel != effectLevel ||
+                 next.effectTransitionMs != effectTransitionMs ||
+                 next.effectTransitionStyle != effectTransitionStyle ||
                  next.paletteId != paletteId ||
                  next.reactiveToAudio != reactiveToAudio ||
                  next.backgroundColor != backgroundColor;

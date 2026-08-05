@@ -31,13 +31,37 @@
 #include "effects/visual-only/EffectScanningPulse.h"
 #include "effects/visual-only/EffectTripleChase.h"
 
+namespace {
+uint32_t blendColorLerp(uint32_t from, uint32_t to, uint16_t t256) {
+  const uint16_t inv = static_cast<uint16_t>(256 - t256);
+  const uint8_t fromR = static_cast<uint8_t>((from >> 16) & 0xFF);
+  const uint8_t fromG = static_cast<uint8_t>((from >> 8) & 0xFF);
+  const uint8_t fromB = static_cast<uint8_t>(from & 0xFF);
+  const uint8_t toR = static_cast<uint8_t>((to >> 16) & 0xFF);
+  const uint8_t toG = static_cast<uint8_t>((to >> 8) & 0xFF);
+  const uint8_t toB = static_cast<uint8_t>(to & 0xFF);
+
+  const uint8_t outR = static_cast<uint8_t>((fromR * inv + toR * t256) >> 8);
+  const uint8_t outG = static_cast<uint8_t>((fromG * inv + toG * t256) >> 8);
+  const uint8_t outB = static_cast<uint8_t>((fromB * inv + toB * t256) >> 8);
+  return (static_cast<uint32_t>(outR) << 16) | (static_cast<uint32_t>(outG) << 8) | outB;
+}
+} // namespace
+
 struct EffectManager::Impl {
   static constexpr size_t kEffectCount = 22;
+  static constexpr uint16_t kMaxTransitionMs = 1500;
 
   CoreState &state;
   LedDriver &driver;
   EffectEngine *effects[kEffectCount] = {};
   uint8_t lastEffectId = 255; // 255 = ninguno activo aun
+  bool transitionActive = false;
+  uint32_t transitionStartedAtMs = 0;
+  uint16_t transitionDurationMs = 0;
+  uint8_t transitionStyle = 0;
+  uint32_t *transitionPrevFrame = nullptr;
+  size_t transitionPrevFrameSize = 0;
 
   EffectFixed fixedEffect;
   EffectGradient gradientEffect;
@@ -110,6 +134,126 @@ struct EffectManager::Impl {
     effects[20] = &audioSpectrumChaseEffect;
     effects[21] = &audioSectionStrobeEffect;
   }
+
+  ~Impl() {
+    delete[] transitionPrevFrame;
+    transitionPrevFrame = nullptr;
+    transitionPrevFrameSize = 0;
+  }
+
+  size_t logicalPixelCount() const {
+    size_t total = 0;
+    for (uint8_t outputIndex = 0; outputIndex < driver.outputCount(); ++outputIndex) {
+      total += driver.outputLogicalPixelCount(outputIndex);
+    }
+    return total;
+  }
+
+  bool ensureTransitionBuffer() {
+    const size_t required = logicalPixelCount();
+    if (required == 0) {
+      transitionPrevFrameSize = 0;
+      return false;
+    }
+
+    if (transitionPrevFrame != nullptr && transitionPrevFrameSize == required) {
+      return true;
+    }
+
+    delete[] transitionPrevFrame;
+    transitionPrevFrame = new uint32_t[required];
+    if (transitionPrevFrame == nullptr) {
+      transitionPrevFrameSize = 0;
+      return false;
+    }
+
+    transitionPrevFrameSize = required;
+    return true;
+  }
+
+  bool captureCurrentFrame() {
+    if (!ensureTransitionBuffer()) {
+      return false;
+    }
+
+    size_t index = 0;
+    for (uint8_t outputIndex = 0; outputIndex < driver.outputCount(); ++outputIndex) {
+      const uint16_t logicalCount = driver.outputLogicalPixelCount(outputIndex);
+      for (uint16_t pixelIndex = 0; pixelIndex < logicalCount; ++pixelIndex) {
+        transitionPrevFrame[index++] = driver.outputPixelColor(outputIndex, pixelIndex);
+      }
+    }
+    return index == transitionPrevFrameSize;
+  }
+
+  void startTransitionIfNeeded() {
+    transitionActive = false;
+    transitionDurationMs = static_cast<uint16_t>(constrain(state.effectTransitionMs, 0, kMaxTransitionMs));
+    transitionStyle = static_cast<uint8_t>(constrain(state.effectTransitionStyle, static_cast<uint8_t>(0), static_cast<uint8_t>(1)));
+
+    if (transitionDurationMs == 0 || lastEffectId == 255) {
+      return;
+    }
+
+    if (!captureCurrentFrame()) {
+      transitionDurationMs = 0;
+      return;
+    }
+
+    transitionActive = true;
+    transitionStartedAtMs = millis();
+  }
+
+  void applyTransitionFrame() {
+    if (!transitionActive || transitionDurationMs == 0 || transitionPrevFrame == nullptr) {
+      transitionActive = false;
+      return;
+    }
+
+    const uint32_t nowMs = millis();
+    const uint32_t elapsedMs = nowMs - transitionStartedAtMs;
+    if (elapsedMs >= transitionDurationMs) {
+      transitionActive = false;
+      return;
+    }
+
+    const uint16_t t256 = static_cast<uint16_t>((elapsedMs * 256UL) / transitionDurationMs);
+    const size_t revealPixels = (logicalPixelCount() * elapsedMs) / transitionDurationMs;
+
+    size_t index = 0;
+    for (uint8_t outputIndex = 0; outputIndex < driver.outputCount(); ++outputIndex) {
+      const uint16_t logicalCount = driver.outputLogicalPixelCount(outputIndex);
+      if (logicalCount == 0) {
+        continue;
+      }
+
+      if (driver.supportsPerPixelColor(outputIndex)) {
+        for (uint16_t pixelIndex = 0; pixelIndex < logicalCount; ++pixelIndex) {
+          const uint32_t from = transitionPrevFrame[index++];
+          const uint32_t to = driver.outputPixelColor(outputIndex, pixelIndex);
+          uint32_t out = to;
+          if (transitionStyle == 1) {
+            out = (index <= revealPixels) ? to : from;
+          } else {
+            out = blendColorLerp(from, to, t256);
+          }
+          driver.setPixelColor(outputIndex, pixelIndex, out);
+        }
+      } else {
+        const uint32_t from = transitionPrevFrame[index++];
+        const uint32_t to = driver.outputPixelColor(outputIndex, 0);
+        uint32_t out = to;
+        if (transitionStyle == 1) {
+          out = (index <= revealPixels) ? to : from;
+        } else {
+          out = blendColorLerp(from, to, t256);
+        }
+        driver.setOutputColor(outputIndex, out);
+      }
+    }
+
+    driver.show();
+  }
 };
 
 EffectManager::EffectManager(CoreState &state, LedDriver &driver)
@@ -133,6 +277,7 @@ void EffectManager::renderFrame() {
   }
 
   if (!impl_->state.power) {
+    impl_->transitionActive = false;
     impl_->driver.clear();
     impl_->driver.show();
     impl_->state.unlock();
@@ -143,6 +288,8 @@ void EffectManager::renderFrame() {
 
   // Ciclo de vida: detectar cambio de efecto y notificar onActivate/onDeactivate.
   if (impl_->state.effectId != impl_->lastEffectId) {
+    impl_->startTransitionIfNeeded();
+
     if (impl_->lastEffectId != 255) {
       for (size_t i = 0; i < Impl::kEffectCount; ++i) {
         if (impl_->effects[i] && impl_->effects[i]->supports(impl_->lastEffectId)) {
@@ -168,6 +315,7 @@ void EffectManager::renderFrame() {
   }
 
   activeEffect.renderFrame();
+  impl_->applyTransitionFrame();
   impl_->state.unlock();
 }
 
