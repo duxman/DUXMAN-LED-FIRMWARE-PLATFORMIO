@@ -230,6 +230,23 @@ uint32_t EffectEngine::addColor(uint32_t colorA, uint32_t colorB) {
   return (r << 16) | (g << 8) | b;
 }
 
+uint32_t EffectEngine::blendAlpha(uint32_t baseColor, uint32_t overlayColor, uint8_t alpha) {
+  const uint16_t a = alpha;
+  const uint16_t inv = static_cast<uint16_t>(255 - alpha);
+
+  const uint8_t br = static_cast<uint8_t>((baseColor >> 16) & 0xFF);
+  const uint8_t bg = static_cast<uint8_t>((baseColor >> 8) & 0xFF);
+  const uint8_t bb = static_cast<uint8_t>(baseColor & 0xFF);
+  const uint8_t orr = static_cast<uint8_t>((overlayColor >> 16) & 0xFF);
+  const uint8_t org = static_cast<uint8_t>((overlayColor >> 8) & 0xFF);
+  const uint8_t orb = static_cast<uint8_t>(overlayColor & 0xFF);
+
+  const uint8_t r = static_cast<uint8_t>((br * inv + orr * a) / 255u);
+  const uint8_t g = static_cast<uint8_t>((bg * inv + org * a) / 255u);
+  const uint8_t b = static_cast<uint8_t>((bb * inv + orb * a) / 255u);
+  return (static_cast<uint32_t>(r) << 16) | (static_cast<uint32_t>(g) << 8) | b;
+}
+
 uint32_t EffectEngine::scaleColorFloat(uint32_t color, float gain) const {
   const float g = clamp01(gain * reactiveGain());
   const uint8_t r = static_cast<uint8_t>(((color >> 16) & 0xFF) * g);
@@ -259,4 +276,89 @@ uint32_t EffectEngine::applyGamma(uint32_t color) {
   return (static_cast<uint32_t>(r) << 16) |
          (static_cast<uint32_t>(g) << 8) |
          static_cast<uint32_t>(b);
+}
+
+void EffectEngine::fillOutput(uint8_t outputIndex, uint32_t color) const {
+  if (driver().supportsPerPixelColor(outputIndex)) {
+    const uint16_t count = driver().outputLogicalPixelCount(outputIndex);
+    for (uint16_t pixel = 0; pixel < count; ++pixel) {
+      driver().setPixelColor(outputIndex, pixel, color);
+    }
+    return;
+  }
+  driver().setOutputColor(outputIndex, color);
+}
+
+uint32_t EffectEngine::getPixel(uint8_t outputIndex, uint16_t pixelIndex) const {
+  return driver().outputPixelColor(outputIndex, pixelIndex);
+}
+
+void EffectEngine::setPixel(uint8_t outputIndex, uint16_t pixelIndex, uint32_t color) const {
+  if (driver().supportsPerPixelColor(outputIndex)) {
+    driver().setPixelColor(outputIndex, pixelIndex, color);
+    return;
+  }
+  driver().setOutputColor(outputIndex, color);
+}
+
+void EffectEngine::addPixelSaturated(uint8_t outputIndex, uint16_t pixelIndex, uint32_t color) const {
+  const uint32_t base = getPixel(outputIndex, pixelIndex);
+  setPixel(outputIndex, pixelIndex, addColor(base, color));
+}
+
+void EffectEngine::fadeToBlackBy(uint8_t outputIndex, uint8_t fadeAmount) const {
+  const uint16_t count = driver().outputLogicalPixelCount(outputIndex);
+  if (count == 0) {
+    return;
+  }
+
+  const uint16_t keep = static_cast<uint16_t>(255 - fadeAmount);
+  for (uint16_t pixel = 0; pixel < count; ++pixel) {
+    const uint32_t color = getPixel(outputIndex, pixel);
+    const uint8_t r = static_cast<uint8_t>(((color >> 16) & 0xFF) * keep / 255u);
+    const uint8_t g = static_cast<uint8_t>(((color >> 8) & 0xFF) * keep / 255u);
+    const uint8_t b = static_cast<uint8_t>((color & 0xFF) * keep / 255u);
+    setPixel(outputIndex, pixel, (static_cast<uint32_t>(r) << 16) | (static_cast<uint32_t>(g) << 8) | b);
+  }
+}
+
+void EffectEngine::blur1D(uint8_t outputIndex, uint8_t blurAmount) const {
+  const uint16_t count = driver().outputLogicalPixelCount(outputIndex);
+  if (count < 3 || blurAmount == 0) {
+    return;
+  }
+
+  uint32_t *snapshot = new uint32_t[count];
+  if (snapshot == nullptr) {
+    return;
+  }
+
+  for (uint16_t pixel = 0; pixel < count; ++pixel) {
+    snapshot[pixel] = getPixel(outputIndex, pixel);
+  }
+
+  const uint16_t centerWeight = static_cast<uint16_t>(255 - blurAmount);
+  const uint16_t sideWeight = static_cast<uint16_t>(blurAmount / 2u);
+  for (uint16_t pixel = 0; pixel < count; ++pixel) {
+    const uint16_t prev = pixel == 0 ? 0 : static_cast<uint16_t>(pixel - 1);
+    const uint16_t next = pixel + 1 < count ? static_cast<uint16_t>(pixel + 1) : static_cast<uint16_t>(count - 1);
+
+    const uint32_t a = snapshot[prev];
+    const uint32_t c = snapshot[pixel];
+    const uint32_t b = snapshot[next];
+
+    const uint8_t r = static_cast<uint8_t>((((a >> 16) & 0xFF) * sideWeight + ((c >> 16) & 0xFF) * centerWeight +
+                                            ((b >> 16) & 0xFF) * sideWeight) /
+                                           255u);
+    const uint8_t g = static_cast<uint8_t>((((a >> 8) & 0xFF) * sideWeight + ((c >> 8) & 0xFF) * centerWeight +
+                                            ((b >> 8) & 0xFF) * sideWeight) /
+                                           255u);
+    const uint8_t bl = static_cast<uint8_t>(((a & 0xFF) * sideWeight + (c & 0xFF) * centerWeight +
+                                             (b & 0xFF) * sideWeight) /
+                                            255u);
+
+    setPixel(outputIndex, pixel, (static_cast<uint32_t>(r) << 16) | (static_cast<uint32_t>(g) << 8) | bl);
+  }
+
+  delete[] snapshot;
 }

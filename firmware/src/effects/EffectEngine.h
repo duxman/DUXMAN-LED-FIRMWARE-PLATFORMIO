@@ -57,10 +57,19 @@ protected:
   static float smoothstep(float edge0, float edge1, float x);
   static uint32_t lerpColor(uint32_t colorA, uint32_t colorB, float t);
   static uint32_t addColor(uint32_t colorA, uint32_t colorB);
+  static uint32_t blendAlpha(uint32_t baseColor, uint32_t overlayColor, uint8_t alpha);
   uint32_t scaleColorFloat(uint32_t color, float gain) const;
   // P4: Interpola entre tres colores primarios según el nivel de audio (0→cA, 50%→cB, max→cC).
   uint32_t audioColorShift(uint32_t cA, uint32_t cB, uint32_t cC) const;
   static uint32_t applyGamma(uint32_t color);
+
+  // F2 primitives: helpers shared by multiple 1D effects.
+  void fillOutput(uint8_t outputIndex, uint32_t color) const;
+  uint32_t getPixel(uint8_t outputIndex, uint16_t pixelIndex) const;
+  void setPixel(uint8_t outputIndex, uint16_t pixelIndex, uint32_t color) const;
+  void addPixelSaturated(uint8_t outputIndex, uint16_t pixelIndex, uint32_t color) const;
+  void fadeToBlackBy(uint8_t outputIndex, uint8_t fadeAmount) const;
+  void blur1D(uint8_t outputIndex, uint8_t blurAmount) const;
 
 private:
   CoreState &state_;

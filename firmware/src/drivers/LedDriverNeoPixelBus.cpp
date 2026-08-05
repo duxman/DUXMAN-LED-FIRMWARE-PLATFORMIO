@@ -389,7 +389,7 @@ void LedDriverNeoPixelBus::setOutputColor(uint8_t outputIndex, uint32_t color) {
 }
 
 void LedDriverNeoPixelBus::setPixelColor(uint8_t outputIndex, uint16_t pixelIndex, uint32_t color) {
-  LedDriver::setOutputColor(outputIndex, color);
+  LedDriver::setPixelColor(outputIndex, pixelIndex, color);
   const uint32_t limitedColor = applyPowerLimit(color);
 
 #if DUX_LED_BACKEND == DUX_LED_BACKEND_NEOPIXELBUS

@@ -39,6 +39,9 @@ void EffectGradientMeteor::renderFrame() {
       continue;
     }
 
+    const uint32_t background = scaleColorFloat(s.backgroundColor, globalGain * (0.08f + 0.22f * (1.0f - levelNorm)));
+    fillOutput(outIdx, background);
+
     const float ledCountF = static_cast<float>(out.ledCount);
     const float headPos = fmodf(t * speedHz * ledCountF, ledCountF);
 
@@ -57,13 +60,24 @@ void EffectGradientMeteor::renderFrame() {
         intensity = smoothstep(0.0f, 1.0f, norm);
       }
 
-      uint32_t color = scaleColorFloat(s.backgroundColor, globalGain * (0.08f + 0.22f * (1.0f - levelNorm)));
       if (intensity > 0.0f) {
         const uint32_t meteorColor = gradientColor(s.primaryColors[0], s.primaryColors[1], s.primaryColors[2], px, out.ledCount);
-        color = addColor(color, scaleColorFloat(meteorColor, intensity * globalGain * (0.60f + 0.40f * levelNorm)));
+        addPixelSaturated(outIdx, px, scaleColorFloat(meteorColor, intensity * globalGain * (0.60f + 0.40f * levelNorm)));
       }
+    }
 
-      led.setPixelColor(outIdx, px, color);
+    // Trail cleanup and slight diffusion for smoother meteor tail.
+    // Keep smooth mode lighter than aggressive to avoid inverted cost profile.
+    const float profileBlend = 1.0f - levelNorm;
+    const uint8_t fadeAmount = static_cast<uint8_t>(24.0f - 6.0f * levelNorm);
+    const uint8_t blurAmount = static_cast<uint8_t>(12.0f + 20.0f * levelNorm);
+    fadeToBlackBy(outIdx, fadeAmount);
+    if (blurAmount > 0) {
+      blur1D(outIdx, blurAmount);
+      // A second, very soft blur is only used at medium/high profiles.
+      if (profileBlend < 0.45f) {
+        blur1D(outIdx, static_cast<uint8_t>(6.0f + 8.0f * levelNorm));
+      }
     }
   }
 

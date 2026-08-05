@@ -43,26 +43,29 @@ void EffectTripleChase::renderFrame() {
       continue;
     }
 
+    const uint32_t background = scaleColorFloat(s.backgroundColor, globalGain * (0.06f + 0.20f * (1.0f - levelNorm)));
+
     for (uint16_t px = 0; px < out.ledCount; ++px) {
       const float x = normalizedX(px, out.ledCount);
-      const float patternPos = fmodf(x * repeats - phase, 1.0f);
-      const float localPos = patternPos < 0.0f ? patternPos + 1.0f : patternPos;
+      const float waveBase = x * repeats - phase;
+      uint32_t composed = background;
 
-      float intensity = 0.0f;
-      if (localPos < trainWidth) {
-        // Head mas intensa, cola mas suave.
-        const float ramp = 1.0f - (localPos / trainWidth);
-        intensity = smoothstep(0.0f, 1.0f, ramp);
+      for (uint8_t lane = 0; lane < 3; ++lane) {
+        const float laneOffset = static_cast<float>(lane) / 3.0f;
+        const float wave = waveBase - laneOffset;
+        const float localPos = wave - floorf(wave);
+
+        if (localPos < trainWidth) {
+          // Head mas intensa, cola mas suave.
+          const float ramp = 1.0f - (localPos / trainWidth);
+          const float intensity = smoothstep(0.0f, 1.0f, ramp);
+          const uint32_t chaseColor = scaleColorFloat(s.primaryColors[lane], intensity * globalGain * (0.55f + 0.45f * levelNorm));
+          const uint8_t alpha = static_cast<uint8_t>(min(255.0f, intensity * (145.0f + 110.0f * levelNorm)));
+          composed = blendAlpha(composed, chaseColor, alpha);
+        }
       }
 
-      const uint8_t colorIdx = static_cast<uint8_t>((static_cast<uint32_t>(x * repeats) % 3u));
-      uint32_t color = scaleColorFloat(s.backgroundColor, globalGain * (0.10f + 0.25f * (1.0f - levelNorm)));
-      if (intensity > 0.0f) {
-        const uint32_t chaseColor = scaleColorFloat(s.primaryColors[colorIdx], intensity * globalGain * (0.55f + 0.45f * levelNorm));
-        color = addColor(color, chaseColor);
-      }
-
-      led.setPixelColor(outIdx, px, color);
+      setPixel(outIdx, px, composed);
     }
   }
 

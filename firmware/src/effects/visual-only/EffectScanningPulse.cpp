@@ -38,6 +38,9 @@ void EffectScanningPulse::renderFrame() {
       continue;
     }
 
+    const uint32_t background = scaleColorFloat(s.backgroundColor, globalGain * (0.10f + 0.22f * (1.0f - levelNorm)));
+    fillOutput(outIdx, background);
+
     const float ledCountF = static_cast<float>(out.ledCount);
     const float phase = fmodf(t * speedHz, 2.0f);
     const float pingPong = phase <= 1.0f ? phase : (2.0f - phase);
@@ -56,12 +59,13 @@ void EffectScanningPulse::renderFrame() {
 
       const float x = normalizedX(px, out.ledCount);
       const uint8_t colorIdx = static_cast<uint8_t>((static_cast<uint32_t>(x * max<uint8_t>(1, s.sectionCount) * 3.0f)) % 3u);
-      uint32_t color = scaleColorFloat(s.backgroundColor, globalGain * (0.10f + 0.22f * (1.0f - levelNorm)));
       if (intensity > 0.0f) {
-        color = addColor(color, scaleColorFloat(s.primaryColors[colorIdx], intensity * globalGain * (0.60f + 0.40f * levelNorm)));
+        addPixelSaturated(outIdx, px,
+                          scaleColorFloat(s.primaryColors[colorIdx], intensity * globalGain * (0.60f + 0.40f * levelNorm)));
       }
-      led.setPixelColor(outIdx, px, color);
     }
+
+    blur1D(outIdx, static_cast<uint8_t>(16.0f + 18.0f * levelNorm));
   }
 
   led.show();
