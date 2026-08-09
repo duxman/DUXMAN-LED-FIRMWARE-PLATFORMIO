@@ -7,6 +7,8 @@
 
 #include "effects/visual-only/EffectGradient.h"
 
+#include "effects/EffectCanvas1D.h"
+
 bool EffectGradient::supports(uint8_t effectId) const {
   return effectId == EffectRegistry::kEffectGradient;
 }
@@ -31,6 +33,10 @@ void EffectGradient::renderFrame() {
       continue;
     }
 
+    EffectCanvas1D canvas;
+    canvas.allocate(output.ledCount);
+    canvas.clear(scaledBackground);
+
     const uint16_t sectionSize = resolveSectionSize(output.ledCount, currentState.sectionCount);
     for (uint16_t pixelIndex = 0; pixelIndex < output.ledCount; ++pixelIndex) {
       uint32_t color = scaledBackground;
@@ -44,8 +50,9 @@ void EffectGradient::renderFrame() {
                           currentState.primaryColors[2], pixelIndex - sectionStart, sectionLength),
             currentState.brightness);
       }
-      ledDriver.setPixelColor(outputIndex, pixelIndex, color);
+      canvas.setPixel(pixelIndex, color);
     }
+    canvas.flushToDriver(ledDriver, outputIndex);
   }
   ledDriver.show();
 }

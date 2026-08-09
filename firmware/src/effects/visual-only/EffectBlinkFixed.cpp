@@ -7,6 +7,8 @@
 
 #include "effects/visual-only/EffectBlinkFixed.h"
 
+#include "effects/EffectCanvas1D.h"
+
 bool EffectBlinkFixed::supports(uint8_t effectId) const {
   return effectId == EffectRegistry::kEffectBlinkFixed;
 }
@@ -35,9 +37,10 @@ void EffectBlinkFixed::renderFrame() {
         continue;
       }
 
-      for (uint16_t pixelIndex = 0; pixelIndex < output.ledCount; ++pixelIndex) {
-        ledDriver.setPixelColor(outputIndex, pixelIndex, scaledBackground);
-      }
+      EffectCanvas1D canvas;
+      canvas.allocate(output.ledCount);
+      canvas.clear(scaledBackground);
+      canvas.flushToDriver(ledDriver, outputIndex);
     }
     ledDriver.show();
     return;
@@ -56,9 +59,9 @@ void EffectBlinkFixed::renderFrame() {
       continue;
     }
 
-    for (uint16_t pixelIndex = 0; pixelIndex < output.ledCount; ++pixelIndex) {
-      ledDriver.setPixelColor(outputIndex, pixelIndex, scaledBackground);
-    }
+    EffectCanvas1D canvas;
+    canvas.allocate(output.ledCount);
+    canvas.clear(scaledBackground);
 
     const uint16_t sectionSize = resolveSectionSize(output.ledCount, currentState.sectionCount);
     for (uint8_t sectionIndex = 0; sectionIndex < currentState.sectionCount; ++sectionIndex) {
@@ -71,9 +74,10 @@ void EffectBlinkFixed::renderFrame() {
       const uint32_t sectionColor = scaleColor(currentState.primaryColors[sectionIndex % 3],
                                                currentState.brightness);
       for (uint16_t pixelIndex = sectionStart; pixelIndex < sectionEnd; ++pixelIndex) {
-        ledDriver.setPixelColor(outputIndex, pixelIndex, sectionColor);
+        canvas.setPixel(pixelIndex, sectionColor);
       }
     }
+    canvas.flushToDriver(ledDriver, outputIndex);
   }
 
   ledDriver.show();

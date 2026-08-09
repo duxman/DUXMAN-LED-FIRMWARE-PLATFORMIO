@@ -15,7 +15,7 @@ Este documento sirve para llevar registro de avance, decisiones y estado de impl
 |---|---|---|---|
 | F0 | Baseline y metricas visuales | [x] | Referencia reproducible de FPS/calidad para comparar cambios |
 | F1 | Transiciones entre efectos | [~] | Cambio de efecto suave sin cortes bruscos |
-| F2 | Primitivas compartidas + canvas | [~] | Base comun para trail, blur, fade y mezcla |
+| F2 | Primitivas compartidas + canvas | [x] | Base comun para trail, blur, fade y mezcla |
 | F3 | Grouping y spacing | [ ] | Mejor legibilidad visual en tiras largas |
 | F4 | Capa overlay (composicion ligera) | [ ] | Efecto base + acento visual combinables |
 | F5 | Ideas adicionales de WLED | [ ] | Mejoras de visibilidad y usabilidad sin romper API |

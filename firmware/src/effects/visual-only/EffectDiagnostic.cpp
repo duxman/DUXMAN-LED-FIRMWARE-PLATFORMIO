@@ -7,6 +7,8 @@
 
 #include "effects/visual-only/EffectDiagnostic.h"
 
+#include "effects/EffectCanvas1D.h"
+
 bool EffectDiagnostic::supports(uint8_t effectId) const {
   return effectId == EffectRegistry::kEffectDiagnostic;
 }
@@ -28,9 +30,10 @@ void EffectDiagnostic::renderFrame() {
         continue;
       }
 
-      for (uint16_t pixelIndex = 0; pixelIndex < output.ledCount; ++pixelIndex) {
-        ledDriver.setPixelColor(outputIndex, pixelIndex, activeColor);
-      }
+      EffectCanvas1D canvas;
+      canvas.allocate(output.ledCount);
+      canvas.clear(activeColor);
+      canvas.flushToDriver(ledDriver, outputIndex);
       continue;
     }
 
@@ -39,9 +42,10 @@ void EffectDiagnostic::renderFrame() {
       continue;
     }
 
-    for (uint16_t pixelIndex = 0; pixelIndex < output.ledCount; ++pixelIndex) {
-      ledDriver.setPixelColor(outputIndex, pixelIndex, 0);
-    }
+    EffectCanvas1D canvas;
+    canvas.allocate(output.ledCount);
+    canvas.clear(0);
+    canvas.flushToDriver(ledDriver, outputIndex);
   }
   ledDriver.show();
 }

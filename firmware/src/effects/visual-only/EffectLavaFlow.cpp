@@ -7,6 +7,7 @@
 
 #include "effects/visual-only/EffectLavaFlow.h"
 
+#include "effects/EffectCanvas1D.h"
 #include "effects/EffectRegistry.h"
 
 #include <math.h>
@@ -38,6 +39,10 @@ void EffectLavaFlow::renderFrame() {
       continue;
     }
 
+    EffectCanvas1D canvas;
+    canvas.allocate(out.ledCount);
+    canvas.clear(0);
+
     for (uint16_t px = 0; px < out.ledCount; ++px) {
       const float x = normalizedX(px, out.ledCount);
       const float w1 = sinf((x * repeats + t * speed) * 2.0f * PI);
@@ -48,8 +53,9 @@ void EffectLavaFlow::renderFrame() {
       const uint32_t lava = lerpColor(hot, s.primaryColors[2], clamp01(0.2f + 0.8f * mix));
       const uint32_t base = scaleColorFloat(s.backgroundColor, gain * (0.08f + 0.20f * (1.0f - levelNorm)));
       const uint32_t glow = scaleColorFloat(lava, gain * (0.60f + 0.40f * levelNorm));
-      led.setPixelColor(outIdx, px, addColor(base, glow));
+      canvas.setPixel(px, addColor(base, glow));
     }
+    canvas.flushToDriver(led, outIdx);
   }
 
   led.show();

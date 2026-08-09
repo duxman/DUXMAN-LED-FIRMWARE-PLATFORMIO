@@ -7,6 +7,7 @@
 
 #include "effects/visual-only/EffectBreathFixed.h"
 
+#include "effects/EffectCanvas1D.h"
 #include "effects/EffectRegistry.h"
 #include <math.h>
 
@@ -18,14 +19,9 @@ void EffectBreathFixed::renderFrame() {
   CoreState &s = state();
   LedDriver &led = driver();
 
-  // Envolvente senoidal: period en segundos (speed bajo -> lento, speed alto -> rapido)
   const float t = normalizedTimeSec();
   const float period = 8.0f - 7.5f * speed01(s.effectSpeed);
-  const float breathe = 0.5f + 0.5f * sinf(2.0f * PI * t / period); // 0..1
-
-  // effectLevel llega en escala 1..10 desde API/UI.
-  // depth = 0 → envelope constante en 1.0 (sin respirar)
-  // depth = 1 → envelope oscila completo entre 0 y 1
+  const float breathe = 0.5f + 0.5f * sinf(2.0f * PI * t / period);
   const float depth = level01(s.effectLevel);
   const float envelope = (1.0f - depth) + depth * breathe;
   const float finalGain = clamp01(envelope * (s.brightness / 255.0f));
@@ -41,11 +37,16 @@ void EffectBreathFixed::renderFrame() {
       continue;
     }
 
+    EffectCanvas1D canvas;
+    canvas.allocate(out.ledCount);
+    canvas.clear(0);
+
     const uint16_t sectionSize = resolveSectionSize(out.ledCount, s.sectionCount);
     for (uint16_t px = 0; px < out.ledCount; ++px) {
       const uint8_t sectionIdx = static_cast<uint8_t>((px / sectionSize) % 3);
-      led.setPixelColor(outIdx, px, scaleColorFloat(s.primaryColors[sectionIdx], finalGain));
+      canvas.setPixel(px, scaleColorFloat(s.primaryColors[sectionIdx], finalGain));
     }
+    canvas.flushToDriver(led, outIdx);
   }
   led.show();
 }
