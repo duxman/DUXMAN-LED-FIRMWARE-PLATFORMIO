@@ -7,6 +7,7 @@
 
 #include "effects/visual-only/EffectRandomColorPop.h"
 
+#include "effects/EffectCanvas1D.h"
 #include "effects/EffectRegistry.h"
 
 #include <math.h>
@@ -64,6 +65,10 @@ void EffectRandomColorPop::renderFrame() {
       continue;
     }
 
+    EffectCanvas1D canvas;
+    canvas.allocate(out.ledCount);
+    canvas.clear(0);
+
     for (uint16_t px = 0; px < out.ledCount; ++px) {
       uint32_t r = hash32(seed_ ^ frameKey ^ (outIdx * 263u + px * 1013u));
       float rnd = (r & 0xFFFF) / 65535.0f;
@@ -77,8 +82,9 @@ void EffectRandomColorPop::renderFrame() {
       uint8_t idx = static_cast<uint8_t>((r >> 8) % 3u);
       uint32_t base = scaleColorFloat(s.backgroundColor, gain * (0.12f + 0.28f * (1.0f - levelNorm)));
       uint32_t light = scaleColorFloat(s.primaryColors[idx], clamp01(pop) * gain);
-      led.setPixelColor(outIdx, px, addColor(base, light));
+      canvas.setPixel(px, addColor(base, light));
     }
+    canvas.flushToDriver(led, outIdx);
   }
 
   led.show();

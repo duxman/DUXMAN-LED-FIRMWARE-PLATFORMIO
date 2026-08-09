@@ -7,6 +7,7 @@
 
 #include "effects/visual-only/EffectPolarIce.h"
 
+#include "effects/EffectCanvas1D.h"
 #include "effects/EffectRegistry.h"
 
 #include <math.h>
@@ -38,6 +39,10 @@ void EffectPolarIce::renderFrame() {
       continue;
     }
 
+    EffectCanvas1D canvas;
+    canvas.allocate(out.ledCount);
+    canvas.clear(0);
+
     for (uint16_t px = 0; px < out.ledCount; ++px) {
       const float x = normalizedX(px, out.ledCount);
       const float a = sinf((x * repeats + t * speed) * 2.0f * PI);
@@ -48,8 +53,9 @@ void EffectPolarIce::renderFrame() {
       const uint32_t ice = lerpColor(cold, s.primaryColors[0], 0.15f * (1.0f - mix));
       const uint32_t base = scaleColorFloat(s.backgroundColor, gain * (0.10f + 0.25f * (1.0f - levelNorm)));
       const uint32_t glow = scaleColorFloat(ice, gain * (0.58f + 0.42f * levelNorm));
-      led.setPixelColor(outIdx, px, addColor(base, glow));
+      canvas.setPixel(px, addColor(base, glow));
     }
+    canvas.flushToDriver(led, outIdx);
   }
 
   led.show();

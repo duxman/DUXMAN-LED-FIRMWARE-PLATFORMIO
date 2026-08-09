@@ -7,6 +7,8 @@
 
 #include "effects/visual-only/EffectBlinkGradient.h"
 
+#include "effects/EffectCanvas1D.h"
+
 bool EffectBlinkGradient::supports(uint8_t effectId) const {
   return effectId == EffectRegistry::kEffectBlinkGradient;
 }
@@ -35,9 +37,10 @@ void EffectBlinkGradient::renderFrame() {
         continue;
       }
 
-      for (uint16_t pixelIndex = 0; pixelIndex < output.ledCount; ++pixelIndex) {
-        ledDriver.setPixelColor(outputIndex, pixelIndex, scaledBackground);
-      }
+      EffectCanvas1D canvas;
+      canvas.allocate(output.ledCount);
+      canvas.clear(scaledBackground);
+      canvas.flushToDriver(ledDriver, outputIndex);
     }
     ledDriver.show();
     return;
@@ -58,6 +61,10 @@ void EffectBlinkGradient::renderFrame() {
       continue;
     }
 
+    EffectCanvas1D canvas;
+    canvas.allocate(output.ledCount);
+    canvas.clear(scaledBackground);
+
     const uint16_t sectionSize = resolveSectionSize(output.ledCount, currentState.sectionCount);
     for (uint16_t pixelIndex = 0; pixelIndex < output.ledCount; ++pixelIndex) {
       uint32_t color = scaledBackground;
@@ -71,8 +78,9 @@ void EffectBlinkGradient::renderFrame() {
                           currentState.primaryColors[2], pixelIndex - sectionStart, sectionLength),
             currentState.brightness);
       }
-      ledDriver.setPixelColor(outputIndex, pixelIndex, color);
+      canvas.setPixel(pixelIndex, color);
     }
+    canvas.flushToDriver(ledDriver, outputIndex);
   }
 
   ledDriver.show();

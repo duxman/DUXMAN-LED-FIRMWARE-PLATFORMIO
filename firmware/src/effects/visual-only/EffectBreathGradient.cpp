@@ -7,6 +7,7 @@
 
 #include "effects/visual-only/EffectBreathGradient.h"
 
+#include "effects/EffectCanvas1D.h"
 #include "effects/EffectRegistry.h"
 #include <math.h>
 
@@ -37,11 +38,16 @@ void EffectBreathGradient::renderFrame() {
       continue;
     }
 
+    EffectCanvas1D canvas;
+    canvas.allocate(out.ledCount);
+    canvas.clear(0);
+
     for (uint16_t px = 0; px < out.ledCount; ++px) {
       const uint32_t gradColor = gradientColor(
           s.primaryColors[0], s.primaryColors[1], s.primaryColors[2], px, out.ledCount);
-      led.setPixelColor(outIdx, px, scaleColorFloat(gradColor, finalGain));
+      canvas.setPixel(px, scaleColorFloat(gradColor, finalGain));
     }
+    canvas.flushToDriver(led, outIdx);
   }
   led.show();
 }

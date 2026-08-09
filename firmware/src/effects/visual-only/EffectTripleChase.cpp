@@ -7,6 +7,7 @@
 
 #include "effects/visual-only/EffectTripleChase.h"
 
+#include "effects/EffectCanvas1D.h"
 #include "effects/EffectRegistry.h"
 
 #include <math.h>
@@ -43,12 +44,14 @@ void EffectTripleChase::renderFrame() {
       continue;
     }
 
-    const uint32_t background = scaleColorFloat(s.backgroundColor, globalGain * (0.06f + 0.20f * (1.0f - levelNorm)));
+    EffectCanvas1D canvas;
+    canvas.allocate(out.ledCount);
+    canvas.clear(scaleColorFloat(s.backgroundColor, globalGain * (0.06f + 0.20f * (1.0f - levelNorm))));
 
     for (uint16_t px = 0; px < out.ledCount; ++px) {
       const float x = normalizedX(px, out.ledCount);
       const float waveBase = x * repeats - phase;
-      uint32_t composed = background;
+      uint32_t composed = scaleColorFloat(s.backgroundColor, globalGain * (0.06f + 0.20f * (1.0f - levelNorm)));
 
       for (uint8_t lane = 0; lane < 3; ++lane) {
         const float laneOffset = static_cast<float>(lane) / 3.0f;
@@ -65,8 +68,12 @@ void EffectTripleChase::renderFrame() {
         }
       }
 
-      setPixel(outIdx, px, composed);
+      canvas.setPixel(px, composed);
     }
+
+    canvas.fadeToBlackBy(static_cast<uint8_t>(10.0f + 16.0f * levelNorm));
+    canvas.blur(static_cast<uint8_t>(8.0f + 10.0f * levelNorm));
+    canvas.flushToDriver(led, outIdx);
   }
 
   led.show();

@@ -11,15 +11,19 @@ The format is based on Keep a Changelog.
 - Release pipeline publishes notes from versioned changelog sections.
 - Fast operational release checklist in `docs/RELEASE_CHECKLIST.md`.
 - mDNS service advertisement for sync discoverability: `_ddp._udp` (LedFx), `_e131._udp`, `_duxsync._udp`, `_http._tcp`.
+- Shared `EffectCanvas1D` layer for reusable per-output 1D rendering primitives (clear/set/get/add/fade/blur/flush).
 
 ### Changed
 - Sync UI now separates LedFx external input usage from cluster sync usage to avoid ambiguous role/mode combinations.
+- F2 primitives/canvas rollout completed across visual-only effects (`fixed`, `gradient`, `blink_*`, `breath_*`, `diagnostic`, `lava_flow`, `polar_ice`, `random_color_pop`, `gradient_meteor`, `scanning_pulse`, `triple_chase`) for a unified frame pipeline.
+- Local PlatformIO defaults now pin upload/monitor to `COM5` in `platformio.ini`.
 
 ### Validation
 - Pending manual validation in real LedFx environment for mDNS auto-discovery flow (`_ddp._udp` / `_e131._udp`) and end-to-end frame ingestion.
 
 ### Docs
 - New sync compatibility guide for LedFx/WLED/E1.31/MQTT at `docs/wiki/Sync-Compatibility.md`.
+- Roadmap updated in `docs/IMPLEMENTACION_EFECTOS_WLED_ROADMAP.md` reflecting F2 state and latest field metrics.
 
 ## [0.6.6-beta] - 2026-07-29
 
