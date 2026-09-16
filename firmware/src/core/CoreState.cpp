@@ -182,12 +182,29 @@ String CoreState::toJson() const {
 }
 
 bool CoreState::applyPatchJson(const String &payload) {
+  return applyPatchJson(payload, nullptr);
+}
+
+bool CoreState::applyPatchJson(const String &payload, String *error) {
+  if (error != nullptr) {
+    error->clear();
+  }
+
   JsonDocument doc;
   if (deserializeJson(doc, payload)) {
+    if (error != nullptr) {
+      *error = "invalid_json";
+    }
     return false;
   }
 
   const JsonObjectConst root = doc.as<JsonObjectConst>();
+  if (root.isNull()) {
+    if (error != nullptr) {
+      *error = "invalid_parameter";
+    }
+    return false;
+  }
 
   if (!lock()) {
     return false;

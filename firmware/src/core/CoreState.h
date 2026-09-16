@@ -37,4 +37,5 @@ struct CoreState {
   CoreState snapshot() const;
   String toJson() const;
   bool applyPatchJson(const String &payload);
+  bool applyPatchJson(const String &payload, String *error);
 };
