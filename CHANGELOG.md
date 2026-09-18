@@ -13,6 +13,7 @@ The format is based on Keep a Changelog.
 - F1 API contract schemas for state, network, GPIO, microphone, general configuration and synchronization in `/api/v1/openapi.json`.
 - Complete F1 API contract coverage for effects, palettes, profiles, diagnostics, metrics and full configuration import/export.
 - Stable external-client examples and response envelope documentation in `docs/wiki/API-v1.md`.
+- Complete importable Postman collection for all API v1 routes and F2 parity preparation in `docs/postman/DUXMAN-LED-API-F1.postman_collection.json`.
 - mDNS service advertisement for sync discoverability: `_ddp._udp` (LedFx), `_e131._udp`, `_duxsync._udp`, `_http._tcp`.
 - Shared `EffectCanvas1D` layer for reusable per-output 1D rendering primitives (clear/set/get/add/fade/blur/flush).
 
