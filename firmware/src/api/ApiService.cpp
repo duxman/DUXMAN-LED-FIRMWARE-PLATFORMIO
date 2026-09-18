@@ -95,6 +95,37 @@ String normalizeJsonPayload(const String &rawPayload) {
   return payload;
 }
 
+void addJsonResponse(JsonObject operation, int status, const char *description,
+                     const char *schemaRef) {
+  JsonObject response = operation["responses"][String(status)].to<JsonObject>();
+  response["description"] = description;
+  if (schemaRef != nullptr) {
+    response["content"]["application/json"]["schema"]["$ref"] = schemaRef;
+  }
+}
+
+String withOkFlag(const String &rawResponse) {
+  JsonDocument doc;
+  if (deserializeJson(doc, rawResponse)) {
+    return rawResponse;
+  }
+  JsonObject root = doc.as<JsonObject>();
+  if (root.isNull()) {
+    return rawResponse;
+  }
+  root["ok"] = true;
+  String response;
+  serializeJson(doc, response);
+  return response;
+}
+
+String errorResponse(const char *code) {
+  String response = "{\"ok\":false,\"error\":\"";
+  response += code;
+  response += "\"}";
+  return response;
+}
+
 String buildGeneralPayloadFromRoot(const JsonObjectConst &root) {
   JsonDocument payloadDoc;
   JsonObject general = payloadDoc["general"].to<JsonObject>();
@@ -1039,7 +1070,7 @@ void ApiService::setupHttpRoutes() {
 
   httpServer_.on("/api/v1/metrics/reset", HTTP_POST, [this]() {
     gRenderMetrics.reset();
-    httpServer_.send(200, "application/json", "{\"reset\":true}");
+    httpServer_.send(200, "application/json", "{\"ok\":true,\"reset\":true}");
   });
 
   httpServer_.on("/api/v1/release", HTTP_GET, [this]() {
@@ -1187,17 +1218,14 @@ void ApiService::handleHttpStateRoute() {
   if (method == HTTP_PATCH || method == HTTP_POST) {
     const String payload = normalizeJsonPayload(httpServer_.arg("plain"));
     if (payload.isEmpty()) {
-      httpServer_.send(400, "application/json", "{\"error\":\"invalid_payload\"}");
+      httpServer_.send(400, "application/json", errorResponse("invalid_payload"));
       return;
     }
 
     String error;
     const bool changed = state_.applyPatchJson(payload, &error);
     if (!error.isEmpty()) {
-      String response = "{\"error\":\"";
-      response += error;
-      response += "\"}";
-      httpServer_.send(400, "application/json", response);
+      httpServer_.send(400, "application/json", errorResponse(error.c_str()));
       return;
     }
     if (changed) {
@@ -1208,11 +1236,11 @@ void ApiService::handleHttpStateRoute() {
     response += ",\"state\":";
     response += state_.toJson();
     response += "}";
-    httpServer_.send(200, "application/json", response);
+    httpServer_.send(200, "application/json", withOkFlag(response));
     return;
   }
 
-  httpServer_.send(405, "application/json", "{\"error\":\"method_not_allowed\"}");
+  httpServer_.send(405, "application/json", errorResponse("method_not_allowed"));
 }
 
 void ApiService::handleHttpNetworkRoute() {
@@ -1226,17 +1254,14 @@ void ApiService::handleHttpNetworkRoute() {
   if (method == HTTP_PATCH || method == HTTP_POST) {
     const String payload = normalizeJsonPayload(httpServer_.arg("plain"));
     if (payload.isEmpty()) {
-      httpServer_.send(400, "application/json", "{\"error\":\"invalid_payload\"}");
+      httpServer_.send(400, "application/json", errorResponse("invalid_payload"));
       return;
     }
 
     String error;
     const bool changed = networkConfig_.applyPatchJson(payload, &error);
     if (!error.isEmpty()) {
-      String response = "{\"error\":\"";
-      response += error;
-      response += "\"}";
-      httpServer_.send(400, "application/json", response);
+      httpServer_.send(400, "application/json", errorResponse(error.c_str()));
       return;
     }
 
@@ -1250,7 +1275,7 @@ void ApiService::handleHttpNetworkRoute() {
     response += ",\"network\":";
     response += networkConfig_.toJson();
     response += "}";
-    httpServer_.send(200, "application/json", response);
+    httpServer_.send(200, "application/json", withOkFlag(response));
 
     // Send HTTP response first to reduce client-side ERR_CONNECTION_RESET
     // when WiFi restarts after applying network settings.
@@ -1263,7 +1288,7 @@ void ApiService::handleHttpNetworkRoute() {
     return;
   }
 
-  httpServer_.send(405, "application/json", "{\"error\":\"method_not_allowed\"}");
+  httpServer_.send(405, "application/json", errorResponse("method_not_allowed"));
 }
 
 void ApiService::handleHttpMicrophoneRoute() {
@@ -1277,17 +1302,14 @@ void ApiService::handleHttpMicrophoneRoute() {
   if (method == HTTP_PATCH || method == HTTP_POST) {
     const String payload = httpServer_.arg("plain");
     if (payload.isEmpty()) {
-      httpServer_.send(400, "application/json", "{\"error\":\"invalid_payload\"}");
+      httpServer_.send(400, "application/json", errorResponse("invalid_payload"));
       return;
     }
 
     String error;
     const bool changed = microphoneConfig_.applyPatchJson(payload, &error);
     if (!error.isEmpty()) {
-      String response = "{\"error\":\"";
-      response += error;
-      response += "\"}";
-      httpServer_.send(400, "application/json", response);
+      httpServer_.send(400, "application/json", errorResponse(error.c_str()));
       return;
     }
 
@@ -1301,11 +1323,11 @@ void ApiService::handleHttpMicrophoneRoute() {
     { JsonDocument d; deserializeJson(d, microphoneConfig_.toJson()); responseDoc["microphone"] = d["microphone"]; }
     String response;
     serializeJson(responseDoc, response);
-    httpServer_.send(200, "application/json", response);
+    httpServer_.send(200, "application/json", withOkFlag(response));
     return;
   }
 
-  httpServer_.send(405, "application/json", "{\"error\":\"method_not_allowed\"}");
+  httpServer_.send(405, "application/json", errorResponse("method_not_allowed"));
 }
 
 void ApiService::handleHttpGpioRoute() {
@@ -1319,17 +1341,14 @@ void ApiService::handleHttpGpioRoute() {
   if (method == HTTP_PATCH || method == HTTP_POST) {
     const String payload = httpServer_.arg("plain");
     if (payload.isEmpty()) {
-      httpServer_.send(400, "application/json", "{\"error\":\"invalid_payload\"}");
+      httpServer_.send(400, "application/json", errorResponse("invalid_payload"));
       return;
     }
 
     String error;
     const bool changed = gpioConfig_.applyPatchJson(payload, &error);
     if (!error.isEmpty()) {
-      String response = "{\"error\":\"";
-      response += error;
-      response += "\"}";
-      httpServer_.send(400, "application/json", response);
+      httpServer_.send(400, "application/json", errorResponse(error.c_str()));
       return;
     }
 
@@ -1340,10 +1359,7 @@ void ApiService::handleHttpGpioRoute() {
     if (changed) {
       String syncError;
       if (!profileService_.syncDefaultProfileFromActiveConfig(&syncError)) {
-        String response = "{\"error\":\"";
-        response += syncError;
-        response += "\"}";
-        httpServer_.send(500, "application/json", response);
+        httpServer_.send(500, "application/json", errorResponse(syncError.c_str()));
         return;
       }
       profileService_.applyActiveConfig();
@@ -1354,11 +1370,11 @@ void ApiService::handleHttpGpioRoute() {
     response += ",\"gpio\":";
     response += gpioConfig_.toJson();
     response += "}";
-    httpServer_.send(200, "application/json", response);
+    httpServer_.send(200, "application/json", withOkFlag(response));
     return;
   }
 
-  httpServer_.send(405, "application/json", "{\"error\":\"method_not_allowed\"}");
+  httpServer_.send(405, "application/json", errorResponse("method_not_allowed"));
 }
 
 void ApiService::handleHttpProfilesRoute() {
@@ -1367,19 +1383,19 @@ void ApiService::handleHttpProfilesRoute() {
     return;
   }
 
-  httpServer_.send(405, "application/json", "{\"error\":\"method_not_allowed\"}");
+  httpServer_.send(405, "application/json", errorResponse("method_not_allowed"));
 }
 
 void ApiService::handleHttpProfilesSaveRoute() {
   const HTTPMethod method = httpServer_.method();
   if (method != HTTP_POST && method != HTTP_PATCH) {
-    httpServer_.send(405, "application/json", "{\"error\":\"method_not_allowed\"}");
+    httpServer_.send(405, "application/json", errorResponse("method_not_allowed"));
     return;
   }
 
   const String payload = httpServer_.arg("plain");
   if (payload.isEmpty()) {
-    httpServer_.send(400, "application/json", "{\"error\":\"invalid_payload\"}");
+    httpServer_.send(400, "application/json", errorResponse("invalid_payload"));
     return;
   }
 
@@ -1389,23 +1405,23 @@ void ApiService::handleHttpProfilesSaveRoute() {
     String out = "{\"error\":\"";
     out += error;
     out += "\"}";
-    httpServer_.send(400, "application/json", out);
+    httpServer_.send(400, "application/json", errorResponse(error.c_str()));
     return;
   }
 
-  httpServer_.send(200, "application/json", response);
+  httpServer_.send(200, "application/json", withOkFlag(response));
 }
 
 void ApiService::handleHttpProfilesApplyRoute() {
   const HTTPMethod method = httpServer_.method();
   if (method != HTTP_POST && method != HTTP_PATCH) {
-    httpServer_.send(405, "application/json", "{\"error\":\"method_not_allowed\"}");
+    httpServer_.send(405, "application/json", errorResponse("method_not_allowed"));
     return;
   }
 
   const String payload = httpServer_.arg("plain");
   if (payload.isEmpty()) {
-    httpServer_.send(400, "application/json", "{\"error\":\"invalid_payload\"}");
+    httpServer_.send(400, "application/json", errorResponse("invalid_payload"));
     return;
   }
 
@@ -1415,23 +1431,23 @@ void ApiService::handleHttpProfilesApplyRoute() {
     String out = "{\"error\":\"";
     out += error;
     out += "\"}";
-    httpServer_.send(400, "application/json", out);
+    httpServer_.send(400, "application/json", errorResponse(error.c_str()));
     return;
   }
 
-  httpServer_.send(200, "application/json", response);
+  httpServer_.send(200, "application/json", withOkFlag(response));
 }
 
 void ApiService::handleHttpProfilesDefaultRoute() {
   const HTTPMethod method = httpServer_.method();
   if (method != HTTP_POST && method != HTTP_PATCH) {
-    httpServer_.send(405, "application/json", "{\"error\":\"method_not_allowed\"}");
+    httpServer_.send(405, "application/json", errorResponse("method_not_allowed"));
     return;
   }
 
   const String payload = httpServer_.arg("plain");
   if (payload.isEmpty()) {
-    httpServer_.send(400, "application/json", "{\"error\":\"invalid_payload\"}");
+    httpServer_.send(400, "application/json", errorResponse("invalid_payload"));
     return;
   }
 
@@ -1441,23 +1457,23 @@ void ApiService::handleHttpProfilesDefaultRoute() {
     String out = "{\"error\":\"";
     out += error;
     out += "\"}";
-    httpServer_.send(400, "application/json", out);
+    httpServer_.send(400, "application/json", errorResponse(error.c_str()));
     return;
   }
 
-  httpServer_.send(200, "application/json", response);
+  httpServer_.send(200, "application/json", withOkFlag(response));
 }
 
 void ApiService::handleHttpProfilesDeleteRoute() {
   const HTTPMethod method = httpServer_.method();
   if (method != HTTP_POST && method != HTTP_PATCH) {
-    httpServer_.send(405, "application/json", "{\"error\":\"method_not_allowed\"}");
+    httpServer_.send(405, "application/json", errorResponse("method_not_allowed"));
     return;
   }
 
   const String payload = httpServer_.arg("plain");
   if (payload.isEmpty()) {
-    httpServer_.send(400, "application/json", "{\"error\":\"invalid_payload\"}");
+    httpServer_.send(400, "application/json", errorResponse("invalid_payload"));
     return;
   }
 
@@ -1467,23 +1483,23 @@ void ApiService::handleHttpProfilesDeleteRoute() {
     String out = "{\"error\":\"";
     out += error;
     out += "\"}";
-    httpServer_.send(400, "application/json", out);
+    httpServer_.send(400, "application/json", errorResponse(error.c_str()));
     return;
   }
 
-  httpServer_.send(200, "application/json", response);
+  httpServer_.send(200, "application/json", withOkFlag(response));
 }
 
 void ApiService::handleHttpProfilesCloneRoute() {
   const HTTPMethod method = httpServer_.method();
   if (method != HTTP_POST && method != HTTP_PATCH) {
-    httpServer_.send(405, "application/json", "{\"error\":\"method_not_allowed\"}");
+    httpServer_.send(405, "application/json", errorResponse("method_not_allowed"));
     return;
   }
 
   const String payload = httpServer_.arg("plain");
   if (payload.isEmpty()) {
-    httpServer_.send(400, "application/json", "{\"error\":\"invalid_payload\"}");
+    httpServer_.send(400, "application/json", errorResponse("invalid_payload"));
     return;
   }
 
@@ -1493,32 +1509,32 @@ void ApiService::handleHttpProfilesCloneRoute() {
     String out = "{\"error\":\"";
     out += error;
     out += "\"}";
-    httpServer_.send(400, "application/json", out);
+    httpServer_.send(400, "application/json", errorResponse(error.c_str()));
     return;
   }
 
-  httpServer_.send(200, "application/json", response);
+  httpServer_.send(200, "application/json", withOkFlag(response));
 }
 
 void ApiService::handleHttpProfilesGetRoute() {
   if (httpServer_.method() != HTTP_GET) {
-    httpServer_.send(405, "application/json", "{\"error\":\"method_not_allowed\"}");
+    httpServer_.send(405, "application/json", errorResponse("method_not_allowed"));
     return;
   }
 
   const String id = httpServer_.arg("id");
   if (id.isEmpty()) {
-    httpServer_.send(400, "application/json", "{\"error\":\"missing_id\"}");
+    httpServer_.send(400, "application/json", errorResponse("missing_id"));
     return;
   }
 
   const String response = profileService_.getProfileConfigJson(id);
   if (response.isEmpty()) {
-    httpServer_.send(404, "application/json", "{\"error\":\"profile_not_found\"}");
+    httpServer_.send(404, "application/json", errorResponse("profile_not_found"));
     return;
   }
 
-  httpServer_.send(200, "application/json", response);
+  httpServer_.send(200, "application/json", withOkFlag(response));
 }
 
 void ApiService::handleHttpEffectsRoute() {
@@ -1527,35 +1543,32 @@ void ApiService::handleHttpEffectsRoute() {
     return;
   }
 
-  httpServer_.send(405, "application/json", "{\"error\":\"method_not_allowed\"}");
+  httpServer_.send(405, "application/json", errorResponse("method_not_allowed"));
 }
 
 void ApiService::handleHttpEffectsStartupRoute() {
   const HTTPMethod method = httpServer_.method();
   if (method != HTTP_POST && method != HTTP_PATCH) {
-    httpServer_.send(405, "application/json", "{\"error\":\"method_not_allowed\"}");
+    httpServer_.send(405, "application/json", errorResponse("method_not_allowed"));
     return;
   }
 
   String error;
   if (!effectPersistenceService_.saveStartupFromCurrent(&error)) {
-    String response = "{\"error\":\"";
-    response += error;
-    response += "\"}";
-    httpServer_.send(500, "application/json", response);
+    httpServer_.send(500, "application/json", errorResponse(error.c_str()));
     return;
   }
 
   String response = "{\"saved\":true,\"effects\":";
   response += effectPersistenceService_.toJson();
   response += "}";
-  httpServer_.send(200, "application/json", response);
+  httpServer_.send(200, "application/json", withOkFlag(response));
 }
 
 void ApiService::handleHttpEffectsSequenceAddRoute() {
   const HTTPMethod method = httpServer_.method();
   if (method != HTTP_POST && method != HTTP_PATCH) {
-    httpServer_.send(405, "application/json", "{\"error\":\"method_not_allowed\"}");
+    httpServer_.send(405, "application/json", errorResponse("method_not_allowed"));
     return;
   }
 
@@ -1564,7 +1577,7 @@ void ApiService::handleHttpEffectsSequenceAddRoute() {
   if (!payload.isEmpty()) {
     JsonDocument doc;
     if (deserializeJson(doc, payload)) {
-      httpServer_.send(400, "application/json", "{\"error\":\"invalid_json\"}");
+      httpServer_.send(400, "application/json", errorResponse("invalid_json"));
       return;
     }
     durationSec = constrain(doc["durationSec"] | 30, 1, 3600);
@@ -1573,10 +1586,7 @@ void ApiService::handleHttpEffectsSequenceAddRoute() {
   uint16_t createdId = 0;
   String error;
   if (!effectPersistenceService_.addCurrentToSequence(durationSec, &createdId, &error)) {
-    String response = "{\"error\":\"";
-    response += error;
-    response += "\"}";
-    httpServer_.send(400, "application/json", response);
+    httpServer_.send(400, "application/json", errorResponse(error.c_str()));
     return;
   }
 
@@ -1585,13 +1595,13 @@ void ApiService::handleHttpEffectsSequenceAddRoute() {
   response += ",\"effects\":";
   response += effectPersistenceService_.toJson();
   response += "}";
-  httpServer_.send(200, "application/json", response);
+  httpServer_.send(200, "application/json", withOkFlag(response));
 }
 
 void ApiService::handleHttpEffectsSequenceDeleteRoute() {
   const HTTPMethod method = httpServer_.method();
   if (method != HTTP_POST && method != HTTP_PATCH) {
-    httpServer_.send(405, "application/json", "{\"error\":\"method_not_allowed\"}");
+    httpServer_.send(405, "application/json", errorResponse("method_not_allowed"));
     return;
   }
 
@@ -1603,29 +1613,26 @@ void ApiService::handleHttpEffectsSequenceDeleteRoute() {
 
   JsonDocument doc;
   if (deserializeJson(doc, payload)) {
-    httpServer_.send(400, "application/json", "{\"error\":\"invalid_json\"}");
+    httpServer_.send(400, "application/json", errorResponse("invalid_json"));
     return;
   }
 
   const uint16_t entryId = doc["id"] | 0;
   if (entryId == 0) {
-    httpServer_.send(400, "application/json", "{\"error\":\"invalid_id\"}");
+    httpServer_.send(400, "application/json", errorResponse("invalid_id"));
     return;
   }
 
   String error;
   if (!effectPersistenceService_.deleteSequenceEntry(entryId, &error)) {
-    String response = "{\"error\":\"";
-    response += error;
-    response += "\"}";
-    httpServer_.send(400, "application/json", response);
+    httpServer_.send(400, "application/json", errorResponse(error.c_str()));
     return;
   }
 
   String response = "{\"deleted\":true,\"effects\":";
   response += effectPersistenceService_.toJson();
   response += "}";
-  httpServer_.send(200, "application/json", response);
+  httpServer_.send(200, "application/json", withOkFlag(response));
 }
 
 void ApiService::handleHttpPalettesRoute() {
@@ -1634,13 +1641,13 @@ void ApiService::handleHttpPalettesRoute() {
     return;
   }
 
-  httpServer_.send(405, "application/json", "{\"error\":\"method_not_allowed\"}");
+  httpServer_.send(405, "application/json", errorResponse("method_not_allowed"));
 }
 
 void ApiService::handleHttpPalettesApplyRoute() {
   const HTTPMethod method = httpServer_.method();
   if (method != HTTP_POST && method != HTTP_PATCH) {
-    httpServer_.send(405, "application/json", "{\"error\":\"method_not_allowed\"}");
+    httpServer_.send(405, "application/json", errorResponse("method_not_allowed"));
     return;
   }
 
@@ -1652,7 +1659,7 @@ void ApiService::handleHttpPalettesApplyRoute() {
 
   JsonDocument input;
   if (deserializeJson(input, payload)) {
-    httpServer_.send(400, "application/json", "{\"error\":\"invalid_json\"}");
+    httpServer_.send(400, "application/json", errorResponse("invalid_json"));
     return;
   }
 
@@ -1663,7 +1670,7 @@ void ApiService::handleHttpPalettesApplyRoute() {
   } else if (!input["palette"].isNull()) {
     root["palette"] = input["palette"];
   } else {
-    httpServer_.send(400, "application/json", "{\"error\":\"missing_palette\"}");
+    httpServer_.send(400, "application/json", errorResponse("missing_palette"));
     return;
   }
 
@@ -1679,12 +1686,12 @@ void ApiService::handleHttpPalettesApplyRoute() {
   response += ",\"state\":";
   response += state_.toJson();
   response += "}";
-  httpServer_.send(200, "application/json", response);
+  httpServer_.send(200, "application/json", withOkFlag(response));
 }
 
 void ApiService::handleHttpPalettesSaveRoute() {
   if (httpServer_.method() != HTTP_POST) {
-    httpServer_.send(405, "application/json", "{\"error\":\"method_not_allowed\"}");
+    httpServer_.send(405, "application/json", errorResponse("method_not_allowed"));
     return;
   }
 
@@ -1698,18 +1705,15 @@ void ApiService::handleHttpPalettesSaveRoute() {
   String error;
   const bool ok = userPaletteService_.saveFromJson(payload, &response, &error);
   if (!ok) {
-    String errJson = "{\"error\":\"";
-    errJson += error;
-    errJson += "\"}";
-    httpServer_.send(400, "application/json", errJson);
+    httpServer_.send(400, "application/json", errorResponse(error.c_str()));
     return;
   }
-  httpServer_.send(200, "application/json", response.isEmpty() ? "{\"saved\":true}" : response);
+  httpServer_.send(200, "application/json", withOkFlag(response.isEmpty() ? "{\"saved\":true}" : response));
 }
 
 void ApiService::handleHttpPalettesDeleteRoute() {
   if (httpServer_.method() != HTTP_POST) {
-    httpServer_.send(405, "application/json", "{\"error\":\"method_not_allowed\"}");
+    httpServer_.send(405, "application/json", errorResponse("method_not_allowed"));
     return;
   }
 
@@ -1723,23 +1727,20 @@ void ApiService::handleHttpPalettesDeleteRoute() {
   String error;
   const bool ok = userPaletteService_.deleteFromJson(payload, &response, &error);
   if (!ok) {
-    String errJson = "{\"error\":\"";
-    errJson += error;
-    errJson += "\"}";
-    httpServer_.send(400, "application/json", errJson);
+    httpServer_.send(400, "application/json", errorResponse(error.c_str()));
     return;
   }
-  httpServer_.send(200, "application/json", response.isEmpty() ? "{\"deleted\":true}" : response);
+  httpServer_.send(200, "application/json", withOkFlag(response.isEmpty() ? "{\"deleted\":true}" : response));
 }
 
 void ApiService::handleHttpRestartRoute() {
   const HTTPMethod method = httpServer_.method();
   if (method != HTTP_POST && method != HTTP_PATCH) {
-    httpServer_.send(405, "application/json", "{\"error\":\"method_not_allowed\"}");
+    httpServer_.send(405, "application/json", errorResponse("method_not_allowed"));
     return;
   }
 
-  httpServer_.send(200, "application/json", "{\"restart\":true}");
+  httpServer_.send(200, "application/json", "{\"ok\":true,\"restart\":true}");
   delay(150);
   ESP.restart();
 }
@@ -1753,20 +1754,20 @@ void ApiService::handleHttpDebugRoute() {
     response += ",\"heartbeatMs\":";
     response += generalConfig_.heartbeatMs;
     response += "}}";
-    httpServer_.send(200, "application/json", response);
+    httpServer_.send(200, "application/json", withOkFlag(response));
     return;
   }
 
   if (method == HTTP_PATCH || method == HTTP_POST) {
     const String payload = normalizeJsonPayload(httpServer_.arg("plain"));
     if (payload.isEmpty()) {
-      httpServer_.send(400, "application/json", "{\"error\":\"invalid_payload\"}");
+      httpServer_.send(400, "application/json", errorResponse("invalid_payload"));
       return;
     }
 
     JsonDocument requestDoc;
     if (deserializeJson(requestDoc, payload)) {
-      httpServer_.send(400, "application/json", "{\"error\":\"invalid_json\"}");
+      httpServer_.send(400, "application/json", errorResponse("invalid_json"));
       return;
     }
 
@@ -1775,10 +1776,7 @@ void ApiService::handleHttpDebugRoute() {
     String error;
     const bool changed = generalConfig_.applyPatchJson(generalPayload, &error);
     if (!error.isEmpty()) {
-      String response = "{\"error\":\"";
-      response += error;
-      response += "\"}";
-      httpServer_.send(400, "application/json", response);
+      httpServer_.send(400, "application/json", errorResponse(error.c_str()));
       return;
     }
 
@@ -1793,11 +1791,11 @@ void ApiService::handleHttpDebugRoute() {
     response += ",\"heartbeatMs\":";
     response += generalConfig_.heartbeatMs;
     response += "}}";
-    httpServer_.send(200, "application/json", response);
+    httpServer_.send(200, "application/json", withOkFlag(response));
     return;
   }
 
-  httpServer_.send(405, "application/json", "{\"error\":\"method_not_allowed\"}");
+  httpServer_.send(405, "application/json", errorResponse("method_not_allowed"));
 }
 
 void ApiService::handleHttpGeneralRoute() {
@@ -1813,24 +1811,21 @@ void ApiService::handleHttpGeneralRoute() {
     response += ",\"heartbeatMs\":";
     response += generalConfig_.heartbeatMs;
     response += "}}";
-    httpServer_.send(200, "application/json", response);
+    httpServer_.send(200, "application/json", withOkFlag(response));
     return;
   }
 
   if (method == HTTP_PATCH || method == HTTP_POST) {
     const String payload = httpServer_.arg("plain");
     if (payload.isEmpty()) {
-      httpServer_.send(400, "application/json", "{\"error\":\"invalid_payload\"}");
+      httpServer_.send(400, "application/json", errorResponse("invalid_payload"));
       return;
     }
 
     String error;
     const bool changed = generalConfig_.applyPatchJson(payload, &error);
     if (!error.isEmpty()) {
-      String response = "{\"error\":\"";
-      response += error;
-      response += "\"}";
-      httpServer_.send(400, "application/json", response);
+      httpServer_.send(400, "application/json", errorResponse(error.c_str()));
       return;
     }
 
@@ -1849,16 +1844,16 @@ void ApiService::handleHttpGeneralRoute() {
     response += ",\"heartbeatMs\":";
     response += generalConfig_.heartbeatMs;
     response += "}}";
-    httpServer_.send(200, "application/json", response);
+    httpServer_.send(200, "application/json", withOkFlag(response));
     return;
   }
 
-  httpServer_.send(405, "application/json", "{\"error\":\"method_not_allowed\"}");
+  httpServer_.send(405, "application/json", errorResponse("method_not_allowed"));
 }
 
 void ApiService::handleHttpSyncStateRoute() {
   if (httpServer_.method() != HTTP_GET) {
-    httpServer_.send(405, "application/json", "{\"error\":\"method_not_allowed\"}");
+    httpServer_.send(405, "application/json", errorResponse("method_not_allowed"));
     return;
   }
 
@@ -1867,7 +1862,7 @@ void ApiService::handleHttpSyncStateRoute() {
 
 void ApiService::handleHttpSyncConnectionRoute() {
   if (httpServer_.method() != HTTP_GET) {
-    httpServer_.send(405, "application/json", "{\"error\":\"method_not_allowed\"}");
+    httpServer_.send(405, "application/json", errorResponse("method_not_allowed"));
     return;
   }
 
@@ -1885,7 +1880,7 @@ void ApiService::handleHttpSyncConfigRoute() {
   if (method == HTTP_PATCH || method == HTTP_POST) {
     const String payload = normalizeJsonPayload(httpServer_.arg("plain"));
     if (payload.isEmpty()) {
-      httpServer_.send(400, "application/json", "{\"error\":\"invalid_payload\"}");
+      httpServer_.send(400, "application/json", errorResponse("invalid_payload"));
       return;
     }
 
@@ -1893,10 +1888,7 @@ void ApiService::handleHttpSyncConfigRoute() {
     bool changed = false;
     const bool ok = syncService_.applyConfigPatch(payload, &changed, &error);
     if (!ok || !error.isEmpty()) {
-      String response = "{\"error\":\"";
-      response += error;
-      response += "\"}";
-      httpServer_.send(400, "application/json", response);
+      httpServer_.send(400, "application/json", errorResponse(error.c_str()));
       return;
     }
 
@@ -1909,17 +1901,17 @@ void ApiService::handleHttpSyncConfigRoute() {
     response += ",\"state\":";
     response += syncService_.buildStateJson();
     response += '}';
-    httpServer_.send(200, "application/json", response);
+    httpServer_.send(200, "application/json", withOkFlag(response));
     return;
   }
 
-  httpServer_.send(405, "application/json", "{\"error\":\"method_not_allowed\"}");
+  httpServer_.send(405, "application/json", errorResponse("method_not_allowed"));
 }
 
 void ApiService::handleHttpSyncModeRoute() {
   const HTTPMethod method = httpServer_.method();
   if (method != HTTP_PATCH && method != HTTP_POST) {
-    httpServer_.send(405, "application/json", "{\"error\":\"method_not_allowed\"}");
+    httpServer_.send(405, "application/json", errorResponse("method_not_allowed"));
     return;
   }
 
@@ -1944,17 +1936,14 @@ void ApiService::handleHttpSyncModeRoute() {
   }
 
   if (mode.isEmpty()) {
-    httpServer_.send(400, "application/json", "{\"error\":\"missing_mode\"}");
+    httpServer_.send(400, "application/json", errorResponse("missing_mode"));
     return;
   }
 
   String error;
   const bool changed = syncService_.setMode(mode, &error);
   if (!error.isEmpty()) {
-    String response = "{\"error\":\"";
-    response += error;
-    response += "\"}";
-    httpServer_.send(400, "application/json", response);
+    httpServer_.send(400, "application/json", errorResponse(error.c_str()));
     return;
   }
 
@@ -1967,13 +1956,13 @@ void ApiService::handleHttpSyncModeRoute() {
   response += ",\"mode\":\"";
   response += syncConfig_.mode;
   response += "\"}";
-  httpServer_.send(200, "application/json", response);
+  httpServer_.send(200, "application/json", withOkFlag(response));
 }
 
 void ApiService::handleHttpDiagRoute() {
   // GET /api/v1/diag - System diagnostics (watchdog, uptime, memory)
   if (httpServer_.method() != HTTP_GET) {
-    httpServer_.send(405, "application/json", "{\"error\":\"method_not_allowed\"}");
+    httpServer_.send(405, "application/json", errorResponse("method_not_allowed"));
     return;
   }
 
@@ -2002,7 +1991,7 @@ void ApiService::handleHttpDiagRoute() {
 
   String response;
   serializeJson(doc, response);
-  httpServer_.send(200, "application/json", response);
+  httpServer_.send(200, "application/json", withOkFlag(response));
 }
 
 String ApiService::buildFullConfigJson() const {
@@ -2039,13 +2028,13 @@ void ApiService::handleHttpConfigAllRoute() {
   if (method == HTTP_POST) {
     const String payload = normalizeJsonPayload(httpServer_.arg("plain"));
     if (payload.isEmpty()) {
-      httpServer_.send(400, "application/json", "{\"error\":\"invalid_payload\"}");
+      httpServer_.send(400, "application/json", errorResponse("invalid_payload"));
       return;
     }
 
     JsonDocument doc;
     if (deserializeJson(doc, payload)) {
-      httpServer_.send(400, "application/json", "{\"error\":\"invalid_json\"}");
+      httpServer_.send(400, "application/json", errorResponse("invalid_json"));
       return;
     }
 
@@ -2063,10 +2052,9 @@ void ApiService::handleHttpConfigAllRoute() {
     String error;
     netCandidate.applyPatchJson(netPayload, &error);
     if (!error.isEmpty()) {
-      String response = "{\"error\":\"network_";
-      response += error;
-      response += "\"}";
-      httpServer_.send(400, "application/json", response);
+      String code = "network_";
+      code += error;
+      httpServer_.send(400, "application/json", errorResponse(code.c_str()));
       return;
     }
 
@@ -2074,10 +2062,9 @@ void ApiService::handleHttpConfigAllRoute() {
     { JsonDocument d; d["gpio"] = root["gpio"]; serializeJson(d, gpioPayload); }
     gpioCandidate.applyPatchJson(gpioPayload, &error);
     if (!error.isEmpty()) {
-      String response = "{\"error\":\"gpio_";
-      response += error;
-      response += "\"}";
-      httpServer_.send(400, "application/json", response);
+      String code = "gpio_";
+      code += error;
+      httpServer_.send(400, "application/json", errorResponse(code.c_str()));
       return;
     }
 
@@ -2085,20 +2072,18 @@ void ApiService::handleHttpConfigAllRoute() {
     { JsonDocument d; d["microphone"] = root["microphone"]; serializeJson(d, micPayload); }
     micCandidate.applyPatchJson(micPayload, &error);
     if (!error.isEmpty()) {
-      String response = "{\"error\":\"microphone_";
-      response += error;
-      response += "\"}";
-      httpServer_.send(400, "application/json", response);
+      String code = "microphone_";
+      code += error;
+      httpServer_.send(400, "application/json", errorResponse(code.c_str()));
       return;
     }
 
     const String generalPayload = buildGeneralPayloadFromRoot(root);
     debugCandidate.applyPatchJson(generalPayload, &error);
     if (!error.isEmpty()) {
-      String response = "{\"error\":\"general_";
-      response += error;
-      response += "\"}";
-      httpServer_.send(400, "application/json", response);
+      String code = "general_";
+      code += error;
+      httpServer_.send(400, "application/json", errorResponse(code.c_str()));
       return;
     }
 
@@ -2106,10 +2091,9 @@ void ApiService::handleHttpConfigAllRoute() {
     { JsonDocument d; d["sync"] = root["sync"]; serializeJson(d, syncPayload); }
     syncCandidate.applyPatchJson(syncPayload, &error);
     if (!error.isEmpty()) {
-      String response = "{\"error\":\"sync_";
-      response += error;
-      response += "\"}";
-      httpServer_.send(400, "application/json", response);
+      String code = "sync_";
+      code += error;
+      httpServer_.send(400, "application/json", errorResponse(code.c_str()));
       return;
     }
 
@@ -2125,17 +2109,14 @@ void ApiService::handleHttpConfigAllRoute() {
 
     String syncError;
     if (!profileService_.syncDefaultProfileFromActiveConfig(&syncError)) {
-      String response = "{\"error\":\"";
-      response += syncError;
-      response += "\"}";
-      httpServer_.send(500, "application/json", response);
+      httpServer_.send(500, "application/json", errorResponse(syncError.c_str()));
       return;
     }
 
     String response = "{\"imported\":true,\"config\":";
     response += buildFullConfigJson();
     response += "}";
-    httpServer_.send(200, "application/json", response);
+    httpServer_.send(200, "application/json", withOkFlag(response));
 
     // Apply runtime changes after the HTTP response to avoid resetting
     // the client connection while config import is being acknowledged.
@@ -2147,7 +2128,7 @@ void ApiService::handleHttpConfigAllRoute() {
     return;
   }
 
-  httpServer_.send(405, "application/json", "{\"error\":\"method_not_allowed\"}");
+  httpServer_.send(405, "application/json", errorResponse("method_not_allowed"));
 }
 
 void ApiService::handleHttpHardwareRoute() {
@@ -2156,7 +2137,7 @@ void ApiService::handleHttpHardwareRoute() {
     return;
   }
 
-  httpServer_.send(405, "application/json", "{\"error\":\"method_not_allowed\"}");
+  httpServer_.send(405, "application/json", errorResponse("method_not_allowed"));
 }
 
 void ApiService::handleHttpMetricsRoute() {
@@ -2165,7 +2146,7 @@ void ApiService::handleHttpMetricsRoute() {
     return;
   }
 
-  httpServer_.send(405, "application/json", "{\"error\":\"method_not_allowed\"}");
+  httpServer_.send(405, "application/json", errorResponse("method_not_allowed"));
 }
 
 String ApiService::buildOpenApiJson() const {
@@ -2214,17 +2195,57 @@ String ApiService::buildOpenApiJson() const {
   stateProperties["reactiveToAudio"]["type"] = "boolean";
 
   JsonObject statePatch = schemas["StatePatch"].to<JsonObject>();
-  statePatch["allOf"][0]["$ref"] = "#/components/schemas/State";
+  statePatch["type"] = "object";
+  statePatch["properties"]["power"]["type"] = "boolean";
+  statePatch["properties"]["brightness"]["type"] = "integer";
+  statePatch["properties"]["brightness"]["minimum"] = 0;
+  statePatch["properties"]["brightness"]["maximum"] = 255;
+  statePatch["properties"]["effectId"]["type"] = "integer";
+  statePatch["properties"]["effectId"]["minimum"] = 0;
+  statePatch["properties"]["effectId"]["maximum"] = 255;
+  statePatch["properties"]["effect"]["type"] = "string";
+  statePatch["properties"]["sectionCount"]["type"] = "integer";
+  statePatch["properties"]["sectionCount"]["minimum"] = 1;
+  statePatch["properties"]["sectionCount"]["maximum"] = 10;
+  statePatch["properties"]["effectSpeed"]["type"] = "integer";
+  statePatch["properties"]["effectSpeed"]["minimum"] = 1;
+  statePatch["properties"]["effectSpeed"]["maximum"] = 100;
+  statePatch["properties"]["effectLevel"]["type"] = "integer";
+  statePatch["properties"]["effectLevel"]["minimum"] = 1;
+  statePatch["properties"]["effectLevel"]["maximum"] = 10;
+  statePatch["properties"]["effectTransitionMs"]["type"] = "integer";
+  statePatch["properties"]["effectTransitionMs"]["minimum"] = 0;
+  statePatch["properties"]["effectTransitionMs"]["maximum"] = 1500;
+  statePatch["properties"]["effectTransitionStyle"]["type"] = "string";
+  statePatch["properties"]["effectTransitionStyle"]["enum"][0] = "fade";
+  statePatch["properties"]["effectTransitionStyle"]["enum"][1] = "wipe";
+  statePatch["properties"]["paletteId"]["type"] = "integer";
+  statePatch["properties"]["palette"]["type"] = "string";
+  statePatch["properties"]["primaryColors"]["type"] = "array";
+  statePatch["properties"]["primaryColors"]["minItems"] = 3;
+  statePatch["properties"]["primaryColors"]["maxItems"] = 3;
+  statePatch["properties"]["primaryColors"]["items"]["type"] = "string";
+  statePatch["properties"]["backgroundColor"]["type"] = "string";
   statePatch["description"] = "Parcial: solo se aplican los campos enviados.";
 
   JsonObject stateResponse = schemas["StateResponse"].to<JsonObject>();
   stateResponse["type"] = "object";
+  stateResponse["required"][0] = "ok";
+  stateResponse["properties"]["ok"]["type"] = "boolean";
   stateResponse["properties"]["updated"]["type"] = "boolean";
   stateResponse["properties"]["state"]["$ref"] = "#/components/schemas/State";
+
+  JsonObject mutationResponse = schemas["MutationResponse"].to<JsonObject>();
+  mutationResponse["type"] = "object";
+  mutationResponse["required"][0] = "ok";
+  mutationResponse["properties"]["ok"]["type"] = "boolean";
+  mutationResponse["properties"]["updated"]["type"] = "boolean";
+  mutationResponse["properties"]["message"]["type"] = "string";
 
   JsonObject errorResponse = schemas["ErrorResponse"].to<JsonObject>();
   errorResponse["type"] = "object";
   errorResponse["required"][0] = "error";
+  errorResponse["properties"]["ok"]["type"] = "boolean";
   errorResponse["properties"]["error"]["type"] = "string";
   errorResponse["properties"]["error"]["enum"][0] = "invalid_payload";
   errorResponse["properties"]["error"]["enum"][1] = "invalid_json";
@@ -2720,6 +2741,70 @@ String ApiService::buildOpenApiJson() const {
   syncModePath["post"]["summary"] = "Alias de PATCH para cambio de modo";
   syncModePath["post"]["requestBody"] = syncModePath["patch"]["requestBody"];
   syncModePath["post"]["responses"] = syncModePath["patch"]["responses"];
+
+  JsonObject effectsPath = paths["/api/v1/effects"].to<JsonObject>();
+  effectsPath["get"]["summary"] = "Listar catalogo, efecto de arranque y secuencia";
+  addJsonResponse(effectsPath["get"].to<JsonObject>(), 200, "Catalogo de efectos y persistencia", nullptr);
+
+  JsonObject startupPath = paths["/api/v1/effects/startup/save"].to<JsonObject>();
+  startupPath["post"]["summary"] = "Guardar el estado actual como efecto de arranque";
+  startupPath["patch"]["summary"] = "Alias de POST para guardar el efecto de arranque";
+  addJsonResponse(startupPath["post"].to<JsonObject>(), 200, "Efecto de arranque guardado", "#/components/schemas/MutationResponse");
+  addJsonResponse(startupPath["patch"].to<JsonObject>(), 200, "Efecto de arranque guardado", "#/components/schemas/MutationResponse");
+
+  JsonObject sequenceAddPath = paths["/api/v1/effects/sequence/add"].to<JsonObject>();
+  sequenceAddPath["post"]["summary"] = "Añadir el estado actual a la secuencia";
+  sequenceAddPath["patch"]["summary"] = "Alias de POST para añadir a la secuencia";
+  addJsonResponse(sequenceAddPath["post"].to<JsonObject>(), 200, "Entrada añadida", "#/components/schemas/MutationResponse");
+  addJsonResponse(sequenceAddPath["patch"].to<JsonObject>(), 200, "Entrada añadida", "#/components/schemas/MutationResponse");
+
+  JsonObject sequenceDeletePath = paths["/api/v1/effects/sequence/delete"].to<JsonObject>();
+  sequenceDeletePath["post"]["summary"] = "Eliminar una entrada de la secuencia";
+  sequenceDeletePath["patch"]["summary"] = "Alias de POST para eliminar una entrada";
+  addJsonResponse(sequenceDeletePath["post"].to<JsonObject>(), 200, "Entrada eliminada", "#/components/schemas/MutationResponse");
+  addJsonResponse(sequenceDeletePath["patch"].to<JsonObject>(), 200, "Entrada eliminada", "#/components/schemas/MutationResponse");
+
+  addJsonResponse(palettesPath["get"].to<JsonObject>(), 200, "Catalogo de paletas", nullptr);
+  palettesApplyPath["post"]["requestBody"]["required"] = true;
+  palettesApplyPath["post"]["requestBody"]["content"]["application/json"]["schema"]["$ref"] = "#/components/schemas/StatePatch";
+  palettesApplyPath["patch"]["requestBody"] = palettesApplyPath["post"]["requestBody"];
+  addJsonResponse(palettesApplyPath["post"].to<JsonObject>(), 200, "Paleta aplicada", "#/components/schemas/StateResponse");
+  addJsonResponse(palettesApplyPath["patch"].to<JsonObject>(), 200, "Paleta aplicada", "#/components/schemas/StateResponse");
+
+  JsonObject palettesSavePath = paths["/api/v1/palettes/save"].to<JsonObject>();
+  palettesSavePath["post"]["summary"] = "Guardar o editar una paleta de usuario";
+  palettesSavePath["patch"]["summary"] = "Alias de POST para guardar una paleta";
+  addJsonResponse(palettesSavePath["post"].to<JsonObject>(), 200, "Paleta guardada", "#/components/schemas/MutationResponse");
+  addJsonResponse(palettesSavePath["patch"].to<JsonObject>(), 200, "Paleta guardada", "#/components/schemas/MutationResponse");
+
+  JsonObject palettesDeletePath = paths["/api/v1/palettes/delete"].to<JsonObject>();
+  palettesDeletePath["post"]["summary"] = "Eliminar una paleta de usuario";
+  palettesDeletePath["patch"]["summary"] = "Alias de POST para eliminar una paleta";
+  addJsonResponse(palettesDeletePath["post"].to<JsonObject>(), 200, "Paleta eliminada", "#/components/schemas/MutationResponse");
+  addJsonResponse(palettesDeletePath["patch"].to<JsonObject>(), 200, "Paleta eliminada", "#/components/schemas/MutationResponse");
+
+  addJsonResponse(restartPath["post"].to<JsonObject>(), 200, "Reinicio solicitado", "#/components/schemas/MutationResponse");
+  addJsonResponse(restartPath["patch"].to<JsonObject>(), 200, "Reinicio solicitado", "#/components/schemas/MutationResponse");
+  JsonObject diagPath = paths["/api/v1/diag"].to<JsonObject>();
+  diagPath["get"]["summary"] = "Obtener diagnostico de memoria y sistema";
+  addJsonResponse(diagPath["get"].to<JsonObject>(), 200, "Diagnostico actual", nullptr);
+  JsonObject metricsPath = paths["/api/v1/metrics"].to<JsonObject>();
+  metricsPath["get"]["summary"] = "Obtener metricas de render";
+  addJsonResponse(metricsPath["get"].to<JsonObject>(), 200, "Metricas actuales", nullptr);
+  JsonObject metricsResetPath = paths["/api/v1/metrics/reset"].to<JsonObject>();
+  metricsResetPath["post"]["summary"] = "Restablecer metricas de render";
+  addJsonResponse(metricsResetPath["post"].to<JsonObject>(), 200, "Metricas restablecidas", "#/components/schemas/MutationResponse");
+  addJsonResponse(releasePath["get"].to<JsonObject>(), 200, "Metadatos de release", nullptr);
+  addJsonResponse(hardwarePath["get"].to<JsonObject>(), 200, "Capacidades de hardware", nullptr);
+
+  profilesGetPath["get"]["parameters"][0]["name"] = "id";
+  profilesGetPath["get"]["parameters"][0]["in"] = "query";
+  profilesGetPath["get"]["parameters"][0]["required"] = true;
+  profilesGetPath["get"]["parameters"][0]["schema"]["type"] = "string";
+  addJsonResponse(profilesPath["get"].to<JsonObject>(), 200, "Perfiles disponibles", nullptr);
+  addJsonResponse(profilesGetPath["get"].to<JsonObject>(), 200, "Perfil solicitado", nullptr);
+  addJsonResponse(configAllPath["get"].to<JsonObject>(), 200, "Configuracion completa", nullptr);
+  addJsonResponse(configAllPath["post"].to<JsonObject>(), 200, "Configuracion importada", "#/components/schemas/MutationResponse");
 
   JsonObject configManualUiPath = paths["/config/manual"].to<JsonObject>();
   configManualUiPath["get"]["summary"] = "UI de edicion manual de configuracion";
