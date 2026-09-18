@@ -57,6 +57,9 @@ Controlador LED modular para ESP32 con efectos visuales/audio, API REST/Serial y
 - `CoreState` valida tipos, rangos, catalogos de efectos/paletas, estilos de
 	transicion y colores antes de modificar el estado.
 - Guia API y ejemplos para clientes externos publicados en la wiki del proyecto.
+- Coleccion Postman completa en `docs/postman/DUXMAN-LED-API-F1.postman_collection.json`,
+  con cobertura de todas las rutas API v1, aliases de mutacion y validacion de
+  errores. La guia de uso esta en `docs/postman/README.md`.
 - Validacion de compilacion confirmada para `esp32dev` con PlatformIO.
 
 El siguiente trabajo funcional es F2: pruebas de paridad entre las acciones de

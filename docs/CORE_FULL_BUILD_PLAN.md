@@ -454,6 +454,13 @@ Convertir la API existente en un contrato estable para clientes externos.
 
 Demostrar que la API puede sustituir todas las acciones de la UI actual.
 
+### Herramienta de prueba
+
+- Coleccion Postman: [DUXMAN-LED-API-F1.postman_collection.json](postman/DUXMAN-LED-API-F1.postman_collection.json)
+- Guia de uso: [docs/postman/README.md](postman/README.md)
+- La coleccion cubre descubrimiento, estado, efectos, paletas, secuencias,
+  configuracion, diagnostico y validacion de errores.
+
 ### Tareas
 
 - [ ] Probar encendido y apagado.

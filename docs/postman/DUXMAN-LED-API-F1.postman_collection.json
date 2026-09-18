@@ -1,0 +1,286 @@
+{
+  "info": {
+    "_postman_id": "f1d6b5f0-1d54-4e0d-8a3a-duxmanledapi01",
+    "name": "DUXMAN LED API - F1 Contract - Full API",
+    "description": "Coleccion Postman completa para validar todas las rutas del contrato API v1 y preparar las pruebas de paridad F2. Importar y configurar baseUrl con la IP del dispositivo.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "http://192.168.4.1", "type": "string" },
+    { "key": "effect", "value": "lava_flow", "type": "string" },
+    { "key": "palette", "value": "sunset_drive", "type": "string" },
+    { "key": "profileId", "value": "test_profile", "type": "string" },
+    { "key": "sourceProfileId", "value": "default", "type": "string" },
+    { "key": "cloneProfileId", "value": "postman_clone", "type": "string" },
+    { "key": "sequenceEntryId", "value": "1", "type": "string" },
+    { "key": "savedPaletteKey", "value": "postman_test_palette", "type": "string" }
+  ],
+  "item": [
+    {
+      "name": "00 - Descubrimiento",
+      "item": [
+        {
+          "name": "OpenAPI",
+          "request": { "method": "GET", "header": [], "url": { "raw": "{{baseUrl}}/api/v1/openapi.json", "host": ["{{baseUrl}}"], "path": ["api", "v1", "openapi.json"] } },
+          "event": [{ "listen": "test", "script": { "exec": ["pm.test('HTTP 200', function () { pm.response.to.have.status(200); });", "pm.test('OpenAPI document is present', function () { pm.expect(pm.response.json().openapi).to.be.a('string'); });"] } }]
+        },
+        {
+          "name": "Estado actual",
+          "request": { "method": "GET", "header": [], "url": { "raw": "{{baseUrl}}/api/v1/state", "host": ["{{baseUrl}}"], "path": ["api", "v1", "state"] } },
+          "event": [{ "listen": "test", "script": { "exec": ["pm.test('HTTP 200', function () { pm.response.to.have.status(200); });", "pm.test('State is an object', function () { pm.expect(pm.response.json()).to.be.an('object'); });"] } }]
+        },
+        {
+          "name": "Catalogo de efectos",
+          "request": { "method": "GET", "header": [], "url": { "raw": "{{baseUrl}}/api/v1/effects", "host": ["{{baseUrl}}"], "path": ["api", "v1", "effects"] } },
+          "event": [{ "listen": "test", "script": { "exec": ["pm.test('HTTP 200', function () { pm.response.to.have.status(200); });"] } }]
+        },
+        {
+          "name": "Catalogo de paletas",
+          "request": { "method": "GET", "header": [], "url": { "raw": "{{baseUrl}}/api/v1/palettes", "host": ["{{baseUrl}}"], "path": ["api", "v1", "palettes"] } },
+          "event": [{ "listen": "test", "script": { "exec": ["pm.test('HTTP 200', function () { pm.response.to.have.status(200); });"] } }]
+        },
+        {
+          "name": "Hardware",
+          "request": { "method": "GET", "header": [], "url": { "raw": "{{baseUrl}}/api/v1/hardware", "host": ["{{baseUrl}}"], "path": ["api", "v1", "hardware"] } },
+          "event": [{ "listen": "test", "script": { "exec": ["pm.test('HTTP 200', function () { pm.response.to.have.status(200); });"] } }]
+        },
+        {
+          "name": "Release",
+          "request": { "method": "GET", "header": [], "url": { "raw": "{{baseUrl}}/api/v1/release", "host": ["{{baseUrl}}"], "path": ["api", "v1", "release"] } },
+          "event": [{ "listen": "test", "script": { "exec": ["pm.test('HTTP 200', function () { pm.response.to.have.status(200); });"] } }]
+        }
+      ]
+    },
+    {
+      "name": "01 - F2 Paridad home",
+      "item": [
+        {
+          "name": "Aplicar estado completo",
+          "request": { "method": "PATCH", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"power\": true,\n  \"brightness\": 180,\n  \"effect\": \"{{effect}}\",\n  \"sectionCount\": 4,\n  \"effectSpeed\": 60,\n  \"effectLevel\": 7,\n  \"effectTransitionMs\": 500,\n  \"effectTransitionStyle\": \"fade\",\n  \"primaryColors\": [\"#FF0000\", \"#00FF00\", \"#0000FF\"],\n  \"backgroundColor\": \"#000000\"\n}" }, "url": { "raw": "{{baseUrl}}/api/v1/state", "host": ["{{baseUrl}}"], "path": ["api", "v1", "state"] } },
+          "event": [{ "listen": "test", "script": { "exec": ["pm.test('HTTP 200', function () { pm.response.to.have.status(200); });", "const json = pm.response.json();", "pm.test('Mutation succeeded', function () { pm.expect(json.ok).to.eql(true); });", "pm.test('State response exists', function () { pm.expect(json.state).to.be.an('object'); });"] } }]
+        },
+        {
+          "name": "Aplicar estado sin cambios",
+          "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"brightness\": 180,\n  \"effect\": \"{{effect}}\"\n}" }, "url": { "raw": "{{baseUrl}}/api/v1/state", "host": ["{{baseUrl}}"], "path": ["api", "v1", "state"] } },
+          "event": [{ "listen": "test", "script": { "exec": ["pm.test('HTTP 200', function () { pm.response.to.have.status(200); });", "pm.test('Mutation envelope exists', function () { pm.expect(pm.response.json().ok).to.eql(true); });", "pm.test('updated is boolean', function () { pm.expect(pm.response.json().updated).to.be.a('boolean'); });"] } }]
+        },
+        {
+          "name": "Aplicar paleta",
+          "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"palette\": \"{{palette}}\"\n}" }, "url": { "raw": "{{baseUrl}}/api/v1/palettes/apply", "host": ["{{baseUrl}}"], "path": ["api", "v1", "palettes", "apply"] } },
+          "event": [{ "listen": "test", "script": { "exec": ["pm.test('HTTP 200', function () { pm.response.to.have.status(200); });", "pm.test('Mutation succeeded', function () { pm.expect(pm.response.json().ok).to.eql(true); });"] } }]
+        },
+        {
+          "name": "Guardar efecto de arranque",
+          "request": { "method": "POST", "header": [], "url": { "raw": "{{baseUrl}}/api/v1/effects/startup/save", "host": ["{{baseUrl}}"], "path": ["api", "v1", "effects", "startup", "save"] } },
+          "event": [{ "listen": "test", "script": { "exec": ["pm.test('HTTP 200', function () { pm.response.to.have.status(200); });", "pm.test('Mutation succeeded', function () { pm.expect(pm.response.json().ok).to.eql(true); });"] } }]
+        },
+        {
+          "name": "Anadir estado a secuencia",
+          "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"durationSec\": 30\n}" }, "url": { "raw": "{{baseUrl}}/api/v1/effects/sequence/add", "host": ["{{baseUrl}}"], "path": ["api", "v1", "effects", "sequence", "add"] } },
+          "event": [{ "listen": "test", "script": { "exec": ["pm.test('HTTP 200', function () { pm.response.to.have.status(200); });", "const json = pm.response.json();", "pm.test('Mutation succeeded', function () { pm.expect(json.ok).to.eql(true); });", "if (json.id) pm.collectionVariables.set('sequenceEntryId', String(json.id));"] } }]
+        },
+        {
+          "name": "Eliminar estado de secuencia",
+          "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"id\": {{sequenceEntryId}}\n}" }, "url": { "raw": "{{baseUrl}}/api/v1/effects/sequence/delete", "host": ["{{baseUrl}}"], "path": ["api", "v1", "effects", "sequence", "delete"] } },
+          "event": [{ "listen": "test", "script": { "exec": ["pm.test('HTTP 200', function () { pm.response.to.have.status(200); });", "pm.test('Mutation succeeded', function () { pm.expect(pm.response.json().ok).to.eql(true); });"] } }]
+        }
+      ]
+    },
+    {
+      "name": "02 - Configuracion y diagnostico",
+      "item": [
+        {
+          "name": "Configuracion de red",
+          "request": { "method": "GET", "header": [], "url": { "raw": "{{baseUrl}}/api/v1/config/network", "host": ["{{baseUrl}}"], "path": ["api", "v1", "config", "network"] } },
+          "event": [{ "listen": "test", "script": { "exec": ["pm.test('HTTP 200', function () { pm.response.to.have.status(200); });"] } }]
+        },
+        {
+          "name": "Configuracion GPIO",
+          "request": { "method": "GET", "header": [], "url": { "raw": "{{baseUrl}}/api/v1/config/gpio", "host": ["{{baseUrl}}"], "path": ["api", "v1", "config", "gpio"] } },
+          "event": [{ "listen": "test", "script": { "exec": ["pm.test('HTTP 200', function () { pm.response.to.have.status(200); });"] } }]
+        },
+        {
+          "name": "Configuracion de microfono",
+          "request": { "method": "GET", "header": [], "url": { "raw": "{{baseUrl}}/api/v1/config/microphone", "host": ["{{baseUrl}}"], "path": ["api", "v1", "config", "microphone"] } },
+          "event": [{ "listen": "test", "script": { "exec": ["pm.test('HTTP 200', function () { pm.response.to.have.status(200); });"] } }]
+        },
+        {
+          "name": "Configuracion general",
+          "request": { "method": "GET", "header": [], "url": { "raw": "{{baseUrl}}/api/v1/config/general", "host": ["{{baseUrl}}"], "path": ["api", "v1", "config", "general"] } },
+          "event": [{ "listen": "test", "script": { "exec": ["pm.test('HTTP 200', function () { pm.response.to.have.status(200); });"] } }]
+        },
+        {
+          "name": "Configuracion debug",
+          "request": { "method": "GET", "header": [], "url": { "raw": "{{baseUrl}}/api/v1/config/debug", "host": ["{{baseUrl}}"], "path": ["api", "v1", "config", "debug"] } },
+          "event": [{ "listen": "test", "script": { "exec": ["pm.test('HTTP 200', function () { pm.response.to.have.status(200); });"] } }]
+        },
+        {
+          "name": "Configuracion completa",
+          "request": { "method": "GET", "header": [], "url": { "raw": "{{baseUrl}}/api/v1/config/all", "host": ["{{baseUrl}}"], "path": ["api", "v1", "config", "all"] } },
+          "event": [{ "listen": "test", "script": { "exec": ["pm.test('HTTP 200', function () { pm.response.to.have.status(200); });"] } }]
+        },
+        {
+          "name": "Diagnostico",
+          "request": { "method": "GET", "header": [], "url": { "raw": "{{baseUrl}}/api/v1/diag", "host": ["{{baseUrl}}"], "path": ["api", "v1", "diag"] } },
+          "event": [{ "listen": "test", "script": { "exec": ["pm.test('HTTP 200', function () { pm.response.to.have.status(200); });"] } }]
+        },
+        {
+          "name": "Metricas",
+          "request": { "method": "GET", "header": [], "url": { "raw": "{{baseUrl}}/api/v1/metrics", "host": ["{{baseUrl}}"], "path": ["api", "v1", "metrics"] } },
+          "event": [{ "listen": "test", "script": { "exec": ["pm.test('HTTP 200', function () { pm.response.to.have.status(200); });"] } }]
+        }
+      ]
+    },
+    {
+      "name": "03 - Validacion de errores",
+      "item": [
+        {
+          "name": "Estado con rango invalido",
+          "request": { "method": "PATCH", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"brightness\": 999\n}" }, "url": { "raw": "{{baseUrl}}/api/v1/state", "host": ["{{baseUrl}}"], "path": ["api", "v1", "state"] } },
+          "event": [{ "listen": "test", "script": { "exec": ["pm.test('HTTP 400', function () { pm.response.to.have.status(400); });", "const json = pm.response.json();", "pm.test('Error envelope is explicit', function () { pm.expect(json.ok).to.eql(false); pm.expect(json.error).to.be.a('string'); });"] } }]
+        },
+        {
+          "name": "Estado con JSON invalido",
+          "request": { "method": "PATCH", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{ invalid" }, "url": { "raw": "{{baseUrl}}/api/v1/state", "host": ["{{baseUrl}}"], "path": ["api", "v1", "state"] } },
+          "event": [{ "listen": "test", "script": { "exec": ["pm.test('HTTP 400', function () { pm.response.to.have.status(400); });", "pm.test('Error is invalid_json', function () { pm.expect(pm.response.json().error).to.eql('invalid_json'); });"] } }]
+        }
+      ]
+    },
+    {
+      "name": "04 - API completa: configuracion",
+      "description": "Lecturas y mutaciones de todas las secciones persistentes. Red, GPIO y configuracion completa pueden cambiar el comportamiento del dispositivo.",
+      "item": [
+        {
+          "name": "Actualizar red (PATCH)",
+          "request": { "method": "PATCH", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"network\": {\n    \"dns\": { \"hostname\": \"duxman-led\" }\n  }\n}" }, "url": { "raw": "{{baseUrl}}/api/v1/config/network", "host": ["{{baseUrl}}"], "path": ["api", "v1", "config", "network"] } },
+          "event": [{ "listen": "test", "script": { "exec": ["pm.test('HTTP 200', function () { pm.response.to.have.status(200); });", "pm.test('Mutation envelope exists', function () { pm.expect(pm.response.json().ok).to.eql(true); });"] } }]
+        },
+        {
+          "name": "Actualizar red (POST alias)",
+          "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"network\": {\n    \"dns\": { \"hostname\": \"duxman-led\" }\n  }\n}" }, "url": { "raw": "{{baseUrl}}/api/v1/config/network", "host": ["{{baseUrl}}"], "path": ["api", "v1", "config", "network"] } },
+          "event": [{ "listen": "test", "script": { "exec": ["pm.test('HTTP 200', function () { pm.response.to.have.status(200); });", "pm.test('Mutation envelope exists', function () { pm.expect(pm.response.json().ok).to.eql(true); });"] } }]
+        },
+        {
+          "name": "Actualizar microfono",
+          "request": { "method": "PATCH", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"microphone\": {\n    \"enabled\": false,\n    \"source\": \"generic_i2c\",\n    \"profileId\": \"DEFAULT\",\n    \"sampleRate\": 16000,\n    \"fftSize\": 512,\n    \"gainPercent\": 100,\n    \"noiseFloorPercent\": 8,\n    \"noiseGateKnee\": 35,\n    \"agcResponsePercent\": 100,\n    \"pins\": { \"bclk\": 21, \"ws\": 5, \"din\": 26 }\n  }\n}" }, "url": { "raw": "{{baseUrl}}/api/v1/config/microphone", "host": ["{{baseUrl}}"], "path": ["api", "v1", "config", "microphone"] } },
+          "event": [{ "listen": "test", "script": { "exec": ["pm.test('HTTP 200', function () { pm.response.to.have.status(200); });", "pm.test('Mutation envelope exists', function () { pm.expect(pm.response.json().ok).to.eql(true); });"] } }]
+        },
+        {
+          "name": "Actualizar GPIO",
+          "request": { "method": "PATCH", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"gpio\": {\n    \"power\": { \"powerLimitEnabled\": false },\n    \"outputs\": [{ \"id\": 0, \"pin\": 8, \"ledCount\": 60, \"ledType\": \"ws2812b\", \"colorOrder\": \"GRB\" }]\n  }\n}" }, "url": { "raw": "{{baseUrl}}/api/v1/config/gpio", "host": ["{{baseUrl}}"], "path": ["api", "v1", "config", "gpio"] } },
+          "event": [{ "listen": "test", "script": { "exec": ["pm.test('HTTP 200', function () { pm.response.to.have.status(200); });", "pm.test('Mutation envelope exists', function () { pm.expect(pm.response.json().ok).to.eql(true); });"] } }]
+        },
+        {
+          "name": "Actualizar configuracion general",
+          "request": { "method": "PATCH", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"general\": { \"language\": \"es\", \"regionCode\": \"ES\", \"debugEnabled\": false, \"heartbeatMs\": 5000 }\n}" }, "url": { "raw": "{{baseUrl}}/api/v1/config/general", "host": ["{{baseUrl}}"], "path": ["api", "v1", "config", "general"] } },
+          "event": [{ "listen": "test", "script": { "exec": ["pm.test('HTTP 200', function () { pm.response.to.have.status(200); });", "pm.test('Mutation envelope exists', function () { pm.expect(pm.response.json().ok).to.eql(true); });"] } }]
+        },
+        {
+          "name": "Actualizar debug (alias legacy)",
+          "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"debug\": { \"enabled\": false, \"heartbeatMs\": 5000 }\n}" }, "url": { "raw": "{{baseUrl}}/api/v1/config/debug", "host": ["{{baseUrl}}"], "path": ["api", "v1", "config", "debug"] } },
+          "event": [{ "listen": "test", "script": { "exec": ["pm.test('HTTP 200', function () { pm.response.to.have.status(200); });", "pm.test('Mutation envelope exists', function () { pm.expect(pm.response.json().ok).to.eql(true); });"] } }]
+        },
+        {
+          "name": "Importar configuracion completa",
+          "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"network\": {},\n  \"gpio\": {},\n  \"microphone\": {},\n  \"general\": {},\n  \"sync\": {}\n}" }, "url": { "raw": "{{baseUrl}}/api/v1/config/all", "host": ["{{baseUrl}}"], "path": ["api", "v1", "config", "all"] } },
+          "event": [{ "listen": "test", "script": { "exec": ["pm.test('HTTP 200', function () { pm.response.to.have.status(200); });", "pm.test('Mutation envelope exists', function () { pm.expect(pm.response.json().ok).to.eql(true); });"] } }]
+        }
+      ]
+    },
+    {
+      "name": "05 - API completa: sincronizacion",
+      "item": [
+        {
+          "name": "Estado de sincronizacion",
+          "request": { "method": "GET", "header": [], "url": { "raw": "{{baseUrl}}/api/v1/sync/state", "host": ["{{baseUrl}}"], "path": ["api", "v1", "sync", "state"] } },
+          "event": [{ "listen": "test", "script": { "exec": ["pm.test('HTTP 200', function () { pm.response.to.have.status(200); });"] } }]
+        },
+        {
+          "name": "Nodos conectados",
+          "request": { "method": "GET", "header": [], "url": { "raw": "{{baseUrl}}/api/v1/sync/connected", "host": ["{{baseUrl}}"], "path": ["api", "v1", "sync", "connected"] } },
+          "event": [{ "listen": "test", "script": { "exec": ["pm.test('HTTP 200', function () { pm.response.to.have.status(200); });"] } }]
+        },
+        {
+          "name": "Configuracion de sincronizacion",
+          "request": { "method": "GET", "header": [], "url": { "raw": "{{baseUrl}}/api/v1/sync/config", "host": ["{{baseUrl}}"], "path": ["api", "v1", "sync", "config"] } },
+          "event": [{ "listen": "test", "script": { "exec": ["pm.test('HTTP 200', function () { pm.response.to.have.status(200); });"] } }]
+        },
+        {
+          "name": "Actualizar configuracion de sincronizacion",
+          "request": { "method": "PATCH", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"sync\": {\n    \"enabled\": false,\n    \"mode\": \"off\",\n    \"role\": \"client\",\n    \"inputProtocol\": \"ddp\",\n    \"ddpPort\": 4048,\n    \"e131UniverseStart\": 1,\n    \"e131UniverseCount\": 1,\n    \"udpSyncPort\": 21324,\n    \"groupMask\": 1,\n    \"sourceTimeoutMs\": 1500,\n    \"clockSmoothing\": \"off\"\n  }\n}" }, "url": { "raw": "{{baseUrl}}/api/v1/sync/config", "host": ["{{baseUrl}}"], "path": ["api", "v1", "sync", "config"] } },
+          "event": [{ "listen": "test", "script": { "exec": ["pm.test('HTTP 200', function () { pm.response.to.have.status(200); });", "pm.test('Mutation envelope exists', function () { pm.expect(pm.response.json().ok).to.eql(true); });"] } }]
+        },
+        {
+          "name": "Cambiar modo de sincronizacion",
+          "request": { "method": "PATCH", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{ \"mode\": \"off\" }" }, "url": { "raw": "{{baseUrl}}/api/v1/sync/mode", "host": ["{{baseUrl}}"], "path": ["api", "v1", "sync", "mode"] } },
+          "event": [{ "listen": "test", "script": { "exec": ["pm.test('HTTP 200', function () { pm.response.to.have.status(200); });", "pm.test('Mutation envelope exists', function () { pm.expect(pm.response.json().ok).to.eql(true); });"] } }]
+        }
+      ]
+    },
+    {
+      "name": "06 - API completa: perfiles",
+      "item": [
+        {
+          "name": "Listar perfiles",
+          "request": { "method": "GET", "header": [], "url": { "raw": "{{baseUrl}}/api/v1/profiles", "host": ["{{baseUrl}}"], "path": ["api", "v1", "profiles"] } },
+          "event": [{ "listen": "test", "script": { "exec": ["pm.test('HTTP 200', function () { pm.response.to.have.status(200); });"] } }]
+        },
+        {
+          "name": "Obtener perfil por id",
+          "request": { "method": "GET", "header": [], "url": { "raw": "{{baseUrl}}/api/v1/profiles/get?id={{sourceProfileId}}", "host": ["{{baseUrl}}"], "path": ["api", "v1", "profiles", "get"], "query": [{ "key": "id", "value": "{{sourceProfileId}}" }] } },
+          "event": [{ "listen": "test", "script": { "exec": ["pm.test('HTTP 200', function () { pm.response.to.have.status(200); });"] } }]
+        },
+        {
+          "name": "Guardar perfil de usuario",
+          "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{ \"profile\": { \"id\": \"{{profileId}}\", \"name\": \"Postman test\" } }" }, "url": { "raw": "{{baseUrl}}/api/v1/profiles/save", "host": ["{{baseUrl}}"], "path": ["api", "v1", "profiles", "save"] } },
+          "event": [{ "listen": "test", "script": { "exec": ["pm.test('HTTP 200', function () { pm.response.to.have.status(200); });", "pm.test('Mutation envelope exists', function () { pm.expect(pm.response.json().ok).to.eql(true); });"] } }]
+        },
+        {
+          "name": "Aplicar perfil",
+          "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{ \"profile\": { \"id\": \"{{profileId}}\" } }" }, "url": { "raw": "{{baseUrl}}/api/v1/profiles/apply", "host": ["{{baseUrl}}"], "path": ["api", "v1", "profiles", "apply"] } },
+          "event": [{ "listen": "test", "script": { "exec": ["pm.test('HTTP 200', function () { pm.response.to.have.status(200); });", "pm.test('Mutation envelope exists', function () { pm.expect(pm.response.json().ok).to.eql(true); });"] } }]
+        },
+        {
+          "name": "Establecer perfil por defecto",
+          "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{ \"profile\": { \"id\": \"{{profileId}}\" } }" }, "url": { "raw": "{{baseUrl}}/api/v1/profiles/default", "host": ["{{baseUrl}}"], "path": ["api", "v1", "profiles", "default"] } },
+          "event": [{ "listen": "test", "script": { "exec": ["pm.test('HTTP 200', function () { pm.response.to.have.status(200); });", "pm.test('Mutation envelope exists', function () { pm.expect(pm.response.json().ok).to.eql(true); });"] } }]
+        },
+        {
+          "name": "Clonar perfil",
+          "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{ \"sourceId\": \"{{sourceProfileId}}\", \"newId\": \"{{cloneProfileId}}\", \"newName\": \"Postman clone\" }" }, "url": { "raw": "{{baseUrl}}/api/v1/profiles/clone", "host": ["{{baseUrl}}"], "path": ["api", "v1", "profiles", "clone"] } },
+          "event": [{ "listen": "test", "script": { "exec": ["pm.test('HTTP 200', function () { pm.response.to.have.status(200); });", "pm.test('Mutation envelope exists', function () { pm.expect(pm.response.json().ok).to.eql(true); });"] } }]
+        },
+        {
+          "name": "Eliminar perfil de usuario",
+          "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{ \"profile\": { \"id\": \"{{cloneProfileId}}\" } }" }, "url": { "raw": "{{baseUrl}}/api/v1/profiles/delete", "host": ["{{baseUrl}}"], "path": ["api", "v1", "profiles", "delete"] } },
+          "event": [{ "listen": "test", "script": { "exec": ["pm.test('HTTP 200', function () { pm.response.to.have.status(200); });", "pm.test('Mutation envelope exists', function () { pm.expect(pm.response.json().ok).to.eql(true); });"] } }]
+        }
+      ]
+    },
+    {
+      "name": "07 - API completa: paletas, metricas y sistema",
+      "item": [
+        {
+          "name": "Guardar paleta de usuario",
+          "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{ \"palette\": { \"id\": \"{{savedPaletteKey}}\", \"label\": \"Postman test\", \"primaryColors\": [\"#FF0000\", \"#00FF00\", \"#0000FF\"] } }" }, "url": { "raw": "{{baseUrl}}/api/v1/palettes/save", "host": ["{{baseUrl}}"], "path": ["api", "v1", "palettes", "save"] } },
+          "event": [{ "listen": "test", "script": { "exec": ["pm.test('HTTP 200', function () { pm.response.to.have.status(200); });", "pm.test('Mutation envelope exists', function () { pm.expect(pm.response.json().ok).to.eql(true); });"] } }]
+        },
+        {
+          "name": "Eliminar paleta de usuario",
+          "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{ \"palette\": { \"id\": \"{{savedPaletteKey}}\" } }" }, "url": { "raw": "{{baseUrl}}/api/v1/palettes/delete", "host": ["{{baseUrl}}"], "path": ["api", "v1", "palettes", "delete"] } },
+          "event": [{ "listen": "test", "script": { "exec": ["pm.test('HTTP 200', function () { pm.response.to.have.status(200); });", "pm.test('Mutation envelope exists', function () { pm.expect(pm.response.json().ok).to.eql(true); });"] } }]
+        },
+        {
+          "name": "Restablecer metricas",
+          "request": { "method": "POST", "header": [], "url": { "raw": "{{baseUrl}}/api/v1/metrics/reset", "host": ["{{baseUrl}}"], "path": ["api", "v1", "metrics", "reset"] } },
+          "event": [{ "listen": "test", "script": { "exec": ["pm.test('HTTP 200', function () { pm.response.to.have.status(200); });", "pm.test('Reset succeeded', function () { pm.expect(pm.response.json().ok).to.eql(true); });"] } }]
+        },
+        {
+          "name": "Reiniciar dispositivo (DISRUPTIVO)",
+          "request": { "method": "POST", "header": [], "url": { "raw": "{{baseUrl}}/api/v1/system/restart", "host": ["{{baseUrl}}"], "path": ["api", "v1", "system", "restart"] } },
+          "event": [{ "listen": "test", "script": { "exec": ["pm.test('HTTP 200', function () { pm.response.to.have.status(200); });", "pm.test('Restart requested', function () { pm.expect(pm.response.json().ok).to.eql(true); });"] } }]
+        }
+      ]
+    }
+  ]
+}

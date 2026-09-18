@@ -67,6 +67,19 @@ Content-Type: application/json
 Una aplicacion externa debe tratar `ok: false` como fallo y usar `error` como
 codigo estable.
 
+## Coleccion Postman
+
+La coleccion importable [DUXMAN-LED-API-F1.postman_collection.json](../postman/DUXMAN-LED-API-F1.postman_collection.json)
+cubre todas las familias de API v1: estado, configuracion, sincronizacion,
+perfiles, efectos, paletas, diagnostico, metricas y metadatos. La guia de
+importacion y ejecucion esta en [docs/postman/README.md](../postman/README.md).
+
+Configura `baseUrl` con la URL de la placa y ejecuta primero `00 -
+Descubrimiento`. Las carpetas posteriores incluyen mutaciones persistentes;
+`04 - API completa: configuracion` puede reaplicar la red y `07 - API
+completa: paletas, metricas y sistema` contiene el reinicio del dispositivo.
+Ejecuta esas operaciones solo con valores revisados y hardware de laboratorio.
+
 ## Estado y sistema
 
 | Metodo | Ruta | Descripcion |
