@@ -100,6 +100,152 @@ uint8_t parseTransitionStyle(JsonVariantConst value, uint8_t fallback) {
 const char *transitionStyleName(uint8_t style) {
   return style == 1 ? "wipe" : "fade";
 }
+
+bool isIntegerInRange(JsonVariantConst value, int minimum, int maximum) {
+  if (!value.is<int>()) {
+    return false;
+  }
+  const int number = value.as<int>();
+  return number >= minimum && number <= maximum;
+}
+
+bool isValidEffect(JsonVariantConst value) {
+  if (value.is<const char *>()) {
+    return EffectRegistry::findByKey(String(value.as<const char *>())) != nullptr;
+  }
+  if (value.is<String>()) {
+    return EffectRegistry::findByKey(value.as<String>()) != nullptr;
+  }
+  return value.is<int>() && value.as<int>() >= 0 &&
+         value.as<int>() <= 255 &&
+         EffectRegistry::findById(static_cast<uint8_t>(value.as<int>())) != nullptr;
+}
+
+bool isValidPalette(JsonVariantConst value) {
+  if (value.is<const char *>()) {
+    return PaletteRegistry::findByKey(String(value.as<const char *>())) != nullptr;
+  }
+  if (value.is<String>()) {
+    return PaletteRegistry::findByKey(value.as<String>()) != nullptr;
+  }
+  if (!value.is<int>()) {
+    return false;
+  }
+  const int paletteId = value.as<int>();
+  return paletteId == PaletteRegistry::kManualPalette ||
+         (paletteId >= 0 && paletteId <= 32767 &&
+          PaletteRegistry::findById(static_cast<int16_t>(paletteId)) != nullptr);
+}
+
+bool isValidHexColor(String color) {
+  color.trim();
+  if (color.startsWith("#")) {
+    color.remove(0, 1);
+  }
+  if (color.length() != 6) {
+    return false;
+  }
+  for (size_t i = 0; i < color.length(); ++i) {
+    if (!isxdigit(color[i])) {
+      return false;
+    }
+  }
+  return true;
+}
+
+bool isValidColor(JsonVariantConst value) {
+  if (value.is<const char *>()) {
+    return isValidHexColor(value.as<const char *>());
+  }
+  if (value.is<String>()) {
+    return isValidHexColor(value.as<String>());
+  }
+  if (value.is<uint32_t>()) {
+    return value.as<uint32_t>() <= 0xFFFFFFUL;
+  }
+  return value.is<int>() && value.as<int>() >= 0 && value.as<int>() <= 0xFFFFFF;
+}
+
+bool hasValidStatePatch(const JsonObjectConst &root, String *error) {
+  if (!root["power"].isNull() && !root["power"].is<bool>()) {
+    *error = "invalid_parameter";
+    return false;
+  }
+  if (!root["brightness"].isNull() && !isIntegerInRange(root["brightness"], 0, 255)) {
+    *error = "invalid_parameter";
+    return false;
+  }
+  if (!root["effectId"].isNull() && !isValidEffect(root["effectId"])) {
+    *error = "invalid_parameter";
+    return false;
+  }
+  if (!root["effect"].isNull() && !isValidEffect(root["effect"])) {
+    *error = "invalid_parameter";
+    return false;
+  }
+  if (!root["sectionCount"].isNull() && !isIntegerInRange(root["sectionCount"], 1, 10)) {
+    *error = "invalid_parameter";
+    return false;
+  }
+  if (!root["effectSpeed"].isNull() && !isIntegerInRange(root["effectSpeed"], 1, 100)) {
+    *error = "invalid_parameter";
+    return false;
+  }
+  if (!root["effectLevel"].isNull() && !isIntegerInRange(root["effectLevel"], 1, 10)) {
+    *error = "invalid_parameter";
+    return false;
+  }
+  if (!root["effectTransitionMs"].isNull() &&
+      !isIntegerInRange(root["effectTransitionMs"], 0, 1500)) {
+    *error = "invalid_parameter";
+    return false;
+  }
+  if (!root["effectTransitionStyle"].isNull() &&
+      (root["effectTransitionStyle"].is<const char *>() ||
+       root["effectTransitionStyle"].is<String>())) {
+    const String style = root["effectTransitionStyle"].is<const char *>()
+                             ? String(root["effectTransitionStyle"].as<const char *>())
+                             : root["effectTransitionStyle"].as<String>();
+    if (style != "fade" && style != "wipe") {
+      *error = "invalid_parameter";
+      return false;
+    }
+  } else if (!root["effectTransitionStyle"].isNull() &&
+             !isIntegerInRange(root["effectTransitionStyle"], 0, 1)) {
+    *error = "invalid_parameter";
+    return false;
+  }
+  if (!root["paletteId"].isNull() && !isValidPalette(root["paletteId"])) {
+    *error = "invalid_parameter";
+    return false;
+  }
+  if (!root["palette"].isNull() && !isValidPalette(root["palette"])) {
+    *error = "invalid_parameter";
+    return false;
+  }
+  if (!root["primaryColors"].isNull()) {
+    if (!root["primaryColors"].is<JsonArrayConst>()) {
+      *error = "invalid_parameter";
+      return false;
+    }
+    JsonArrayConst colors = root["primaryColors"].as<JsonArrayConst>();
+    if (colors.size() != 3) {
+      *error = "invalid_parameter";
+      return false;
+    }
+    for (JsonVariantConst color : colors) {
+      if (!isValidColor(color)) {
+        *error = "invalid_parameter";
+        return false;
+      }
+    }
+  }
+  if (!root["backgroundColor"].isNull() && !isValidColor(root["backgroundColor"])) {
+    *error = "invalid_parameter";
+    return false;
+  }
+  return true;
+}
 } // namespace
 
 CoreState CoreState::defaults() {
@@ -203,6 +349,11 @@ bool CoreState::applyPatchJson(const String &payload, String *error) {
     if (error != nullptr) {
       *error = "invalid_parameter";
     }
+    return false;
+  }
+
+  String validationError;
+  if (!hasValidStatePatch(root, error != nullptr ? error : &validationError)) {
     return false;
   }
 

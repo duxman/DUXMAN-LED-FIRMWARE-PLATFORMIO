@@ -421,21 +421,32 @@ Convertir la API existente en un contrato estable para clientes externos.
 
 ### Tareas
 
-- [ ] Revisar todos los endpoints de estado, efectos, paletas y configuracion.
-- [ ] Completar los schemas de `/api/v1/openapi.json`.
+- [x] Revisar todos los endpoints de estado, efectos, paletas y configuracion.
+- [x] Completar los schemas de `/api/v1/openapi.json`.
 - [x] Documentar rangos y enumeraciones del estado en la API y OpenAPI.
-- [ ] Unificar respuestas de exito.
-- [ ] Unificar respuestas de error.
+- [x] Unificar respuestas de exito.
+- [x] Unificar respuestas de error.
 - [x] Diferenciar JSON invalido, parametro invalido y operacion sin cambios en `/api/v1/state`.
-- [ ] Verificar compatibilidad PATCH/POST.
+- [x] Verificar compatibilidad PATCH/POST.
 - [x] Actualizar `docs/wiki/API-v1.md`.
-- [ ] Anadir ejemplos para el cliente externo.
+- [x] Anadir ejemplos para el cliente externo.
 
 ### Criterio de cierre
 
-- [ ] Un cliente externo puede descubrir las capacidades sin leer el codigo fuente.
-- [ ] Todos los errores de entrada devuelven codigo HTTP y codigo de error previsibles.
-- [ ] La documentacion coincide con el firmware probado.
+- [x] Un cliente externo puede descubrir las capacidades sin leer el codigo fuente.
+- [x] Todos los errores de entrada devuelven codigo HTTP y codigo de error previsibles.
+- [x] La documentacion coincide con el firmware probado.
+
+### Registro de reanudacion F1
+
+- Se amplio el OpenAPI embebido con `StatePatch`, respuestas comunes y las rutas
+  de efectos, paletas, perfiles, diagnostico, metricas y configuracion completa.
+- Todos los handlers HTTP usan `ok: true` en exito y `ok: false` con un codigo
+  estable en error, conservando los campos legacy.
+- La documentacion de `API-v1.md` fue publicada en el wiki remoto.
+- El checker de drift puede mostrar `docs/wiki/API-v1.md` como modificado porque
+  compara contra el commit del repositorio principal; el mirror remoto esta
+  sincronizado tras el push.
 
 ## F2 - Pruebas de paridad con `home`
 

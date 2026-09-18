@@ -45,3 +45,19 @@ Controlador LED modular para ESP32 con efectos visuales/audio, API REST/Serial y
 - Estabilidad de pipeline de audio y sincronizacion.
 - Robustez de configuracion/perfiles/paletas.
 - Cobertura de pruebas de regresion API y arranque.
+
+## Hitos recientes
+
+### F1 - Contrato API completo (2026-09-18)
+
+- OpenAPI embebido ampliado para las rutas de estado, configuracion, efectos,
+	paletas, perfiles, diagnostico, metricas y configuracion completa.
+- Respuestas HTTP de mutacion normalizadas con `ok`, `updated` y codigos de
+	error previsibles, manteniendo campos legacy para compatibilidad.
+- `CoreState` valida tipos, rangos, catalogos de efectos/paletas, estilos de
+	transicion y colores antes de modificar el estado.
+- Guia API y ejemplos para clientes externos publicados en la wiki del proyecto.
+- Validacion de compilacion confirmada para `esp32dev` con PlatformIO.
+
+El siguiente trabajo funcional es F2: pruebas de paridad entre las acciones de
+`home` y la API, incluyendo efectos, paletas, secuencias y persistencia.

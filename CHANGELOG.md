@@ -11,12 +11,17 @@ The format is based on Keep a Changelog.
 - Release pipeline publishes notes from versioned changelog sections.
 - Fast operational release checklist in `docs/RELEASE_CHECKLIST.md`.
 - F1 API contract schemas for state, network, GPIO, microphone, general configuration and synchronization in `/api/v1/openapi.json`.
+- Complete F1 API contract coverage for effects, palettes, profiles, diagnostics, metrics and full configuration import/export.
+- Stable external-client examples and response envelope documentation in `docs/wiki/API-v1.md`.
 - mDNS service advertisement for sync discoverability: `_ddp._udp` (LedFx), `_e131._udp`, `_duxsync._udp`, `_http._tcp`.
 - Shared `EffectCanvas1D` layer for reusable per-output 1D rendering primitives (clear/set/get/add/fade/blur/flush).
 
 ### Changed
 - `/api/v1/state` now distinguishes invalid JSON, invalid parameters and valid patches with no changes.
 - API wiki documents response envelopes, validation ranges, enumerations and synchronization/configuration schemas.
+- HTTP mutation responses now expose `ok: true` on success and `ok: false` with a stable `error` code on failure, while preserving legacy fields such as `saved`, `deleted`, `added` and `restart`.
+- State patches reject invalid types, ranges, effects, palettes, transition styles and colors instead of silently coercing them.
+- F1 completion is recorded in `docs/CORE_FULL_BUILD_PLAN.md`.
 - Sync UI now separates LedFx external input usage from cluster sync usage to avoid ambiguous role/mode combinations.
 - F2 primitives/canvas rollout completed across visual-only effects (`fixed`, `gradient`, `blink_*`, `breath_*`, `diagnostic`, `lava_flow`, `polar_ice`, `random_color_pop`, `gradient_meteor`, `scanning_pulse`, `triple_chase`) for a unified frame pipeline.
 - Local PlatformIO defaults now pin upload/monitor to `COM5` in `platformio.ini`.
