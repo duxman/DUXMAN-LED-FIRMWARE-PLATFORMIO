@@ -1,0 +1,1112 @@
+{
+  ".github/scripts/update_headers.py": {
+    "mtime": 1792266385.0,
+    "seen": 1794060901.3411577,
+    "ast_hash": "2724f1353c33e8b942f5d234aca2a232",
+    "semantic_hash": ""
+  },
+  ".github/workflows/changelog-check.yml": {
+    "mtime": 1792266385.0,
+    "seen": 1794060901.3411577,
+    "ast_hash": "bc11aeb8a0932dd7e40f3c6943d3e5a2",
+    "semantic_hash": ""
+  },
+  ".github/workflows/firmware-build-release.yml": {
+    "mtime": 1792266385.0,
+    "seen": 1794060901.3411577,
+    "ast_hash": "7e50d942058ede9a13642c07b167b4f2",
+    "semantic_hash": ""
+  },
+  ".github/workflows/wiki-sync-check.yml": {
+    "mtime": 1792266385.0,
+    "seen": 1794060901.3411577,
+    "ast_hash": "ad570cd26e43704e879fd0c8f3bceec3",
+    "semantic_hash": ""
+  },
+  ".vscode/extensions.json": {
+    "mtime": 1794060812.04712,
+    "seen": 1794060901.3411577,
+    "ast_hash": "b4fe65422789c169a6e60ad8eeb1d8c6",
+    "semantic_hash": ""
+  },
+  ".vscode/tasks.json": {
+    "mtime": 1792266385.0,
+    "seen": 1794060901.3411577,
+    "ast_hash": "f4822151647bf913021ccd77b9add3e0",
+    "semantic_hash": ""
+  },
+  "data/ui/i18n.js": {
+    "mtime": 1792266385.0,
+    "seen": 1794060901.3411577,
+    "ast_hash": "248722845e49696df69be09fa208877a",
+    "semantic_hash": ""
+  },
+  "data/ui/i18n/en.json": {
+    "mtime": 1792266385.0,
+    "seen": 1794060901.3411577,
+    "ast_hash": "3e72e2b7209ecd171798a6d2d2770d91",
+    "semantic_hash": ""
+  },
+  "data/ui/i18n/es.json": {
+    "mtime": 1792266385.0,
+    "seen": 1794060901.3411577,
+    "ast_hash": "a72b3da9d8cb9f0bc3c384e12ee899eb",
+    "semantic_hash": ""
+  },
+  "docs/baseline/test-scenes.json": {
+    "mtime": 1792266385.0,
+    "seen": 1794060901.3411577,
+    "ast_hash": "a1929acdfd7caa1826893683c113df1b",
+    "semantic_hash": ""
+  },
+  "docs/postman/DUXMAN-LED-API-F1.postman_collection.json": {
+    "mtime": 1792266385.0,
+    "seen": 1794060901.3411577,
+    "ast_hash": "5b17d737a079740474679cd5b401673f",
+    "semantic_hash": ""
+  },
+  "firmware/config/device-config.json": {
+    "mtime": 1792266386.0,
+    "seen": 1794060901.3411577,
+    "ast_hash": "7a8e1cd1b9ee761b4219c1878729a254",
+    "semantic_hash": ""
+  },
+  "firmware/config/gpio-config-example.json": {
+    "mtime": 1792266386.0,
+    "seen": 1794060901.3411577,
+    "ast_hash": "f3ab32a39ad4e344148f9ce82ba22b83",
+    "semantic_hash": ""
+  },
+  "firmware/config/release-info.json": {
+    "mtime": 1792266386.0,
+    "seen": 1794060901.3411577,
+    "ast_hash": "736a71f9b72d5df2ba4fef2d6caf59c7",
+    "semantic_hash": ""
+  },
+  "firmware/src/api/ApiService.cpp": {
+    "mtime": 1792266386.0,
+    "seen": 1794060901.3411577,
+    "ast_hash": "9cf82abf7f615eac987dc5e6adc651a7",
+    "semantic_hash": ""
+  },
+  "firmware/src/api/ApiService.h": {
+    "mtime": 1792266386.0,
+    "seen": 1794060901.3411577,
+    "ast_hash": "10ac991b3b5fce2d19768c7d38c56238",
+    "semantic_hash": ""
+  },
+  "firmware/src/core/BuildProfile.h": {
+    "mtime": 1792266386.0,
+    "seen": 1794060901.3411577,
+    "ast_hash": "f79d2e80ceaba37089c57541542f52ce",
+    "semantic_hash": ""
+  },
+  "firmware/src/core/ColorUtils.h": {
+    "mtime": 1792266386.0,
+    "seen": 1794060901.3411577,
+    "ast_hash": "2154b26a6ed57491d333fb5fc93e1be3",
+    "semantic_hash": ""
+  },
+  "firmware/src/core/Config.cpp": {
+    "mtime": 1792266386.0,
+    "seen": 1794060901.3411577,
+    "ast_hash": "74cc145f8baed1a33c8eb32d0ad917d5",
+    "semantic_hash": ""
+  },
+  "firmware/src/core/Config.h": {
+    "mtime": 1792266386.0,
+    "seen": 1794060901.3411577,
+    "ast_hash": "be75060d843252eea843c7938e4cb72c",
+    "semantic_hash": ""
+  },
+  "firmware/src/core/CoreState.cpp": {
+    "mtime": 1792266386.0,
+    "seen": 1794060901.3411577,
+    "ast_hash": "93204333a9c8e3e9aa2446cb13572f9f",
+    "semantic_hash": ""
+  },
+  "firmware/src/core/CoreState.h": {
+    "mtime": 1792266386.0,
+    "seen": 1794060901.3411577,
+    "ast_hash": "2ba683212936c708628f02107e7d1f3c",
+    "semantic_hash": ""
+  },
+  "firmware/src/core/HardwareInfo.cpp": {
+    "mtime": 1792266386.0,
+    "seen": 1794060901.3411577,
+    "ast_hash": "e0eac0ce9315f8432e9cc14db8c353a5",
+    "semantic_hash": ""
+  },
+  "firmware/src/core/HardwareInfo.h": {
+    "mtime": 1792266386.0,
+    "seen": 1794060901.3411577,
+    "ast_hash": "dcdf057efdf9310f13ebb8e31940fe63",
+    "semantic_hash": ""
+  },
+  "firmware/src/core/PaletteRegistry.cpp": {
+    "mtime": 1792266386.0,
+    "seen": 1794060901.3411577,
+    "ast_hash": "c2a747c58cd038233291f0285db7e644",
+    "semantic_hash": ""
+  },
+  "firmware/src/core/PaletteRegistry.h": {
+    "mtime": 1792266386.0,
+    "seen": 1794060901.3411577,
+    "ast_hash": "2e30d63fe97bc83300806e64367c639e",
+    "semantic_hash": ""
+  },
+  "firmware/src/core/ReleaseInfo.cpp": {
+    "mtime": 1792266386.0,
+    "seen": 1794060901.3411577,
+    "ast_hash": "7faf3ac6b4a089de5312f4c3fbf42dbf",
+    "semantic_hash": ""
+  },
+  "firmware/src/core/ReleaseInfo.h": {
+    "mtime": 1792266386.0,
+    "seen": 1794060901.3411577,
+    "ast_hash": "f7b85b573b8d962f91dae9db9d11f4cc",
+    "semantic_hash": ""
+  },
+  "firmware/src/drivers/CurrentLedDriver.h": {
+    "mtime": 1792266386.0,
+    "seen": 1794060901.3411577,
+    "ast_hash": "000f85b8217442dee0861b2b863bbd80",
+    "semantic_hash": ""
+  },
+  "firmware/src/drivers/LedDriver.cpp": {
+    "mtime": 1792266386.0,
+    "seen": 1794060901.3411577,
+    "ast_hash": "0ad24f6f6be9936c2eeceaa069f685ce",
+    "semantic_hash": ""
+  },
+  "firmware/src/drivers/LedDriver.h": {
+    "mtime": 1792266386.0,
+    "seen": 1794060901.3411577,
+    "ast_hash": "d4f6b6c13d44f2bac61b351abf23f681",
+    "semantic_hash": ""
+  },
+  "firmware/src/drivers/LedDriverDigital.cpp": {
+    "mtime": 1792266386.0,
+    "seen": 1794060901.3411577,
+    "ast_hash": "b11d6894a231f7bb1df4de10af44298d",
+    "semantic_hash": ""
+  },
+  "firmware/src/drivers/LedDriverDigital.h": {
+    "mtime": 1792266386.0,
+    "seen": 1794060901.3411577,
+    "ast_hash": "f2a4403b68662a5bb9ce57440a67c309",
+    "semantic_hash": ""
+  },
+  "firmware/src/drivers/LedDriverFastLed.cpp": {
+    "mtime": 1792266386.0,
+    "seen": 1794060901.3411577,
+    "ast_hash": "fefcb6dc9ee57857a7bd8aaa60f9f884",
+    "semantic_hash": ""
+  },
+  "firmware/src/drivers/LedDriverFastLed.h": {
+    "mtime": 1792266386.0,
+    "seen": 1794060901.3411577,
+    "ast_hash": "ab4a7743eb8553c4f099964272675ed2",
+    "semantic_hash": ""
+  },
+  "firmware/src/drivers/LedDriverNeoPixelBus.cpp": {
+    "mtime": 1792266386.0,
+    "seen": 1794060901.3411577,
+    "ast_hash": "fb95b1a3d346601a0453ddf020052df9",
+    "semantic_hash": ""
+  },
+  "firmware/src/drivers/LedDriverNeoPixelBus.h": {
+    "mtime": 1792266386.0,
+    "seen": 1794060901.3411577,
+    "ast_hash": "a4e7363a67ea6aa06503a1494dace24f",
+    "semantic_hash": ""
+  },
+  "firmware/src/effects/EffectCanvas1D.cpp": {
+    "mtime": 1792266386.0,
+    "seen": 1794060901.3411577,
+    "ast_hash": "57d048c3c261c69fde609a4346eeab51",
+    "semantic_hash": ""
+  },
+  "firmware/src/effects/EffectCanvas1D.h": {
+    "mtime": 1792266386.0,
+    "seen": 1794060901.3411577,
+    "ast_hash": "f51bf99c1511641b3996a7e487eca75c",
+    "semantic_hash": ""
+  },
+  "firmware/src/effects/EffectEngine.cpp": {
+    "mtime": 1792266386.0,
+    "seen": 1794060901.3411577,
+    "ast_hash": "d2e8d39af6eaa219674ddee34c271867",
+    "semantic_hash": ""
+  },
+  "firmware/src/effects/EffectEngine.h": {
+    "mtime": 1792266386.0,
+    "seen": 1794060901.3411577,
+    "ast_hash": "f03ae193cd5f99b53576579fe4b6654e",
+    "semantic_hash": ""
+  },
+  "firmware/src/effects/EffectManager.cpp": {
+    "mtime": 1792266386.0,
+    "seen": 1794060901.3411577,
+    "ast_hash": "0bd18414a05d882178b4efd9892b917e",
+    "semantic_hash": ""
+  },
+  "firmware/src/effects/EffectManager.h": {
+    "mtime": 1792266386.0,
+    "seen": 1794060901.3411577,
+    "ast_hash": "7e8b20afb7583167ff098e29b5fcc1c9",
+    "semantic_hash": ""
+  },
+  "firmware/src/effects/EffectRegistry.cpp": {
+    "mtime": 1792266386.0,
+    "seen": 1794060901.3411577,
+    "ast_hash": "7bfd9141948e1f30fb8b8ff7f714fd85",
+    "semantic_hash": ""
+  },
+  "firmware/src/effects/EffectRegistry.h": {
+    "mtime": 1792266386.0,
+    "seen": 1794060901.3411577,
+    "ast_hash": "61b75764d6a103bc5f6dede28244e8a4",
+    "semantic_hash": ""
+  },
+  "firmware/src/effects/audio-reactive/EffectAudioNeonEq.cpp": {
+    "mtime": 1792266386.0,
+    "seen": 1794060901.3411577,
+    "ast_hash": "7d0bfba0cfaefbff27d7851f16a5c389",
+    "semantic_hash": ""
+  },
+  "firmware/src/effects/audio-reactive/EffectAudioNeonEq.h": {
+    "mtime": 1792266386.0,
+    "seen": 1794060901.3411577,
+    "ast_hash": "c87eeea8d73d4c70c6c2299f3774e643",
+    "semantic_hash": ""
+  },
+  "firmware/src/effects/audio-reactive/EffectAudioPulse.cpp": {
+    "mtime": 1792266386.0,
+    "seen": 1794060901.3411577,
+    "ast_hash": "0e812ed4da4792495364ea0b63ecf6b9",
+    "semantic_hash": ""
+  },
+  "firmware/src/effects/audio-reactive/EffectAudioPulse.h": {
+    "mtime": 1792266386.0,
+    "seen": 1794060901.3411577,
+    "ast_hash": "2d1d2996abe2ac70c72e55299d77c85f",
+    "semantic_hash": ""
+  },
+  "firmware/src/effects/audio-reactive/EffectAudioRainbowWave.cpp": {
+    "mtime": 1792266386.0,
+    "seen": 1794060901.3411577,
+    "ast_hash": "ab6bb8aa2725713ce3d8b606c31038c6",
+    "semantic_hash": ""
+  },
+  "firmware/src/effects/audio-reactive/EffectAudioRainbowWave.h": {
+    "mtime": 1792266386.0,
+    "seen": 1794060901.3411577,
+    "ast_hash": "c71ee7be1513ec1fb20de6af819b4e86",
+    "semantic_hash": ""
+  },
+  "firmware/src/effects/audio-reactive/EffectAudioSectionStrobe.cpp": {
+    "mtime": 1792266386.0,
+    "seen": 1794060901.3411577,
+    "ast_hash": "97706127eac5e7593d5d8896d52398c0",
+    "semantic_hash": ""
+  },
+  "firmware/src/effects/audio-reactive/EffectAudioSectionStrobe.h": {
+    "mtime": 1792266386.0,
+    "seen": 1794060901.3411577,
+    "ast_hash": "a1e07f3f4c524d0f589bfaa601e178ef",
+    "semantic_hash": ""
+  },
+  "firmware/src/effects/audio-reactive/EffectAudioSpectrum.cpp": {
+    "mtime": 1792266386.0,
+    "seen": 1794060901.3411577,
+    "ast_hash": "051a84cd608e0ca5d25424c5288d1c34",
+    "semantic_hash": ""
+  },
+  "firmware/src/effects/audio-reactive/EffectAudioSpectrum.h": {
+    "mtime": 1792266386.0,
+    "seen": 1794060901.3411577,
+    "ast_hash": "dc629156a066631910358b10d8a6101e",
+    "semantic_hash": ""
+  },
+  "firmware/src/effects/audio-reactive/EffectAudioSpectrumChase.cpp": {
+    "mtime": 1792266386.0,
+    "seen": 1794060901.3411577,
+    "ast_hash": "b2ad13a94e6d8654ec1cbbf8b31439fb",
+    "semantic_hash": ""
+  },
+  "firmware/src/effects/audio-reactive/EffectAudioSpectrumChase.h": {
+    "mtime": 1792266386.0,
+    "seen": 1794060901.3411577,
+    "ast_hash": "92169146a14b2a1df8a0b9c84fca662c",
+    "semantic_hash": ""
+  },
+  "firmware/src/effects/audio-reactive/EffectBouncingPhysics.cpp": {
+    "mtime": 1792266386.0,
+    "seen": 1794060901.3411577,
+    "ast_hash": "9767cfc62004b53a5cc1a9e8dc086ce8",
+    "semantic_hash": ""
+  },
+  "firmware/src/effects/audio-reactive/EffectBouncingPhysics.h": {
+    "mtime": 1792266386.0,
+    "seen": 1794060901.3411577,
+    "ast_hash": "e51824b9acdc020fed197f018549c3e7",
+    "semantic_hash": ""
+  },
+  "firmware/src/effects/audio-reactive/EffectStellarTwinkle.cpp": {
+    "mtime": 1792266386.0,
+    "seen": 1794060901.3411577,
+    "ast_hash": "addb0557986d0fbfe342c2fdd2b1342e",
+    "semantic_hash": ""
+  },
+  "firmware/src/effects/audio-reactive/EffectStellarTwinkle.h": {
+    "mtime": 1792266386.0,
+    "seen": 1794060901.3411577,
+    "ast_hash": "d6bb892a2df6b5c6e76f2ba5590a827e",
+    "semantic_hash": ""
+  },
+  "firmware/src/effects/audio-reactive/EffectTrigRibbon.cpp": {
+    "mtime": 1792266386.0,
+    "seen": 1794060901.3411577,
+    "ast_hash": "fccc113f6e4a37ea428c7de622a2a127",
+    "semantic_hash": ""
+  },
+  "firmware/src/effects/audio-reactive/EffectTrigRibbon.h": {
+    "mtime": 1792266386.0,
+    "seen": 1794060901.3411577,
+    "ast_hash": "ad739e276f7e2b514d1280f19fbbc9fc",
+    "semantic_hash": ""
+  },
+  "firmware/src/effects/visual-only/EffectBlinkFixed.cpp": {
+    "mtime": 1792266386.0,
+    "seen": 1794060901.3411577,
+    "ast_hash": "35e9621434a32ca1004226da7528f6e2",
+    "semantic_hash": ""
+  },
+  "firmware/src/effects/visual-only/EffectBlinkFixed.h": {
+    "mtime": 1792266386.0,
+    "seen": 1794060901.3411577,
+    "ast_hash": "b60faad3d348bc956073de6770616de3",
+    "semantic_hash": ""
+  },
+  "firmware/src/effects/visual-only/EffectBlinkGradient.cpp": {
+    "mtime": 1792266386.0,
+    "seen": 1794060901.3411577,
+    "ast_hash": "c69483745e5ad637218631a242253700",
+    "semantic_hash": ""
+  },
+  "firmware/src/effects/visual-only/EffectBlinkGradient.h": {
+    "mtime": 1792266386.0,
+    "seen": 1794060901.3411577,
+    "ast_hash": "ab82c779edb7e1ad2a1007b4d0380111",
+    "semantic_hash": ""
+  },
+  "firmware/src/effects/visual-only/EffectBreathFixed.cpp": {
+    "mtime": 1792266386.0,
+    "seen": 1794060901.3411577,
+    "ast_hash": "4405b83e48b054b2103908dafdd04773",
+    "semantic_hash": ""
+  },
+  "firmware/src/effects/visual-only/EffectBreathFixed.h": {
+    "mtime": 1792266386.0,
+    "seen": 1794060901.3411577,
+    "ast_hash": "eec83e149b7b653e8f1ad27ed466b678",
+    "semantic_hash": ""
+  },
+  "firmware/src/effects/visual-only/EffectBreathGradient.cpp": {
+    "mtime": 1792266386.0,
+    "seen": 1794060901.3411577,
+    "ast_hash": "6b286bdd4a86fcf7e51d69141d8c4e08",
+    "semantic_hash": ""
+  },
+  "firmware/src/effects/visual-only/EffectBreathGradient.h": {
+    "mtime": 1792266386.0,
+    "seen": 1794060901.3411577,
+    "ast_hash": "cc384922022edd8861f6e89f01460f4f",
+    "semantic_hash": ""
+  },
+  "firmware/src/effects/visual-only/EffectDiagnostic.cpp": {
+    "mtime": 1792266386.0,
+    "seen": 1794060901.3411577,
+    "ast_hash": "1e4c1e70def4706fbe007917ac206936",
+    "semantic_hash": ""
+  },
+  "firmware/src/effects/visual-only/EffectDiagnostic.h": {
+    "mtime": 1792266386.0,
+    "seen": 1794060901.3411577,
+    "ast_hash": "cfaf4350912618abaced9939ae499678",
+    "semantic_hash": ""
+  },
+  "firmware/src/effects/visual-only/EffectFixed.cpp": {
+    "mtime": 1792266386.0,
+    "seen": 1794060901.3411577,
+    "ast_hash": "c7591f72fae55595a4af32e859dc88b6",
+    "semantic_hash": ""
+  },
+  "firmware/src/effects/visual-only/EffectFixed.h": {
+    "mtime": 1792266386.0,
+    "seen": 1794060901.3411577,
+    "ast_hash": "c274508bfa0ab3fe823b7217ebfe7de0",
+    "semantic_hash": ""
+  },
+  "firmware/src/effects/visual-only/EffectGradient.cpp": {
+    "mtime": 1792266386.0,
+    "seen": 1794060901.3411577,
+    "ast_hash": "9c983ac139aeb3a6ba506b6c6abc087d",
+    "semantic_hash": ""
+  },
+  "firmware/src/effects/visual-only/EffectGradient.h": {
+    "mtime": 1792266386.0,
+    "seen": 1794060901.3411577,
+    "ast_hash": "b0c533287359fdc2c2793a135d7813cc",
+    "semantic_hash": ""
+  },
+  "firmware/src/effects/visual-only/EffectGradientMeteor.cpp": {
+    "mtime": 1792266386.0,
+    "seen": 1794060901.3411577,
+    "ast_hash": "4886c626fed68e9d98a5ad3772c92559",
+    "semantic_hash": ""
+  },
+  "firmware/src/effects/visual-only/EffectGradientMeteor.h": {
+    "mtime": 1792266386.0,
+    "seen": 1794060901.3422198,
+    "ast_hash": "8094c819bb6cf8db2c87c6929790be1f",
+    "semantic_hash": ""
+  },
+  "firmware/src/effects/visual-only/EffectLavaFlow.cpp": {
+    "mtime": 1792266386.0,
+    "seen": 1794060901.3422198,
+    "ast_hash": "45225e3ef7584f0a84bb4e7bb01a2d72",
+    "semantic_hash": ""
+  },
+  "firmware/src/effects/visual-only/EffectLavaFlow.h": {
+    "mtime": 1792266386.0,
+    "seen": 1794060901.3422198,
+    "ast_hash": "911ed801f79f83ff40d6deef17f87361",
+    "semantic_hash": ""
+  },
+  "firmware/src/effects/visual-only/EffectPolarIce.cpp": {
+    "mtime": 1792266386.0,
+    "seen": 1794060901.3422198,
+    "ast_hash": "a4011004968c20e8065b2972a234a0dd",
+    "semantic_hash": ""
+  },
+  "firmware/src/effects/visual-only/EffectPolarIce.h": {
+    "mtime": 1792266386.0,
+    "seen": 1794060901.3422198,
+    "ast_hash": "c23a6ed2695132471f5320ba9cd4c744",
+    "semantic_hash": ""
+  },
+  "firmware/src/effects/visual-only/EffectRandomColorPop.cpp": {
+    "mtime": 1792266386.0,
+    "seen": 1794060901.3422198,
+    "ast_hash": "fd936826ac651184ea24dd2c042a10fb",
+    "semantic_hash": ""
+  },
+  "firmware/src/effects/visual-only/EffectRandomColorPop.h": {
+    "mtime": 1792266386.0,
+    "seen": 1794060901.3422198,
+    "ast_hash": "0d7c32a573f71acc519dec9548dab31e",
+    "semantic_hash": ""
+  },
+  "firmware/src/effects/visual-only/EffectScanningPulse.cpp": {
+    "mtime": 1792266386.0,
+    "seen": 1794060901.3422198,
+    "ast_hash": "d5ac9d029ab991aed0bec5b527c03b90",
+    "semantic_hash": ""
+  },
+  "firmware/src/effects/visual-only/EffectScanningPulse.h": {
+    "mtime": 1792266386.0,
+    "seen": 1794060901.3422198,
+    "ast_hash": "43ff51a7d01169f34eeeb23eb603bdbe",
+    "semantic_hash": ""
+  },
+  "firmware/src/effects/visual-only/EffectTripleChase.cpp": {
+    "mtime": 1792266386.0,
+    "seen": 1794060901.3422198,
+    "ast_hash": "8cbb5aefc76d6fffec11d7051a763512",
+    "semantic_hash": ""
+  },
+  "firmware/src/effects/visual-only/EffectTripleChase.h": {
+    "mtime": 1792266386.0,
+    "seen": 1794060901.3422198,
+    "ast_hash": "00064067e61802ccebfbaed0e1649d6f",
+    "semantic_hash": ""
+  },
+  "firmware/src/i18n/i18n_en.json": {
+    "mtime": 1792266386.0,
+    "seen": 1794060901.3422198,
+    "ast_hash": "e3dc8357b7aebef96d9819f5c98bd08e",
+    "semantic_hash": ""
+  },
+  "firmware/src/i18n/i18n_es.json": {
+    "mtime": 1792266386.0,
+    "seen": 1794060901.3422198,
+    "ast_hash": "5a69c0e9bff6ab60eb3cb416f513a2b5",
+    "semantic_hash": ""
+  },
+  "firmware/src/main.cpp": {
+    "mtime": 1792266386.0,
+    "seen": 1794060901.3422198,
+    "ast_hash": "807feae6f0418ec402777186b2187b51",
+    "semantic_hash": ""
+  },
+  "firmware/src/services/AudioService.cpp": {
+    "mtime": 1792266386.0,
+    "seen": 1794060901.3422198,
+    "ast_hash": "ad9be1336036c7cfc9b4982d1b7931df",
+    "semantic_hash": ""
+  },
+  "firmware/src/services/AudioService.h": {
+    "mtime": 1792266386.0,
+    "seen": 1794060901.3422198,
+    "ast_hash": "be305d3257bd3c7b7df794b0035cc07c",
+    "semantic_hash": ""
+  },
+  "firmware/src/services/EffectPersistenceService.cpp": {
+    "mtime": 1792266386.0,
+    "seen": 1794060901.3422198,
+    "ast_hash": "8becf2e72390e9437d4f3a799820edfd",
+    "semantic_hash": ""
+  },
+  "firmware/src/services/EffectPersistenceService.h": {
+    "mtime": 1792266386.0,
+    "seen": 1794060901.3422198,
+    "ast_hash": "7fdf1c363f6402cd35831b56012c4db0",
+    "semantic_hash": ""
+  },
+  "firmware/src/services/LanguageManager.cpp": {
+    "mtime": 1792266386.0,
+    "seen": 1794060901.3422198,
+    "ast_hash": "ba7ad29a7c0a8b66c6af95ab79669c26",
+    "semantic_hash": ""
+  },
+  "firmware/src/services/LanguageManager.h": {
+    "mtime": 1792266386.0,
+    "seen": 1794060901.3422198,
+    "ast_hash": "8ae406f92e7909e90c2cd1458508f372",
+    "semantic_hash": ""
+  },
+  "firmware/src/services/PersistenceSchedulerService.cpp": {
+    "mtime": 1792266386.0,
+    "seen": 1794060901.3422198,
+    "ast_hash": "aa9ef74b200c593d0978531e89c13768",
+    "semantic_hash": ""
+  },
+  "firmware/src/services/PersistenceSchedulerService.h": {
+    "mtime": 1792266386.0,
+    "seen": 1794060901.3422198,
+    "ast_hash": "3b7a2e717c3c97cbc1c53eb4b0b7a92d",
+    "semantic_hash": ""
+  },
+  "firmware/src/services/ProfileService.cpp": {
+    "mtime": 1792266386.0,
+    "seen": 1794060901.3422198,
+    "ast_hash": "c1c02c15c5cca2bf02c6af58d6b5cc2f",
+    "semantic_hash": ""
+  },
+  "firmware/src/services/ProfileService.h": {
+    "mtime": 1792266386.0,
+    "seen": 1794060901.3422198,
+    "ast_hash": "6022d3ab91be5d588bb35373f325c963",
+    "semantic_hash": ""
+  },
+  "firmware/src/services/RenderMetricsService.cpp": {
+    "mtime": 1792266386.0,
+    "seen": 1794060901.3422198,
+    "ast_hash": "6907b126555d444cbd5b439cb1a2745b",
+    "semantic_hash": ""
+  },
+  "firmware/src/services/RenderMetricsService.h": {
+    "mtime": 1792266386.0,
+    "seen": 1794060901.3422198,
+    "ast_hash": "f7325137177f1810912afff1bb62dcc8",
+    "semantic_hash": ""
+  },
+  "firmware/src/services/StorageService.cpp": {
+    "mtime": 1792266386.0,
+    "seen": 1794060901.3422198,
+    "ast_hash": "785f3cd1084e5815820abe0b372772a4",
+    "semantic_hash": ""
+  },
+  "firmware/src/services/StorageService.h": {
+    "mtime": 1792266386.0,
+    "seen": 1794060901.3422198,
+    "ast_hash": "92844b4305127b9a8cb80c29beb07a02",
+    "semantic_hash": ""
+  },
+  "firmware/src/services/SyncService.cpp": {
+    "mtime": 1792266386.0,
+    "seen": 1794060901.3422198,
+    "ast_hash": "240fc89fc406901c7bcbcceb3c94fe68",
+    "semantic_hash": ""
+  },
+  "firmware/src/services/SyncService.h": {
+    "mtime": 1792266386.0,
+    "seen": 1794060901.3422198,
+    "ast_hash": "e192e4be072379b2643332dc899bd018",
+    "semantic_hash": ""
+  },
+  "firmware/src/services/UserPaletteService.cpp": {
+    "mtime": 1792266386.0,
+    "seen": 1794060901.3422198,
+    "ast_hash": "fe8ffe3416c14f0600c5b51383ccaf30",
+    "semantic_hash": ""
+  },
+  "firmware/src/services/UserPaletteService.h": {
+    "mtime": 1792266386.0,
+    "seen": 1794060901.3422198,
+    "ast_hash": "0e0c475e34ecf826eb6b19ad19b694b5",
+    "semantic_hash": ""
+  },
+  "firmware/src/services/VoltageOptimizer.cpp": {
+    "mtime": 1792266386.0,
+    "seen": 1794060901.3422198,
+    "ast_hash": "bce9df5114443e7e9542da290b631934",
+    "semantic_hash": ""
+  },
+  "firmware/src/services/VoltageOptimizer.h": {
+    "mtime": 1792266386.0,
+    "seen": 1794060901.3422198,
+    "ast_hash": "fdd9995f1dabcb242f89051681d0b358",
+    "semantic_hash": ""
+  },
+  "firmware/src/services/WatchdogService.cpp": {
+    "mtime": 1792266386.0,
+    "seen": 1794060901.3422198,
+    "ast_hash": "c06c9ae9643f000af7c991b5468ba2d9",
+    "semantic_hash": ""
+  },
+  "firmware/src/services/WatchdogService.h": {
+    "mtime": 1792266386.0,
+    "seen": 1794060901.3422198,
+    "ast_hash": "da8dcb545cc84d0a71102ad46cf839e4",
+    "semantic_hash": ""
+  },
+  "firmware/src/services/WifiService.cpp": {
+    "mtime": 1792266386.0,
+    "seen": 1794060901.3422198,
+    "ast_hash": "581f84a6007a578d46ed45813d25adef",
+    "semantic_hash": ""
+  },
+  "firmware/src/services/WifiService.h": {
+    "mtime": 1792266386.0,
+    "seen": 1794060901.3422198,
+    "ast_hash": "8455daa0a3cce4102ee39cef6c09ff61",
+    "semantic_hash": ""
+  },
+  "tools/flash.ps1": {
+    "mtime": 1792266386.0,
+    "seen": 1794060901.3422198,
+    "ast_hash": "9026980ce0d1eb20131a8df9dfb7ec98",
+    "semantic_hash": ""
+  },
+  "tools/wiki-check-drift.ps1": {
+    "mtime": 1792266386.0,
+    "seen": 1794060901.3422198,
+    "ast_hash": "d06a44bf110c4873ab5e7f922978ebf1",
+    "semantic_hash": ""
+  },
+  "tools/wiki-sync.ps1": {
+    "mtime": 1792266386.0,
+    "seen": 1794060901.3422198,
+    "ast_hash": "2696255ae79e6282d5559b1f6f7a2820",
+    "semantic_hash": ""
+  },
+  ".github/agents/Arduino y platform io agent local.agent.md": {
+    "mtime": 1792266385.0,
+    "seen": 1794060901.3422198,
+    "ast_hash": "275ee0c6d5641cf9fd9aa28cfc193f2d",
+    "semantic_hash": ""
+  },
+  ".github/agents/programador-arduino.agent.md": {
+    "mtime": 1794060309.5068429,
+    "seen": 1794060901.3422198,
+    "ast_hash": "c91943ffbbc3fa75d2d9c1d3f962e048",
+    "semantic_hash": ""
+  },
+  ".github/agents/programador-java.agent.md": {
+    "mtime": 1794060309.5068429,
+    "seen": 1794060901.3422198,
+    "ast_hash": "cbad475a14e046a6f88c7ffb1466f1c1",
+    "semantic_hash": ""
+  },
+  ".github/instructions/arduino.instructions.md": {
+    "mtime": 1794060030.7829945,
+    "seen": 1794060901.3422198,
+    "ast_hash": "e47195c2b97353f72ca9e72d77e3b54e",
+    "semantic_hash": ""
+  },
+  ".github/instructions/graphify.instructions.md": {
+    "mtime": 1794060309.6675665,
+    "seen": 1794060901.3422198,
+    "ast_hash": "dcb9d73e25e3b763830ee2ff0aaf7dc8",
+    "semantic_hash": ""
+  },
+  ".github/instructions/java-basico.instructions.md": {
+    "mtime": 1793487929.0,
+    "seen": 1794060901.3422198,
+    "ast_hash": "b7e4950f37cfbdffb2ebd5e5164ad14f",
+    "semantic_hash": ""
+  },
+  ".github/instructions/java-junit.instructions.md": {
+    "mtime": 1793488535.0,
+    "seen": 1794060901.3422198,
+    "ast_hash": "7da44a9f6462d699fffbb603e6a48fe7",
+    "semantic_hash": ""
+  },
+  ".github/instructions/java-logging.instructions.md": {
+    "mtime": 1793490514.0,
+    "seen": 1794060901.3422198,
+    "ast_hash": "58d725510b64f7d4c2e99335de484dbe",
+    "semantic_hash": ""
+  },
+  ".github/instructions/java-patrones.instructions.md": {
+    "mtime": 1793487929.0,
+    "seen": 1794060901.3422198,
+    "ast_hash": "79f5f81bce6dea0a87195272fc3c6e45",
+    "semantic_hash": ""
+  },
+  ".github/instructions/java-pruebas-externas.instructions.md": {
+    "mtime": 1793488535.0,
+    "seen": 1794060901.3422198,
+    "ast_hash": "1226b2e146353d9148b176856a7d560e",
+    "semantic_hash": ""
+  },
+  ".github/instructions/java-pruebas.instructions.md": {
+    "mtime": 1793488535.0,
+    "seen": 1794060901.3422198,
+    "ast_hash": "71e42ebaedb27f649dd8158b871b1e9e",
+    "semantic_hash": ""
+  },
+  ".github/instructions/java-spring-data.instructions.md": {
+    "mtime": 1793487929.0,
+    "seen": 1794060901.3422198,
+    "ast_hash": "3172cd5a347fe3d14e3a6dbecf8cee1c",
+    "semantic_hash": ""
+  },
+  ".github/instructions/java-spring.instructions.md": {
+    "mtime": 1793488535.0,
+    "seen": 1794060901.3422198,
+    "ast_hash": "21b394324ead6c12078ee005e11f103a",
+    "semantic_hash": ""
+  },
+  ".github/instructions/java-version.instructions.md": {
+    "mtime": 1793487929.0,
+    "seen": 1794060901.3422198,
+    "ast_hash": "70dd6b0addb18d0c4c3f462c6d7e474c",
+    "semantic_hash": ""
+  },
+  ".github/instructions/java.instructions.md": {
+    "mtime": 1793490514.0,
+    "seen": 1794060901.3422198,
+    "ast_hash": "c3cdc20b1b9360ce503b465aa66ecbf5",
+    "semantic_hash": ""
+  },
+  ".github/pull_request_template.md": {
+    "mtime": 1792266385.0,
+    "seen": 1794060901.3422198,
+    "ast_hash": "676da6996a9e5c7931770191e75fe822",
+    "semantic_hash": ""
+  },
+  "CHANGELOG.md": {
+    "mtime": 1792266385.0,
+    "seen": 1794060901.3422198,
+    "ast_hash": "558c9701895cf7aabb9893fb52b00aff",
+    "semantic_hash": ""
+  },
+  "README.md": {
+    "mtime": 1792266385.0,
+    "seen": 1794060901.3422198,
+    "ast_hash": "7df10bcc62cd5f993ef48a93740d13c2",
+    "semantic_hash": ""
+  },
+  "data/ui/api-config-all.html": {
+    "mtime": 1792266385.0,
+    "seen": 1794060901.3422198,
+    "ast_hash": "737e1d54f9cca5cdf66f579705b50098",
+    "semantic_hash": ""
+  },
+  "data/ui/api-config-debug.html": {
+    "mtime": 1792266385.0,
+    "seen": 1794060901.3422198,
+    "ast_hash": "f725fbc56b9c885f59a9d77e7d5bec6c",
+    "semantic_hash": ""
+  },
+  "data/ui/api-config-gpio.html": {
+    "mtime": 1792266385.0,
+    "seen": 1794060901.3422198,
+    "ast_hash": "45cff19dc40b69adf7c8ceb5513ac476",
+    "semantic_hash": ""
+  },
+  "data/ui/api-config-microphone.html": {
+    "mtime": 1792266385.0,
+    "seen": 1794060901.3422198,
+    "ast_hash": "7decb0d0bb9250106e319759375b2aed",
+    "semantic_hash": ""
+  },
+  "data/ui/api-config-network.html": {
+    "mtime": 1792266385.0,
+    "seen": 1794060901.3422198,
+    "ast_hash": "31d7589a069d84c4ee05187600ae0327",
+    "semantic_hash": ""
+  },
+  "data/ui/api-config-sync.html": {
+    "mtime": 1792266385.0,
+    "seen": 1794060901.3422198,
+    "ast_hash": "9a4c7e7fdf1938319b78097c08e056bc",
+    "semantic_hash": ""
+  },
+  "data/ui/api-hardware.html": {
+    "mtime": 1792266385.0,
+    "seen": 1794060901.3422198,
+    "ast_hash": "d808a67db9c291d76cccd3104665bf96",
+    "semantic_hash": ""
+  },
+  "data/ui/api-profiles.html": {
+    "mtime": 1792266385.0,
+    "seen": 1794060901.3422198,
+    "ast_hash": "87aa2a05c7c6a8126a75cc90999dcdf7",
+    "semantic_hash": ""
+  },
+  "data/ui/api-release.html": {
+    "mtime": 1792266385.0,
+    "seen": 1794060901.3422198,
+    "ast_hash": "a25bfdaa9d1cf149e90588c00175a773",
+    "semantic_hash": ""
+  },
+  "data/ui/api-state.html": {
+    "mtime": 1792266385.0,
+    "seen": 1794060901.3422198,
+    "ast_hash": "26299fe6c950616831e224c344765a62",
+    "semantic_hash": ""
+  },
+  "data/ui/common.css.html": {
+    "mtime": 1792266385.0,
+    "seen": 1794060901.3422198,
+    "ast_hash": "47ba219d48b754b834bd858bc1f4712a",
+    "semantic_hash": ""
+  },
+  "data/ui/config-index.html": {
+    "mtime": 1792266385.0,
+    "seen": 1794060901.3422198,
+    "ast_hash": "3407426b3cb1e57b119fb2fea6946b48",
+    "semantic_hash": ""
+  },
+  "data/ui/debug-config.html": {
+    "mtime": 1792266385.0,
+    "seen": 1794060901.3422198,
+    "ast_hash": "3753a4e3ea01a37247bcf39d831542e1",
+    "semantic_hash": ""
+  },
+  "data/ui/docs.html": {
+    "mtime": 1792266385.0,
+    "seen": 1794060901.3422198,
+    "ast_hash": "0f661c8a5a47f319b6b893b63a6ee6df",
+    "semantic_hash": ""
+  },
+  "data/ui/general-config.html": {
+    "mtime": 1792266385.0,
+    "seen": 1794060901.3422198,
+    "ast_hash": "f237f0bfe761956fb43ac2eaea8b40f3",
+    "semantic_hash": ""
+  },
+  "data/ui/gpio-config.html": {
+    "mtime": 1792266385.0,
+    "seen": 1794060901.3422198,
+    "ast_hash": "54d481bee12decf94bb4787b24480cd5",
+    "semantic_hash": ""
+  },
+  "data/ui/home.html": {
+    "mtime": 1792266385.0,
+    "seen": 1794060901.3422198,
+    "ast_hash": "a7790639fb74897bacd67166af2329c8",
+    "semantic_hash": ""
+  },
+  "data/ui/manual-config.html": {
+    "mtime": 1792266385.0,
+    "seen": 1794060901.3422198,
+    "ast_hash": "2d12a0ec1adedb41df5509df17e7904a",
+    "semantic_hash": ""
+  },
+  "data/ui/microphone-config.html": {
+    "mtime": 1792266385.0,
+    "seen": 1794060901.3422198,
+    "ast_hash": "54113ac4ce9196fab127c0447da59fc9",
+    "semantic_hash": ""
+  },
+  "data/ui/nav.html": {
+    "mtime": 1792266385.0,
+    "seen": 1794060901.3422198,
+    "ast_hash": "7bd6545c759a674ebaa0b543b261e381",
+    "semantic_hash": ""
+  },
+  "data/ui/network-config.html": {
+    "mtime": 1792266385.0,
+    "seen": 1794060901.3422198,
+    "ast_hash": "44b20119069ba40788e3bacfa0f0ae83",
+    "semantic_hash": ""
+  },
+  "data/ui/palettes-config.html": {
+    "mtime": 1792266385.0,
+    "seen": 1794060901.3422198,
+    "ast_hash": "3feb72b7f8f53b90e692fef03791fc1e",
+    "semantic_hash": ""
+  },
+  "data/ui/profiles-config.html": {
+    "mtime": 1792266385.0,
+    "seen": 1794060901.3422198,
+    "ast_hash": "f18f73d2b28c279356f0d9fc602f95b9",
+    "semantic_hash": ""
+  },
+  "data/ui/sync-config.html": {
+    "mtime": 1792266385.0,
+    "seen": 1794060901.3422198,
+    "ast_hash": "f9542deb9f1ac9da9e59863ace101b01",
+    "semantic_hash": ""
+  },
+  "data/ui/version.html": {
+    "mtime": 1792266385.0,
+    "seen": 1794060901.3422198,
+    "ast_hash": "10ecf472982098efd670e0c0fa3b4b8e",
+    "semantic_hash": ""
+  },
+  "docs/CONTEXT_TRANSFER_FROM_MONOREPO.md": {
+    "mtime": 1792266385.0,
+    "seen": 1794060901.3422198,
+    "ast_hash": "cd57683c139934ad44651cde8721a5d5",
+    "semantic_hash": ""
+  },
+  "docs/CORE_FULL_BUILD_PLAN.md": {
+    "mtime": 1792266385.0,
+    "seen": 1794060901.3422198,
+    "ast_hash": "74359b872e37892817bfe03594f27065",
+    "semantic_hash": ""
+  },
+  "docs/CORE_FULL_F0_AUDIT.md": {
+    "mtime": 1792266385.0,
+    "seen": 1794060901.3422198,
+    "ast_hash": "af6c0829e7baedbf8d50f85d385daa0e",
+    "semantic_hash": ""
+  },
+  "docs/IMPLEMENTACION_EFECTOS_WLED_ROADMAP.md": {
+    "mtime": 1792266385.0,
+    "seen": 1794060901.3422198,
+    "ast_hash": "a41332eff0697be65412f92005faff9a",
+    "semantic_hash": ""
+  },
+  "docs/MEMORIA_PROYECTO.md": {
+    "mtime": 1792266385.0,
+    "seen": 1794060901.3422198,
+    "ast_hash": "8bff5ef955e3e741947ea76401d5c2f2",
+    "semantic_hash": ""
+  },
+  "docs/RELEASE_CHECKLIST.md": {
+    "mtime": 1792266385.0,
+    "seen": 1794060901.3422198,
+    "ast_hash": "bf6b1ea3aa0cbb7a48d7c317a333673f",
+    "semantic_hash": ""
+  },
+  "docs/baseline/BASELINE_CAPTURE_TEMPLATE.md": {
+    "mtime": 1792266385.0,
+    "seen": 1794060901.3422198,
+    "ast_hash": "e8bb61175019811b35092f0553b04e21",
+    "semantic_hash": ""
+  },
+  "docs/baseline/HOW-TO-BASELINE.md": {
+    "mtime": 1792266385.0,
+    "seen": 1794060901.3422198,
+    "ast_hash": "9dfcb8cf1219d8c5887d4e464d3e10a5",
+    "semantic_hash": ""
+  },
+  "docs/postman/README.md": {
+    "mtime": 1792266385.0,
+    "seen": 1794060901.3422198,
+    "ast_hash": "7105be092a8ba67291665e81da978ac1",
+    "semantic_hash": ""
+  },
+  "docs/wiki/API-v1.md": {
+    "mtime": 1792266385.0,
+    "seen": 1794060901.3422198,
+    "ast_hash": "2b91a5bf78bcbbbcf3018ef878f7e19b",
+    "semantic_hash": ""
+  },
+  "docs/wiki/Architecture.md": {
+    "mtime": 1792266385.0,
+    "seen": 1794060901.3422198,
+    "ast_hash": "435eab5a721055a37abc83080d28aacb",
+    "semantic_hash": ""
+  },
+  "docs/wiki/Configuration-Schema.md": {
+    "mtime": 1792266385.0,
+    "seen": 1794060901.3422198,
+    "ast_hash": "310610b5db9e54aa3b1880d6d04204c2",
+    "semantic_hash": ""
+  },
+  "docs/wiki/FAQ.md": {
+    "mtime": 1792266385.0,
+    "seen": 1794060901.3422198,
+    "ast_hash": "1886abe4b886e0bac82d6456c069fb6f",
+    "semantic_hash": ""
+  },
+  "docs/wiki/GPIO-Profiles.md": {
+    "mtime": 1792266385.0,
+    "seen": 1794060901.3422198,
+    "ast_hash": "6b26dffb6e88451bb0e55ea6d62869ff",
+    "semantic_hash": ""
+  },
+  "docs/wiki/Home.md": {
+    "mtime": 1792266385.0,
+    "seen": 1794060901.3422198,
+    "ast_hash": "aaf31949cda5137c1bb454746c5e49fe",
+    "semantic_hash": ""
+  },
+  "docs/wiki/Palettes.md": {
+    "mtime": 1792266385.0,
+    "seen": 1794060901.3422198,
+    "ast_hash": "a79eaab63b4c5a7669cf3f081c2c7b8d",
+    "semantic_hash": ""
+  },
+  "docs/wiki/Roadmap.md": {
+    "mtime": 1792266385.0,
+    "seen": 1794060901.3422198,
+    "ast_hash": "b780ce93cfb61109e38ed4c6ff4d5ffa",
+    "semantic_hash": ""
+  },
+  "docs/wiki/Sync-Compatibility.md": {
+    "mtime": 1792266385.0,
+    "seen": 1794060901.3422198,
+    "ast_hash": "a580a116a2be978114fa4011766407c2",
+    "semantic_hash": ""
+  },
+  "firmware/CHECKLIST_SERIAL_ESP32C3.md": {
+    "mtime": 1792266385.0,
+    "seen": 1794060901.3422198,
+    "ast_hash": "784e2bbb02f1a0773e78009c504899af",
+    "semantic_hash": ""
+  },
+  "firmware/config/POWER_CONFIG_GUIDE.md": {
+    "mtime": 1792266386.0,
+    "seen": 1794060901.3422198,
+    "ast_hash": "b967401ab3f674b626ee5432465cdfde",
+    "semantic_hash": ""
+  },
+  "firmware/src/services/VoltageOptimizer-README.md": {
+    "mtime": 1792266386.0,
+    "seen": 1794060901.3422198,
+    "ast_hash": "d689c137c102c212b6712e47c2894711",
+    "semantic_hash": ""
+  },
+  "firmware/test/README.md": {
+    "mtime": 1792266386.0,
+    "seen": 1794060901.3422198,
+    "ast_hash": "c8acb589f8559e0f03a5284d457f9de5",
+    "semantic_hash": ""
+  },
+  "tools/README.md": {
+    "mtime": 1792266386.0,
+    "seen": 1794060901.3422198,
+    "ast_hash": "5fc088d0eb6bdf063c21be6df4d9cd3f",
+    "semantic_hash": ""
+  }
+}
