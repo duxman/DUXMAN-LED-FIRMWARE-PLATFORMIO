@@ -68,6 +68,8 @@ private:
   static constexpr uint8_t kDdpReplyFlag = 0x04;
   static constexpr uint8_t kDdpStorageFlag = 0x08;
   static constexpr uint8_t kDdpTimeFlag = 0x10;
+  static constexpr uint8_t kDdpDatatypeDefault = 0x00;
+  static constexpr uint8_t kDdpDatatypeRgb24 = 0x01;
   static constexpr uint8_t kDdpDatatypeRgb8 = 0x0B;
   static constexpr size_t kDdpHeaderLength = 10;
   static constexpr size_t kDdpTimecodeHeaderLength = 14;
