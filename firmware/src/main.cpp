@@ -56,6 +56,7 @@ TaskHandle_t renderTaskHandle = nullptr;
 
 constexpr TickType_t kRenderIntervalTicks = pdMS_TO_TICKS(16);
 constexpr TickType_t kControlIntervalTicks = pdMS_TO_TICKS(10);
+constexpr uint32_t kControlTaskStackBytes = 8192;
 
 void waitForSerialIfUsbCdcEnabled(unsigned long timeoutMs) {
 #if defined(ARDUINO_USB_CDC_ON_BOOT) && (ARDUINO_USB_CDC_ON_BOOT == 1)
@@ -175,7 +176,7 @@ void setup() {
   const BaseType_t controlTaskOk = xTaskCreatePinnedToCore(
       controlTask,
       "dux-control",
-      4096,
+      kControlTaskStackBytes,
       nullptr,
       2,
       &controlTaskHandle,

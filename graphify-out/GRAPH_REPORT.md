@@ -1,17 +1,17 @@
 # Graph Report - DUXMAN-LED-FIRMWARE-PLATFORMIO  (2026-11-07)
 
 ## Corpus Check
-- 160 files · ~113,862 words
+- 160 files · ~114,753 words
 - Verdict: corpus is large enough that graph structure adds value.
 - Unclassified: 11 file(s) not represented in the graph (top: (none) 8, .log 2, .ini 1)
 
 ## Summary
-- 1880 nodes · 3722 edges · 117 communities (97 shown, 20 thin omitted)
-- Extraction: 81% EXTRACTED · 19% INFERRED · 0% AMBIGUOUS · INFERRED: 704 edges (avg confidence: 0.85)
+- 1913 nodes · 3640 edges · 127 communities (99 shown, 28 thin omitted)
+- Extraction: 83% EXTRACTED · 17% INFERRED · 0% AMBIGUOUS · INFERRED: 604 edges (avg confidence: 0.85)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `e8f43f99`
+- Built from commit: `b8e13eee`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -19,11 +19,11 @@
 - LedDriver
 - ApiService
 - ProfileService
-- LedDriverNeoPixelBus.cpp
+- NeoOutputBase
 - Config.cpp
 - EffectPersistenceService
 - AudioService
-- LedDriverColorOrder
+- LedDriverFastLed.cpp
 - Implementacion de mejoras de efectos (inspirado en WLED)
 - EffectEngine.h
 - with
@@ -55,6 +55,7 @@
 - Servicios activos en arranque
 - Arduino y PlatformIO
 - Checklist de diagnostico serial (ESP32-C3)
+- HardwareInfo.cpp
 - Instrucciones del Proyecto y Memoria de Arquitectura
 - API-v1.md
 - Plan de perfiles `core` y `full`
@@ -65,7 +66,7 @@
 - Baseline de metricas de render — DUXMAN-LED-NEXT
 - EffectAudioNeonEq
 - .resetE131Assembly
-- VoltageOptimizer.h
+- LedDriverNeoPixelBus.cpp
 - Changelog
 - 4. Capacidades que debe cubrir la API
 - Release Checklist (2 minutos)
@@ -76,7 +77,7 @@
 - Instrucciones de Graphify para memoria arquitectónica y agentes
 - Context Transfer From Monorepo
 - Configuration Schema
-- OutputPowerMetrics
+- [0.6.7-beta] - 2026-11-07
 - Instrucciones del Proyecto y Memoria de Arquitectura
 - java.instructions.md
 - Registro y logging
@@ -87,26 +88,24 @@
 - wiki-sync.ps1
 - Perfiles GPIO
 - Paletas de color
-- EffectAudioPulse
-- EffectBlinkFixed
-- EffectBlinkGradient
-- Stats
+- LedDriverColorOrder
+- NeoOutputRgb
+- EffectCanvas1D.h
+- NeoOutputRgbw
 - Pruebas unitarias
 - Patrones de diseño
 - Spring Boot 4
 - pull_request_template.md
-- [0.6.6-beta] - 2026-07-29
-- [Unreleased]
+- LedDriverOutputConfig
+- LedDriverType
 - 5. Contrato API y calidad
 - F0 - Baseline y auditoria funcional
 - F1 - Contrato API completo
 - F2 - Pruebas de paridad con `home`
-- HardwareInfo.cpp
+- main.cpp
 - SynchronizedClockState
 - Java en este repositorio
 - Pruebas externas y de carga
-- [0.6.4-alpha] - 2026-07-27
-- [0.6.5-beta] - 2026-07-28
 - 1. Objetivos
 - 2. Situacion actual
 - 6. Arquitectura de builds
@@ -118,17 +117,22 @@
 - F8 - Documentacion y release
 - DUXMAN-LED-FIRMWARE-PLATFORMIO
 - Roadmap y evolucion
-- EffectFixed
-- Usage Example
 - Fase de pruebas
 - Spring Data
 - Pruebas API con Postman
 - SyncService::SyncService
 - test/README.md
+- ColorUtils.h
+- [0.6.6-beta] - 2026-07-29
+- Hitos recientes
+- EffectAudioPulse
+- EffectBlinkGradient
+- [0.6.5-beta] - 2026-07-28
+- EffectBreathFixed.cpp
 
 ## God Nodes (most connected - your core abstractions)
 1. `SyncService` - 92 edges
-2. `ApiService` - 83 edges
+2. `ApiService` - 84 edges
 3. `LedDriver` - 67 edges
 4. `impl_` - 65 edges
 5. `EffectEngine` - 59 edges
@@ -139,37 +143,37 @@
 10. `EffectPersistenceService` - 34 edges
 
 ## Surprising Connections (you probably didn't know these)
-- `Flujo recomendado de trabajo` --references--> `main()`  [INFERRED]
-  docs/MEMORIA_PROYECTO.md → .github/scripts/update_headers.py
-- `CI/CD de firmware` --references--> `main()`  [INFERRED]
-  README.md → .github/scripts/update_headers.py
-- `Pilares de arquitectura` --references--> `ApiService`  [INFERRED]
-  docs/MEMORIA_PROYECTO.md → firmware/src/api/ApiService.h
-- `Servicios activos en arranque` --references--> `ApiService`  [INFERRED]
-  docs/wiki/Architecture.md → firmware/src/api/ApiService.h
 - `Metricas preliminares F2 (Gradient Meteor)` --references--> `EffectGradientMeteor`  [INFERRED]
   docs/IMPLEMENTACION_EFECTOS_WLED_ROADMAP.md → firmware/src/effects/visual-only/EffectGradientMeteor.h
+- `Historical Releases (Imported)` --references--> `SyncService`  [INFERRED]
+  CHANGELOG.md → firmware/src/services/SyncService.h
+- `Historical Releases (Imported)` --references--> `VoltageOptimizer`  [INFERRED]
+  CHANGELOG.md → firmware/src/services/VoltageOptimizer.h
+- `CI/CD de firmware` --references--> `main()`  [INFERRED]
+  README.md → .github/scripts/update_headers.py
+- `Arquitectura rapida` --references--> `ApiService`  [INFERRED]
+  README.md → firmware/src/api/ApiService.h
 
 ## Import Cycles
 - None detected.
 
-## Communities (117 total, 20 thin omitted)
+## Communities (127 total, 28 thin omitted)
 
 ### Community 0 - "LedDriver"
 Cohesion: 0.05
 Nodes (30): isRgbwOutput(), LedDriver, frameColors_, LedDriver::~LedDriver(), level_, logicalPixelCount_, logNextShow_, outputLevels_ (+22 more)
 
 ### Community 1 - "ApiService"
-Cohesion: 0.10
-Nodes (13): addJsonResponse(), ApiService, commandBuffer_, httpServer_, buildBootedAtLabel(), buildGeneralPayloadFromRoot(), buildMicrophoneJson(), contentTypeForPath() (+5 more)
+Cohesion: 0.07
+Nodes (79): addJsonResponse(), ApiService, ApiService::begin(), ApiService::buildApiConfigAllHtml(), ApiService::buildApiConfigDebugHtml(), ApiService::buildApiConfigGpioHtml(), ApiService::buildApiConfigMicrophoneHtml(), ApiService::buildApiConfigNetworkHtml() (+71 more)
 
 ### Community 2 - "ProfileService"
 Cohesion: 0.07
 Nodes (24): AppProfile, builtIn, debug, description, gpio, id, microphone, name (+16 more)
 
-### Community 3 - "LedDriverNeoPixelBus.cpp"
-Cohesion: 0.06
-Nodes (24): asNeoOutput(), createNeoOutput(), createNeoOutputRgbByChannel(), createNeoOutputRgbByMethod(), createNeoOutputRgbwByChannel(), createNeoOutputRgbwByMethod(), destroyNeoOutput(), isAddressableOutputType() (+16 more)
+### Community 3 - "NeoOutputBase"
+Cohesion: 0.16
+Nodes (5): createNeoOutputRgbByChannel(), createNeoOutputRgbByMethod(), createNeoOutputRgbwByChannel(), createNeoOutputRgbwByMethod(), NeoOutputBase
 
 ### Community 4 - "Config.cpp"
 Cohesion: 0.09
@@ -183,17 +187,17 @@ Nodes (26): EffectPersistenceService, activeSequenceIndex_, activeSequenceStarte
 Cohesion: 0.05
 Nodes (29): AudioService, ambientBaseline_, audioBuffer_, audioLevel_, AudioService::AudioService(), beatCooldownMs_, i2sPort_, kAgcBaselineFactor (+21 more)
 
-### Community 7 - "LedDriverColorOrder"
-Cohesion: 0.05
-Nodes (39): LedDriverColorOrder, B, BGR, BRG, G, GBR, GRB, GRBW (+31 more)
+### Community 7 - "LedDriverFastLed.cpp"
+Cohesion: 0.16
+Nodes (7): addFastLedController(), createFastLedController(), LedDriverFastLed, activeLedCount_, activeOutputIndex_, initialized_, resolveFastLedOrder()
 
 ### Community 8 - "Implementacion de mejoras de efectos (inspirado en WLED)"
-Cohesion: 0.05
-Nodes (43): Alcance MVP, Alcance MVP, Alcance MVP, Backlog priorizado, Bitacora de cambios, Control de riesgos, Convenciones de estado, Criterio de cierre (+35 more)
+Cohesion: 0.04
+Nodes (44): Alcance MVP, Alcance MVP, Alcance MVP, Backlog priorizado, Bitacora de cambios, Control de riesgos, Convenciones de estado, Criterio de cierre (+36 more)
 
 ### Community 9 - "EffectEngine.h"
 Cohesion: 0.08
-Nodes (12): Metricas F2 (Triple Chase), Metricas preliminares F2 (Gradient Meteor), blendColorLerp(), EffectBreathFixed, EffectBreathGradient, EffectDiagnostic, EffectGradient, EffectGradientMeteor (+4 more)
+Nodes (11): Metricas F2 (Triple Chase), EffectBouncingPhysics, EffectTrigRibbon, blendColorLerp(), EffectManager, EffectBreathGradient, EffectGradientMeteor, EffectLavaFlow (+3 more)
 
 ### Community 10 - "with"
 Cohesion: 0.05
@@ -211,10 +215,6 @@ Nodes (38): SyncService, activeDdpPort_, clusterLastSentAtMs_, clusterLastSequen
 Cohesion: 0.06
 Nodes (27): Flujo recomendado de trabajo, Control de flujo, Documentación, Errores, Hilos, Java básico, siempre presente, No generar, aunque el curso lo enseñe, Objetos (+19 more)
 
-### Community 14 - "main.cpp"
-Cohesion: 0.14
-Nodes (6): ReleaseInfo::toJson(), controlTask(), renderTask(), setup(), waitForSerialIfUsbCdcEnabled(), Arquitectura rapida
-
 ### Community 15 - "WifiService.cpp"
 Cohesion: 0.10
 Nodes (13): hasCustomDns(), normalizedWifiMode(), parseIpOrDefault(), printIpDetails(), registerDiscoveryServices(), WifiService, apEnabled_, dnsApplied_ (+5 more)
@@ -228,8 +228,8 @@ Cohesion: 0.12
 Nodes (14): Language, ENGLISH, FRENCH, GERMAN, ITALIAN, SPANISH, UNKNOWN, LanguageManager (+6 more)
 
 ### Community 18 - "CoreState.cpp"
-Cohesion: 0.10
-Nodes (19): formatHexColor(), parseColorValue(), parseHexColor(), CoreState::applyPatchJson(), CoreState::defaults(), CoreState::lock(), CoreState::setMutex(), CoreState::snapshot() (+11 more)
+Cohesion: 0.14
+Nodes (16): CoreState::applyPatchJson(), CoreState::defaults(), CoreState::lock(), CoreState::setMutex(), CoreState::snapshot(), CoreState::toJson(), hasValidStatePatch(), isIntegerInRange() (+8 more)
 
 ### Community 19 - "Paso a paso completo"
 Cohesion: 0.07
@@ -240,8 +240,8 @@ Cohesion: 0.08
 Nodes (23): API Endpoints, Backward Compatibility, Colors Look Wrong After Dimming, Configuration Examples, Configuration Not Persisting, Configuration Parameters, Example 1: Simple Setup (5V, ~100 LEDs), Example 2: Long Cable Run (300 LEDs, 3m cable) (+15 more)
 
 ### Community 22 - "EffectAudioRainbowWave"
-Cohesion: 0.10
-Nodes (12): EffectAudioRainbowWave, beatMs_, kBeatFlashMs, kColorOrange, kColorRed, kColorWhite, kColorYellow, kWaveSmoothK (+4 more)
+Cohesion: 0.18
+Nodes (10): EffectAudioRainbowWave, beatMs_, kBeatFlashMs, kColorOrange, kColorRed, kColorWhite, kColorYellow, kWaveSmoothK (+2 more)
 
 ### Community 23 - "StorageService"
 Cohesion: 0.17
@@ -260,24 +260,24 @@ Cohesion: 0.16
 Nodes (19): all(), applyToColors(), ColorPaletteDescriptor, color1, color2, color3, description, id (+11 more)
 
 ### Community 27 - "VoltageOptimizer"
-Cohesion: 0.10
-Nodes (16): VoltageOptimizer, colorHistory_, config_, energySmoothingFilter_, history_, historyWriteIdx_, isInitialized_, kHistoryBufferSize (+8 more)
+Cohesion: 0.06
+Nodes (29): OutputPowerMetrics, correctionFactor, estimatedCurrentmA, isThrottled, predictedPeakmA, throttleLevel, voltageDrop, PowerHistoryPoint (+21 more)
 
 ### Community 29 - "EffectRegistry.cpp"
 Cohesion: 0.19
 Nodes (17): all(), buildHtmlOptions(), count(), EffectDescriptor, description, id, key, label (+9 more)
 
 ### Community 30 - "VoltageOptimizer - Software Voltage Management System"
-Cohesion: 0.12
-Nodes (16): API Endpoints (Future), Architecture, Calibration Guide, Configuration, Core Components, Future Enhancements, LEDs Dimming Unexpectedly, Measuring Cable Resistance (+8 more)
+Cohesion: 0.10
+Nodes (20): API Endpoints (Future), Architecture, Basic Initialization, Calibration Guide, Configuration, Core Components, Future Enhancements, LEDs Dimming Unexpectedly (+12 more)
 
 ### Community 31 - "steps"
 Cohesion: 0.12
 Nodes (16): runs-on, steps, jobs, check-wiki-sync, name, on, pull_request, push (+8 more)
 
 ### Community 32 - "WatchdogService"
-Cohesion: 0.16
-Nodes (5): WatchdogService, autoResetOnTimeout_, initialized_, stats_, timeoutSeconds_
+Cohesion: 0.11
+Nodes (10): Stats, controlTaskResets, lastResetTimeMs, renderTaskResets, resetCount, WatchdogService, autoResetOnTimeout_, initialized_ (+2 more)
 
 ### Community 33 - "RenderMetricsService"
 Cohesion: 0.12
@@ -292,8 +292,8 @@ Cohesion: 0.13
 Nodes (14): name, runs-on, steps, jobs, changelog-required, name, on, pull_request (+6 more)
 
 ### Community 36 - "Servicios activos en arranque"
-Cohesion: 0.14
-Nodes (11): Decisiones clave, F1 - Contrato API completo (2026-09-18), Hitos recientes, Memoria del Proyecto - Firmware, Objetivo, Pilares de arquitectura, Prioridades inmediatas, Riesgos conocidos (+3 more)
+Cohesion: 0.25
+Nodes (7): Decisiones clave, Memoria del Proyecto - Firmware, Objetivo, Pilares de arquitectura, Prioridades inmediatas, Riesgos conocidos, Stack tecnico
 
 ### Community 37 - "Arduino y PlatformIO"
 Cohesion: 0.14
@@ -335,13 +335,13 @@ Nodes (9): Baseline de metricas de render — DUXMAN-LED-NEXT, Criterio de cierr
 Cohesion: 0.24
 Nodes (6): EffectAudioNeonEq, beatFlashAtMs_, highEnv_, lowEnv_, midEnv_, smoothEnv()
 
-### Community 51 - "VoltageOptimizer.h"
-Cohesion: 0.22
-Nodes (6): PowerHistoryPoint, brightnessPercent, effectId, temperatureC, timestamp, totalCurrentmA
+### Community 51 - "LedDriverNeoPixelBus.cpp"
+Cohesion: 0.25
+Nodes (9): asNeoOutput(), createNeoOutput(), destroyNeoOutput(), isAddressableOutputType(), LedDriverNeoPixelBus, initialized_, LedDriverNeoPixelBus::~LedDriverNeoPixelBus(), outputs_ (+1 more)
 
 ### Community 52 - "Changelog"
-Cohesion: 0.22
-Nodes (8): [0.6.3-alpha] - 2026-07-23, [0.6.4-beta] - 2026-07-27, Added, Changed, Changelog, Historical Releases (Imported), Notes, Notes
+Cohesion: 0.14
+Nodes (13): [0.6.3-alpha] - 2026-07-23, [0.6.4-alpha] - 2026-07-27, [0.6.4-beta] - 2026-07-27, Added, Added, Changed, Changed, Changelog (+5 more)
 
 ### Community 53 - "4. Capacidades que debe cubrir la API"
 Cohesion: 0.22
@@ -352,8 +352,8 @@ Cohesion: 0.22
 Nodes (8): 1) Preparar version, 2) Actualizar changelog, 3) Commit y push, 4) Crear tag de release, 5) Verificar GitHub Actions, 6) Verificar assets de release, 7) Post-release rapido, Release Checklist (2 minutos)
 
 ### Community 55 - "Arquitectura del firmware"
-Cohesion: 0.22
-Nodes (9): Arquitectura del firmware, Diseno general, Modelos de configuracion, Motor LED, Persistencia, Referencias, Sincronizacion (stack S1-S6), Tareas FreeRTOS (+1 more)
+Cohesion: 0.20
+Nodes (10): Arquitectura del firmware, Diseno general, Modelos de configuracion, Motor LED, Persistencia, Referencias, Servicios activos en arranque, Sincronizacion (stack S1-S6) (+2 more)
 
 ### Community 56 - "EffectStellarTwinkle.cpp"
 Cohesion: 0.31
@@ -375,9 +375,9 @@ Nodes (7): Context Transfer From Monorepo, Convenciones de mantenimiento en firm
 Cohesion: 0.25
 Nodes (8): Configuration Schema, Endpoints relacionados, general, gpio, microphone, network, Root JSON, sync
 
-### Community 62 - "OutputPowerMetrics"
-Cohesion: 0.25
-Nodes (7): OutputPowerMetrics, correctionFactor, estimatedCurrentmA, isThrottled, predictedPeakmA, throttleLevel, voltageDrop
+### Community 62 - "[0.6.7-beta] - 2026-11-07"
+Cohesion: 0.33
+Nodes (6): [0.6.7-beta] - 2026-11-07, Added, Changed, Docs, Fixed, Validation
 
 ### Community 63 - "Instrucciones del Proyecto y Memoria de Arquitectura"
 Cohesion: 0.25
@@ -411,17 +411,21 @@ Nodes (6): API de perfiles, Ejemplo de perfil completo, Notas, Perfiles GPIO, Qu
 Cohesion: 0.33
 Nodes (5): API de paletas, Ejemplo de paleta de usuario, Paletas de color, Paletas de usuario, Paletas predefinidas
 
-### Community 75 - "EffectBlinkFixed"
-Cohesion: 0.40
-Nodes (3): EffectBlinkFixed, lastToggleAtMs_, visible_
+### Community 74 - "LedDriverColorOrder"
+Cohesion: 0.14
+Nodes (14): LedDriverColorOrder, B, BGR, BRG, G, GBR, GRB, GRBW (+6 more)
 
-### Community 76 - "EffectBlinkGradient"
-Cohesion: 0.40
-Nodes (3): EffectBlinkGradient, lastToggleAtMs_, visible_
+### Community 75 - "NeoOutputRgb"
+Cohesion: 0.14
+Nodes (5): NeoOutputRgb, bus_, busCount_, ledCount_, rgbFromColor()
 
-### Community 77 - "Stats"
-Cohesion: 0.33
-Nodes (5): Stats, controlTaskResets, lastResetTimeMs, renderTaskResets, resetCount
+### Community 76 - "EffectCanvas1D.h"
+Cohesion: 0.13
+Nodes (6): EffectBlinkFixed, lastToggleAtMs_, visible_, EffectDiagnostic, EffectFixed, EffectGradient
+
+### Community 77 - "NeoOutputRgbw"
+Cohesion: 0.17
+Nodes (5): NeoOutputRgbw, bus_, busCount_, ledCount_, rgbwFromColor()
 
 ### Community 78 - "Pruebas unitarias"
 Cohesion: 0.33
@@ -439,13 +443,13 @@ Nodes (5): Cómo se compone, Preferencia por Spring Boot, Qué no se genera, Ref
 Cohesion: 0.33
 Nodes (5): Checklist Wiki, Notas adicionales, Resumen, Tipo de cambio, Validacion realizada
 
-### Community 82 - "[0.6.6-beta] - 2026-07-29"
-Cohesion: 0.40
-Nodes (4): [0.6.6-beta] - 2026-07-29, Added, Changed, Docs
+### Community 82 - "LedDriverOutputConfig"
+Cohesion: 0.20
+Nodes (9): LedDriverOutputConfig, colorOrder, enabled, id, isDigital, isRgbw, ledCount, ledType (+1 more)
 
-### Community 83 - "[Unreleased]"
-Cohesion: 0.40
-Nodes (5): Added, Changed, Docs, [Unreleased], Validation
+### Community 83 - "LedDriverType"
+Cohesion: 0.22
+Nodes (9): LedDriverType, Digital, Sk6812, Tm1814, Unknown, Ws2811, Ws2812b, Ws2813 (+1 more)
 
 ### Community 84 - "5. Contrato API y calidad"
 Cohesion: 0.40
@@ -460,8 +464,8 @@ Cohesion: 0.40
 Nodes (5): Criterio de cierre, F1 - Contrato API completo, Objetivo, Registro de reanudacion F1, Tareas
 
 ### Community 87 - "F2 - Pruebas de paridad con `home`"
-Cohesion: 0.40
-Nodes (5): Criterio de cierre, F2 - Pruebas de paridad con `home`, Herramienta de prueba, Objetivo, Tareas
+Cohesion: 0.33
+Nodes (6): Criterio de cierre, Estado, F2 - Pruebas de paridad con `home`, Herramienta de prueba, Objetivo, Tareas
 
 ### Community 89 - "SynchronizedClockState"
 Cohesion: 0.40
@@ -474,14 +478,6 @@ Nodes (5): Conocimiento ya extraído, Cómo procesar un PDF nuevo, Java en este 
 ### Community 91 - "Pruebas externas y de carga"
 Cohesion: 0.40
 Nodes (4): JMeter, No generar, Pruebas externas y de carga, Selenium
-
-### Community 92 - "[0.6.4-alpha] - 2026-07-27"
-Cohesion: 0.50
-Nodes (4): [0.6.4-alpha] - 2026-07-27, Added, Changed, Docs
-
-### Community 93 - "[0.6.5-beta] - 2026-07-28"
-Cohesion: 0.50
-Nodes (4): [0.6.5-beta] - 2026-07-28, Changed, Docs, Fixed
 
 ### Community 94 - "1. Objetivos"
 Cohesion: 0.50
@@ -527,10 +523,6 @@ Nodes (4): Contenido, DUXMAN-LED-FIRMWARE-PLATFORMIO, Inicio rapido, Repositorio
 Cohesion: 0.50
 Nodes (4): Completado en v0.6.3-alpha, Decisiones tecnicas consolidadas, Fases siguientes, Roadmap y evolucion
 
-### Community 106 - "Usage Example"
-Cohesion: 0.50
-Nodes (4): Basic Initialization, Monitoring Power, Per-Output Metrics, Usage Example
-
 ### Community 107 - "Fase de pruebas"
 Cohesion: 0.50
 Nodes (4): Cómo queda documentada, Fase de pruebas, Qué entra en el incremento, Qué se propone siempre
@@ -543,25 +535,45 @@ Nodes (3): Cómo se escribe, Qué no se genera, Spring Data
 Cohesion: 0.67
 Nodes (3): Importar, Orden recomendado, Pruebas API con Postman
 
+### Community 120 - "ColorUtils.h"
+Cohesion: 0.40
+Nodes (3): formatHexColor(), parseColorValue(), parseHexColor()
+
+### Community 121 - "[0.6.6-beta] - 2026-07-29"
+Cohesion: 0.29
+Nodes (6): [0.6.6-beta] - 2026-07-29, Added, Changed, Docs, renderTask(), Arquitectura rapida
+
+### Community 122 - "Hitos recientes"
+Cohesion: 0.33
+Nodes (6): Diagnostico provisional de pila OpenAPI (2026-11-07), F1 - Contrato API completo (2026-09-18), F2 - Pruebas de paridad con `home` completadas (2026-11-07), Hitos recientes, Preparacion de Release v0.6.7-beta y F3 pospuesto (2026-11-07), controlTask()
+
+### Community 124 - "EffectBlinkGradient"
+Cohesion: 0.40
+Nodes (3): EffectBlinkGradient, lastToggleAtMs_, visible_
+
+### Community 125 - "[0.6.5-beta] - 2026-07-28"
+Cohesion: 0.50
+Nodes (4): [0.6.5-beta] - 2026-07-28, Changed, Docs, Fixed
+
 ## Knowledge Gaps
-- **344 isolated node(s):** `commandBuffer_`, `httpServer_`, `id`, `key`, `label` (+339 more)
-  These have ≤1 connection - possible missing edges or undocumented components. (Counts symbols only; 907 node(s) total have ≤1 connection when file, concept and rationale nodes are included.)
-- **20 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+- **344 isolated node(s):** `frameColors_`, `level_`, `logicalPixelCount_`, `logNextShow_`, `outputLevels_` (+339 more)
+  These have ≤1 connection - possible missing edges or undocumented components. (Counts symbols only; 934 node(s) total have ≤1 connection when file, concept and rationale nodes are included.)
+- **28 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `Servicios activos en arranque` connect `Servicios activos en arranque` to `WatchdogService`, `ApiService`, `ProfileService`, `EffectPersistenceService`, `AudioService`, `UserPaletteService`, `SyncService`, `PersistenceSchedulerService`, `WifiService.cpp`, `StorageService`, `Arquitectura del firmware`?**
-  _High betweenness centrality (0.185) - this node is a cross-community bridge._
+- **Why does `Servicios activos en arranque` connect `Arquitectura del firmware` to `WatchdogService`, `ApiService`, `ProfileService`, `EffectPersistenceService`, `AudioService`, `EffectEngine.h`, `UserPaletteService`, `SyncService`, `PersistenceSchedulerService`, `WifiService.cpp`, `StorageService`?**
+  _High betweenness centrality (0.204) - this node is a cross-community bridge._
 - **Are the 3 inferred relationships involving `SyncService` (e.g. with `Historical Releases (Imported)` and `Pilares de arquitectura`) actually correct?**
   _`SyncService` has 3 INFERRED edges - model-reasoned connections that need verification._
-- **What connects `commandBuffer_`, `httpServer_`, `id` to the rest of the system?**
+- **What connects `frameColors_`, `level_`, `logicalPixelCount_` to the rest of the system?**
   _344 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `LedDriver` be split into smaller, more focused modules?**
-  _Cohesion score 0.054466660100462916 - nodes in this community are weakly interconnected._
-- **Why does `Arquitectura del firmware` connect `Arquitectura del firmware` to `API-v1.md`, `Servicios activos en arranque`?**
-  _High betweenness centrality (0.141) - this node is a cross-community bridge._
-- **Are the 2 inferred relationships involving `ApiService` (e.g. with `Pilares de arquitectura` and `Servicios activos en arranque`) actually correct?**
-  _`ApiService` has 2 INFERRED edges - model-reasoned connections that need verification._
+  _Cohesion score 0.05483967635600839 - nodes in this community are weakly interconnected._
+- **Why does `Arquitectura del firmware` connect `Arquitectura del firmware` to `API-v1.md`?**
+  _High betweenness centrality (0.142) - this node is a cross-community bridge._
+- **Are the 3 inferred relationships involving `ApiService` (e.g. with `Pilares de arquitectura` and `Servicios activos en arranque`) actually correct?**
+  _`ApiService` has 3 INFERRED edges - model-reasoned connections that need verification._
 - **Should `ApiService` be split into smaller, more focused modules?**
-  _Cohesion score 0.10314637482900137 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.07166042446941323 - nodes in this community are weakly interconnected._

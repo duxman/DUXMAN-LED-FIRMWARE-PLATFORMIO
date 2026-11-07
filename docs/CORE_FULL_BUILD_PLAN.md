@@ -454,6 +454,10 @@ Convertir la API existente en un contrato estable para clientes externos.
 
 Demostrar que la API puede sustituir todas las acciones de la UI actual.
 
+### Estado
+- Estado: [x] Completada (2026-11-07)
+- Resultado: Paridad 100% verificada contra hardware real (esp32dev).
+
 ### Herramienta de prueba
 
 - Coleccion Postman: [DUXMAN-LED-API-F1.postman_collection.json](postman/DUXMAN-LED-API-F1.postman_collection.json)
@@ -463,27 +467,30 @@ Demostrar que la API puede sustituir todas las acciones de la UI actual.
 
 ### Tareas
 
-- [ ] Probar encendido y apagado.
-- [ ] Probar brillo.
-- [ ] Probar seleccion de cada efecto.
-- [ ] Probar velocidad y nivel.
-- [ ] Probar secciones.
-- [ ] Probar transiciones.
-- [ ] Probar colores manuales.
-- [ ] Probar color de fondo.
-- [ ] Probar aplicar paleta.
-- [ ] Probar guardar efecto de arranque.
-- [ ] Probar anadir entrada a secuencia.
-- [ ] Probar eliminar entrada de secuencia.
-- [ ] Probar reinicio.
-- [ ] Probar que el estado devuelto coincide con el estado aplicado.
+- [x] Probar encendido y apagado.
+- [x] Probar brillo.
+- [x] Probar seleccion de cada efecto.
+- [x] Probar velocidad y nivel.
+- [x] Probar secciones.
+- [x] Probar transiciones.
+- [x] Probar colores manuales.
+- [x] Probar color de fondo.
+- [x] Probar aplicar paleta.
+- [x] Probar guardar efecto de arranque.
+- [x] Probar anadir entrada a secuencia.
+- [x] Probar eliminar entrada de secuencia.
+- [x] Probar reinicio y persistencia de arranque.
+- [x] Probar que el estado devuelto coincide con el estado aplicado.
 
 ### Criterio de cierre
 
-- [ ] Todas las acciones de `home` tienen una prueba API automatizada o reproducible.
-- [ ] No hay divergencia entre lo que muestra `home` y `GET /api/v1/state`.
+- [x] Todas las acciones de `home` tienen una prueba API automatizada o reproducible.
+- [x] No hay divergencia entre lo que muestra `home` y `GET /api/v1/state`.
 
 ## F3 - Separacion de filesystem
+
+> **Estado: [ ] Pospuesto / En evaluacion (TODO)**
+> Decision del usuario (2026-11-07): Se mantiene la estructura unificada actual de LittleFS (`data/ui`) y se deja marcada como tarea futura (TODO) pendiente de evaluar si el ahorro de flash real justifica el coste de mantenimiento de mantener dos arboles de UI independientes.
 
 ### Objetivo
 
@@ -491,12 +498,12 @@ Generar imagenes LittleFS distintas para `core` y `full`.
 
 ### Tareas
 
-- [ ] Crear `data/full` y migrar la UI actual sin cambios funcionales.
-- [ ] Crear `data/core` con solo la pagina de red minima.
-- [ ] Seleccionar el directorio por entorno PlatformIO.
-- [ ] Verificar que `buildfs` usa el directorio correcto.
-- [ ] Confirmar que la imagen `core` no contiene HTML full.
-- [ ] Documentar el comando de compilacion y subida del filesystem.
+- [ ] (TODO) Crear `data/full` y migrar la UI actual sin cambios funcionales.
+- [ ] (TODO) Crear `data/core` con solo la pagina de red minima.
+- [ ] (TODO) Seleccionar el directorio por entorno PlatformIO.
+- [ ] (TODO) Verificar que `buildfs` usa el directorio correcto.
+- [ ] (TODO) Confirmar que la imagen `core` no contiene HTML full.
+- [ ] (TODO) Documentar el comando de compilacion y subida del filesystem.
 
 ### Criterio de cierre
 

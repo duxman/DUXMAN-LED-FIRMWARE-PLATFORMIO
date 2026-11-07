@@ -2149,18 +2149,8 @@ void ApiService::handleHttpMetricsRoute() {
   httpServer_.send(405, "application/json", errorResponse("method_not_allowed"));
 }
 
-String ApiService::buildOpenApiJson() const {
-  JsonDocument doc;
-  doc["openapi"] = "3.0.3";
-  doc["info"]["title"] = "DUXMAN-LED-NEXT API";
-  doc["info"]["version"] = "v1";
-  doc["info"]["description"] = "Documentacion embebida en firmware para HTTP y comandos Serial.";
-
-  JsonObject servers = doc["servers"][0].to<JsonObject>();
-  servers["url"] = "/";
-
-  JsonObject schemas = doc["components"]["schemas"].to<JsonObject>();
-
+namespace {
+__attribute__((noinline)) void appendOpenApiStateSchemas(JsonObject schemas) {
   JsonObject state = schemas["State"].to<JsonObject>();
   state["type"] = "object";
   JsonObject stateProperties = state["properties"].to<JsonObject>();
@@ -2376,7 +2366,9 @@ String ApiService::buildOpenApiJson() const {
   microphoneResponse["type"] = "object";
   microphoneResponse["properties"]["updated"]["type"] = "boolean";
   microphoneResponse["properties"]["microphone"]["$ref"] = "#/components/schemas/MicrophoneConfig";
+}
 
+__attribute__((noinline)) void appendOpenApiDeviceSchemas(JsonObject schemas) {
   JsonObject generalSchema = schemas["GeneralConfig"].to<JsonObject>();
   generalSchema["type"] = "object";
   JsonObject general = generalSchema["properties"]["general"].to<JsonObject>();
@@ -2529,9 +2521,9 @@ String ApiService::buildOpenApiJson() const {
   syncModeResponse["type"] = "object";
   syncModeResponse["properties"]["updated"]["type"] = "boolean";
   syncModeResponse["properties"]["mode"]["type"] = "string";
+}
 
-  JsonObject paths = doc["paths"].to<JsonObject>();
-
+__attribute__((noinline)) void appendOpenApiConfigPaths(JsonObject paths) {
   JsonObject statePath = paths["/api/v1/state"].to<JsonObject>();
   statePath["get"]["summary"] = "Obtener estado actual";
   statePath["get"]["responses"]["200"]["description"] = "Estado actual";
@@ -2611,7 +2603,9 @@ String ApiService::buildOpenApiJson() const {
   gpioPath["post"]["summary"] = "Alias de PATCH para clientes limitados";
   gpioPath["post"]["requestBody"] = gpioPath["patch"]["requestBody"];
   gpioPath["post"]["responses"] = gpioPath["patch"]["responses"];
+}
 
+__attribute__((noinline)) void appendOpenApiServicePaths(JsonObject paths) {
   JsonObject profilesPath = paths["/api/v1/profiles"].to<JsonObject>();
   profilesPath["get"]["summary"] = "Listar perfiles guardados e integrados";
 
@@ -2820,6 +2814,26 @@ String ApiService::buildOpenApiJson() const {
 
   JsonObject specPath = paths["/api/v1/openapi.json"].to<JsonObject>();
   specPath["get"]["summary"] = "Especificacion OpenAPI-like";
+}
+} // namespace
+
+String ApiService::buildOpenApiJson() const {
+  JsonDocument doc;
+  doc["openapi"] = "3.0.3";
+  doc["info"]["title"] = "DUXMAN-LED-NEXT API";
+  doc["info"]["version"] = "v1";
+  doc["info"]["description"] = "Documentacion embebida en firmware para HTTP y comandos Serial.";
+
+  JsonObject servers = doc["servers"][0].to<JsonObject>();
+  servers["url"] = "/";
+
+  JsonObject schemas = doc["components"]["schemas"].to<JsonObject>();
+  appendOpenApiStateSchemas(schemas);
+  appendOpenApiDeviceSchemas(schemas);
+
+  JsonObject paths = doc["paths"].to<JsonObject>();
+  appendOpenApiConfigPaths(paths);
+  appendOpenApiServicePaths(paths);
 
   JsonArray serialCommands = doc["x-serialCommands"].to<JsonArray>();
   serialCommands.add("GET /api/v1/state");

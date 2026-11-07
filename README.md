@@ -1,6 +1,6 @@
 # DUXMAN-LED-FIRMWARE-PLATFORMIO
 
-**v0.6.6-beta** — Firmware modular para control LED en ESP32 con API REST/Serial, UI embebida, motor de efectos visual/audio y sincronizacion multi-nodo.
+**v0.6.7-beta** — Firmware modular para control LED en ESP32 con API REST/Serial, UI embebida, motor de efectos visual/audio y sincronizacion multi-nodo.
 
 Repositorio activo y prioritario del proyecto.
 
@@ -68,6 +68,8 @@ Si faltase esa seccion, el workflow de release falla para evitar releases sin tr
 - **Backends LED**: NeoPixelBus (principal), FastLED (alternativo), Digital
 - **Sync stack S1-S6**: DDP, E1.31, cluster sync, reloj de fase compartido, telemetria runtime
 - **Descubrimiento mDNS**: `_ddp._udp` y `_e131._udp` para LedFx (entrada externa) y `_duxsync._udp` para sync interno de cluster
+
+La generacion de OpenAPI en `ApiService` fue modularizada para resolver el desbordamiento de pila en `controlTask`, manteniendo un margen de seguridad con `kControlTaskStackBytes = 8192` verificado en hardware. Las fases F1 (contrato API y esquemas) y F2 (paridad completa UI home -> API) estan 100% completadas. La separacion de filesystem F3 (`core`/`full`) queda registrada como TODO en evaluacion para priorizar estabilidad.
 
 ## API v1 (resumen)
 

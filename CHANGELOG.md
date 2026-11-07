@@ -6,6 +6,8 @@ The format is based on Keep a Changelog.
 
 ## [Unreleased]
 
+## [0.6.7-beta] - 2026-11-07
+
 ### Added
 - Changelog governance with required `CHANGELOG.md` updates in pull requests.
 - Release pipeline publishes notes from versioned changelog sections.
@@ -18,21 +20,29 @@ The format is based on Keep a Changelog.
 - Shared `EffectCanvas1D` layer for reusable per-output 1D rendering primitives (clear/set/get/add/fade/blur/flush).
 
 ### Changed
+- Control task stack increased to 8192 bytes for safe headroom during large JSON generation.
+- Split OpenAPI schema and route construction into modular functions in `ApiService.cpp`, reducing function frame size from 14.1 KB to 1.6 KB.
 - `/api/v1/state` now distinguishes invalid JSON, invalid parameters and valid patches with no changes.
 - API wiki documents response envelopes, validation ranges, enumerations and synchronization/configuration schemas.
 - HTTP mutation responses now expose `ok: true` on success and `ok: false` with a stable `error` code on failure, while preserving legacy fields such as `saved`, `deleted`, `added` and `restart`.
 - State patches reject invalid types, ranges, effects, palettes, transition styles and colors instead of silently coercing them.
-- F1 completion is recorded in `docs/CORE_FULL_BUILD_PLAN.md`.
+- F1 and F2 completion recorded in `docs/CORE_FULL_BUILD_PLAN.md`.
 - Sync UI now separates LedFx external input usage from cluster sync usage to avoid ambiguous role/mode combinations.
 - F2 primitives/canvas rollout completed across visual-only effects (`fixed`, `gradient`, `blink_*`, `breath_*`, `diagnostic`, `lava_flow`, `polar_ice`, `random_color_pop`, `gradient_meteor`, `scanning_pulse`, `triple_chase`) for a unified frame pipeline.
-- Local PlatformIO defaults now pin upload/monitor to `COM5` in `platformio.ini`.
+- Firmware version markers bumped to `0.6.7-beta` (`platformio.ini`, `release-info.json`).
+
+### Fixed
+- Fixed FreeRTOS stack overflow in `dux-control` task when serving `GET /api/v1/openapi.json`.
 
 ### Validation
+- On esp32dev, OpenAPI stack overflow resolved and verified across multiple consecutive requests with 62 FPS and stable heap (>154 KB).
+- Phase F2 (home UI -> API parity) fully validated against real hardware: power on/off, brightness, effect selection, speed, sections, transition params, custom colors, palette application, startup effect persistence, sequence add/delete, and reboot recovery.
 - Pending manual validation in real LedFx environment for mDNS auto-discovery flow (`_ddp._udp` / `_e131._udp`) and end-to-end frame ingestion.
 
 ### Docs
 - New sync compatibility guide for LedFx/WLED/E1.31/MQTT at `docs/wiki/Sync-Compatibility.md`.
 - Roadmap updated in `docs/IMPLEMENTACION_EFECTOS_WLED_ROADMAP.md` reflecting F2 state and latest field metrics.
+- Updated root README with version `0.6.7-beta`, F2 parity status, and F3 LittleFS separation notes.
 
 ## [0.6.6-beta] - 2026-07-29
 
