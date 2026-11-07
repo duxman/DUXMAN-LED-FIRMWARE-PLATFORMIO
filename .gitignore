@@ -6,3 +6,7 @@
 .wiki-tmp/
 /docs/old
 .venv
+.github
+.github/agents
+.github/instructions
+
