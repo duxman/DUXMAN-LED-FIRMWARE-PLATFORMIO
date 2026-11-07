@@ -24,8 +24,8 @@
     "semantic_hash": ""
   },
   ".vscode/extensions.json": {
-    "mtime": 1794066579.9135504,
-    "seen": 1794067196.2214363,
+    "mtime": 1794067309.80941,
+    "seen": 1794072302.259412,
     "ast_hash": "b4fe65422789c169a6e60ad8eeb1d8c6",
     "semantic_hash": ""
   },
@@ -78,8 +78,8 @@
     "semantic_hash": ""
   },
   "firmware/config/release-info.json": {
-    "mtime": 1794066588.438597,
-    "seen": 1794067196.2214363,
+    "mtime": 1794067304.6048348,
+    "seen": 1794072302.259412,
     "ast_hash": "5f74d3d0a6ecd7b3139da78c08923087",
     "semantic_hash": ""
   },
@@ -552,9 +552,9 @@
     "semantic_hash": ""
   },
   "firmware/src/services/AudioService.cpp": {
-    "mtime": 1792266386.0,
-    "seen": 1794060901.3422198,
-    "ast_hash": "ad9be1336036c7cfc9b4982d1b7931df",
+    "mtime": 1794072279.7955828,
+    "seen": 1794072302.259412,
+    "ast_hash": "194c3faf44dc800fe59144a3cb60a7ff",
     "semantic_hash": ""
   },
   "firmware/src/services/AudioService.h": {
@@ -810,14 +810,14 @@
     "semantic_hash": ""
   },
   "CHANGELOG.md": {
-    "mtime": 1794066605.6739745,
-    "seen": 1794067196.2214363,
-    "ast_hash": "df4c1424764d491d03e7352edd411d8c",
+    "mtime": 1794072279.7955828,
+    "seen": 1794072302.259412,
+    "ast_hash": "b31921e2dc263270b72f84d8f26e71e3",
     "semantic_hash": ""
   },
   "README.md": {
-    "mtime": 1794066627.7801807,
-    "seen": 1794067196.2214363,
+    "mtime": 1794067304.6038272,
+    "seen": 1794072302.259412,
     "ast_hash": "30ab831b8f926329ad9806eb0385255c",
     "semantic_hash": ""
   },
@@ -978,8 +978,8 @@
     "semantic_hash": ""
   },
   "docs/CORE_FULL_BUILD_PLAN.md": {
-    "mtime": 1794066563.7706773,
-    "seen": 1794067196.2214363,
+    "mtime": 1794067304.6048348,
+    "seen": 1794072302.259412,
     "ast_hash": "758fae28b3d20f7ae402f74d9a941530",
     "semantic_hash": ""
   },
@@ -996,9 +996,9 @@
     "semantic_hash": ""
   },
   "docs/MEMORIA_PROYECTO.md": {
-    "mtime": 1794066649.1970947,
-    "seen": 1794067196.2214363,
-    "ast_hash": "985ed1f138a053116e42be4e3b36749f",
+    "mtime": 1794072279.7955828,
+    "seen": 1794072302.259412,
+    "ast_hash": "9fd0e72bffcbbbe21525e30b86b6e185",
     "semantic_hash": ""
   },
   "docs/RELEASE_CHECKLIST.md": {

@@ -64,41 +64,17 @@ void AudioService::end() {
 }
 
 void AudioService::handle(unsigned long nowMs) {
-  if (nowMs - lastLogMs_ >= kAudioLogIntervalMs) {
+  if (nowMs - lastLogMs_ >= 1000UL) {
     lastLogMs_ = nowMs;
-    if (debugConfig_.debugEnabled) {
-      Serial.print("[audio.dbg] active=");
-      Serial.print(isActive_ ? "1" : "0");
-      Serial.print(" error=");
-      Serial.print(hasError_ ? "1" : "0");
-      Serial.print(" level=");
+    if (debugConfig_.debugEnabled && isActive_) {
+      Serial.print("[audio] level=");
       Serial.print(audioLevel_);
-      Serial.print(" peak=");
+      Serial.print("/255 rawRMS=");
       Serial.print(peakLevel_);
-      Serial.print(" bytes=");
-      Serial.print(lastBytesRead_);
-      Serial.print(" readErr=");
-      Serial.print(lastReadErr_);
-      Serial.print(" reactive=");
-      Serial.print(coreState_.reactiveToAudio ? "1" : "0");
-      Serial.print(" effectId=");
-      Serial.print(coreState_.effectId);
-      Serial.print(" gain=");
-      Serial.print(microphoneConfig_.gainPercent);
-      Serial.print(" noiseFloor=");
-      Serial.print(microphoneConfig_.noiseFloorPercent);
-      Serial.print(" gate=");
-      Serial.print(microphoneConfig_.noiseGateKnee);
-      Serial.print(" agcResp=");
-      Serial.print(microphoneConfig_.agcResponsePercent);
-      Serial.print(" baseline=");
+      Serial.print(" base=");
       Serial.print(static_cast<int>(ambientBaseline_));
-      Serial.print(" pins=");
-      Serial.print(microphoneConfig_.pins.bclk);
-      Serial.print('/');
-      Serial.print(microphoneConfig_.pins.ws);
-      Serial.print('/');
-      Serial.println(microphoneConfig_.pins.din);
+      Serial.print(" beat=");
+      Serial.println(coreState_.beatDetected ? "YES" : "no");
     }
   }
 
@@ -212,8 +188,9 @@ void AudioService::processAudioBuffer(unsigned long nowMs) {
   const float gainMultiplier = microphoneConfig_.gainPercent / 100.0f;
   uint32_t scaledRms = static_cast<uint32_t>(rms * gainMultiplier);
 
+  // Piso de ruido estático: solo corta ruido ambiente casi nulo (sombra < 10 RMS).
   const uint32_t noiseFloor =
-      static_cast<uint32_t>(microphoneConfig_.noiseFloorPercent) * 20U;
+      static_cast<uint32_t>(microphoneConfig_.noiseFloorPercent);
   if (scaledRms <= noiseFloor) {
     scaledRms = 0;
   } else {
@@ -221,10 +198,12 @@ void AudioService::processAudioBuffer(unsigned long nowMs) {
   }
   peakLevel_ = scaledRms;
 
-  // Normalización con raíz cuadrada: escalado perceptual mejor que lineal.
-  // kSqrtMaxRms = sqrt(23169) ≈ 152 (RMS máximo teórico de señal int16_t a plena escala).
+  // Normalización con raíz cuadrada para dinámica acústica:
+  // En voz/música normal el canal mono I2S entrega AC RMS entre 15 y 400 (scaledRms).
+  // Con kAudioScaleRef = 24.0f (≈ sqrt(576)), una señal de voz (RMS ~100..400) mapea a rawF de 40 a 200+.
+  static constexpr float kAudioScaleRef = 24.0f;
   const float sqrtRaw = sqrtf(static_cast<float>(scaledRms));
-  const float rawF    = (sqrtRaw / kSqrtMaxRms) * 255.0f;
+  const float rawF    = (sqrtRaw / kAudioScaleRef) * 255.0f;
   const float rawFClamped = rawF < 0.0f ? 0.0f : (rawF > 255.0f ? 255.0f : rawF);
 
   // AGC: seguimiento asimétrico del nivel ambiente.
@@ -246,7 +225,7 @@ void AudioService::processAudioBuffer(unsigned long nowMs) {
   }
   ambientBaseline_ += agcDiff * agcFactor;
   if (ambientBaseline_ < 0.0f)   ambientBaseline_ = 0.0f;
-  if (ambientBaseline_ > 250.0f) ambientBaseline_ = 250.0f;
+  if (ambientBaseline_ > 100.0f) ambientBaseline_ = 100.0f;
 
   // Señal activa = lo que supera el baseline, re-escalada al headroom disponible.
   const float headroom      = 255.0f - ambientBaseline_;
@@ -302,17 +281,34 @@ void AudioService::processAudioBuffer(unsigned long nowMs) {
 }
 
 uint32_t AudioService::calculateRMS(const int16_t *buffer, size_t length) {
-  if (length == 0) {
+  if (length < 2) {
     return 0;
   }
 
-  uint64_t sum = 0;
-  for (size_t i = 0; i < length; ++i) {
-    int32_t sample = static_cast<int32_t>(buffer[i]);
-    sum += sample * sample;
+  // Los micrófonos I2S mono (como el de la Gledopto) transmiten en un solo canal (índices pares: s0, s2...).
+  // El canal impar (s1, s3...) contiene saltos gigantes de bus flotante (-32768, -16384, +24576).
+  // Procesamos ÚNICAMENTE las muestras del canal real (índices pares: i = 0, 2, 4...).
+  int64_t sum = 0;
+  size_t count = 0;
+
+  for (size_t i = 0; i < length; i += 2) {
+    sum += buffer[i];
+    count++;
   }
 
-  // RMS = sqrt(sum / length)
-  float rms = sqrtf(static_cast<float>(sum) / static_cast<float>(length));
+  if (count == 0) {
+    return 0;
+  }
+
+  const int32_t mean = static_cast<int32_t>(sum / static_cast<int64_t>(count));
+
+  // Varianza pura de audio sobre el canal real (s0, s2...)
+  uint64_t varSum = 0;
+  for (size_t i = 0; i < length; i += 2) {
+    const int32_t diff = static_cast<int32_t>(buffer[i]) - mean;
+    varSum += static_cast<uint64_t>(diff * diff);
+  }
+
+  const float rms = sqrtf(static_cast<float>(varSum) / static_cast<float>(count));
   return static_cast<uint32_t>(rms);
 }

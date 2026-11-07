@@ -120,3 +120,16 @@ llamadas ni miden el margen real de `dux-control`.
   - Preparado el changelog para la generacion automatica de notas de release en GitHub Actions.
 - **Documentacion actualizada:** `README.md`, `CHANGELOG.md`, `platformio.ini`, `release-info.json`, `docs/CORE_FULL_BUILD_PLAN.md` y esta memoria.
 - **Riesgos y seguimiento:** Si en el futuro se retoma F3, medir primero con `pio run -t buildfs` la comparativa real de bytes antes de duplicar archivos.
+
+### Calibración DSP de Audio y Eliminación de Pedestal DC (2026-11-07)
+
+- **Decisión tomada:** 
+  1. Aislar el canal físico del micrófono en `AudioService::calculateRMS()` procesando exclusivamente las muestras pares (`i = 0, 2, 4...`).
+  2. Sustraer la media DC del canal real para obtener la energía acústica alterna pura (AC RMS).
+  3. Calibrar la escala perceptual del divisor acústico (`kAudioScaleRef = 24.0f`, correspondiente a un rango AC acústico de ~15..600 RMS para voz/música normal) y unificar el piso de ruido a escala natural (`noiseFloorPercent * 1U`).
+- **Motivo del hallazgo en hardware:** Las muestras impresas en el log (`s0=260 s1=-16384 s2=260 s3=-16384` ... `s1=-32768`) demostraron que el micrófono I2S de la Gledopto GL-C-017WL es mono y transmite únicamente en el canal izquierdo (muestras pares `s0, s2`). El canal derecho (muestras impares `s1, s3`) flotaba en el bus I2S inyectando saltos espurios gigantescos ($\pm 16384$, $\pm 32768$). Al aislar el canal real, la señal acústica pura de voz y ambiente se mueve en el rango de 30 a 500 RMS. La escala anterior requería 23.000 RMS para llegar al 100%, por lo que la voz solo generaba un 2% de nivel y solo un golpe mecánico directo alcanzaba los 3.000 RMS necesarios para encender los LEDs.
+- **Impacto:**
+  - En silencio el nivel cae a 0/255.
+  - Al hablar normal o con música ambiente, la señal escala limpiamente a niveles de 40 a 160/255.
+  - Golpes o picos fuertes alcanzan 200..255/255 con detección de beat.
+- **Documentación actualizada:** `firmware/src/services/AudioService.cpp`, `CHANGELOG.md`, y esta memoria.
