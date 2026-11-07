@@ -88,3 +88,7 @@ Estas instrucciones definen el criterio técnico para programar firmware con Ard
 - `doc/esp32/ref2.md`
 - `doc/esp32/referencias.md`
 - Documentación oficial de los fabricantes y de PlatformIO / Arduino / ESP-IDF según corresponda.
+
+## Prácticas declaradas
+
+- **2026-11-07 — Incremento obligatorio de versión/fecha en cada commit:** Cada vez que el usuario indique o solicite preparar un commit o release, es obligatorio incrementar un micro/patch de versión (o build/versionCode) y actualizar la fecha (`DUX_FW_DATE` en `platformio.ini`, `buildDate` en `release-info.json`, `README.md` y `CHANGELOG.md`). Nunca hacer commit sin diferenciar la versión o fecha respecto al estado anterior.
