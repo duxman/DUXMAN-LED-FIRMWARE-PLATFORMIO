@@ -133,3 +133,10 @@ llamadas ni miden el margen real de `dux-control`.
   - Al hablar normal o con música ambiente, la señal escala limpiamente a niveles de 40 a 160/255.
   - Golpes o picos fuertes alcanzan 200..255/255 con detección de beat.
 - **Documentación actualizada:** `firmware/src/services/AudioService.cpp`, `CHANGELOG.md`, y esta memoria.
+
+### Regla declarada: Versionado y fecha obligatorios por commit (2026-11-07)
+
+- **Decisión tomada:** Cada vez que se prepare un commit o release, se debe incrementar obligatoriamente una microversión/patch o actualizar la fecha y versionCode (`platformio.ini`, `release-info.json`, `README.md`, `CHANGELOG.md`).
+- **Motivo:** Evitar que commits sucesivos compartan el mismo número o marcador de versión, impidiendo la trazabilidad del firmware flasheado en hardware físico.
+- **Impacto:** No se generará ningún commit sin antes sincronizar e incrementar la versión o fecha en todos los descriptores del proyecto.
+- **Documentación actualizada:** `.github/instructions/arduino.instructions.md`, memoria del usuario y esta memoria.
