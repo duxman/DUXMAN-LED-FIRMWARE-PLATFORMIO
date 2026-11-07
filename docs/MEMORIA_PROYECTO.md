@@ -140,3 +140,14 @@ llamadas ni miden el margen real de `dux-control`.
 - **Motivo:** Evitar que commits sucesivos compartan el mismo número o marcador de versión, impidiendo la trazabilidad del firmware flasheado en hardware físico.
 - **Impacto:** No se generará ningún commit sin antes sincronizar e incrementar la versión o fecha en todos los descriptores del proyecto.
 - **Documentación actualizada:** `.github/instructions/arduino.instructions.md`, memoria del usuario y esta memoria.
+
+### Compatibilidad DDP para streaming en tiempo real desde LedFx (2026-11-07)
+
+- **Decisión tomada:** 
+  1. Habilitar compatibilidad con los tipos de datos DDP estándar de LedFx: `kDdpDatatypeDefault (0x00)` y `kDdpDatatypeRgb24 (0x01)` además del legacy `0x0B`.
+  2. Eliminar el descarte estricto de paquetes cuando la cantidad de píxeles transmitida por LedFx no coincide exactamente con el número de LEDs de la tira (`copyLength != dataLength`), truncando suavemente al tamaño del buffer disponible.
+- **Motivo:** LedFx transmite tramas DDP con `dataType = 0x01` (o `0x00`) y con la longitud de píxeles configurada en su perfil de dispositivo. El parser de `SyncService.cpp` solo admitía `0x0B` y descartaba el paquete completo si la longitud no era idéntica, provocando que el 100% de los paquetes fueran descartados (`packetsDropped = 803`, `packetsReceived = 0`).
+- **Impacto:** Las tramas UDP de LedFx se decodifican y aplican inmediatamente a la tira LED sin caídas de paquetes.
+- **Validación en hardware (2026-11-07):** Confirmada recepción y renderizado continuo de 7.494 paquetes DDP desde LedFx (`192.168.0.115`), con 0 paquetes descartados (`packetsDropped = 0`), tasa de entrada de 68.7 FPS y reproducción visual en tiempo real en la tira de LEDs.
+- **Versión:** Bump a `v0.6.8-beta` (versionCode 25).
+- **Documentación actualizada:** `firmware/src/services/SyncService.h`, `firmware/src/services/SyncService.cpp`, `platformio.ini`, `release-info.json`, `README.md`, `CHANGELOG.md`, y esta memoria.

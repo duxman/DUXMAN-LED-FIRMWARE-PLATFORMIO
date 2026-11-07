@@ -731,13 +731,17 @@ bool SyncService::parseDdpPacket(const uint8_t *packet, size_t packetLength, con
   const uint32_t dataOffset = readBigEndian32(packet + 4);
   const uint16_t dataLength = readBigEndian16(packet + 8);
 
-  if (packetLength < headerLength + dataLength || dataType != kDdpDatatypeRgb8) {
+  const bool isSupportedDataType = (dataType == kDdpDatatypeDefault ||
+                                   dataType == kDdpDatatypeRgb24 ||
+                                   dataType == kDdpDatatypeRgb8);
+
+  if (packetLength < headerLength + dataLength || !isSupportedDataType) {
     touchPacket(ipToString(remoteIp), true, nowMs);
     return false;
   }
 
   if (dataLength > 0) {
-    if (stagingBuffer_ == nullptr || dataOffset >= frameBufferSize_) {
+    if (stagingBuffer_ == nullptr || frameBufferSize_ == 0) {
       touchPacket(ipToString(remoteIp), true, nowMs);
       return false;
     }
@@ -748,15 +752,12 @@ bool SyncService::parseDdpPacket(const uint8_t *packet, size_t packetLength, con
       stagingHasSequence_ = true;
     }
 
-    const size_t availableBytes = frameBufferSize_ - dataOffset;
-    const size_t copyLength = min(static_cast<size_t>(dataLength), availableBytes);
-    memcpy(stagingBuffer_ + dataOffset, packet + headerLength, copyLength);
-    stagingBufferLength_ = max(stagingBufferLength_, static_cast<size_t>(dataOffset) + copyLength);
-    stagingHasData_ = true;
-
-    if (copyLength != dataLength) {
-      touchPacket(ipToString(remoteIp), true, nowMs);
-      return false;
+    if (dataOffset < frameBufferSize_) {
+      const size_t availableBytes = frameBufferSize_ - dataOffset;
+      const size_t copyLength = min(static_cast<size_t>(dataLength), availableBytes);
+      memcpy(stagingBuffer_ + dataOffset, packet + headerLength, copyLength);
+      stagingBufferLength_ = max(stagingBufferLength_, static_cast<size_t>(dataOffset) + copyLength);
+      stagingHasData_ = true;
     }
   }
 

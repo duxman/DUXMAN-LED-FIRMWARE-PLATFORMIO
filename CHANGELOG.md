@@ -6,6 +6,18 @@ The format is based on Keep a Changelog.
 
 ## [Unreleased]
 
+## [0.6.8-beta] - 2026-11-07
+
+### Added
+- Native LedFx DDP (Distributed Display Protocol) real-time streaming support verified on hardware at 68+ FPS.
+
+### Fixed
+- Fixed LedFx DDP packet rejection in `SyncService` by adding support for standard DDP data types (`0x00` default and `0x01` RGB24) alongside legacy `0x0B`.
+- Fixed DDP frame dropping when packet payload length exceeds physical strip size by clamping to available buffer instead of dropping the entire frame.
+
+### Validation
+- End-to-end LedFx DDP streaming verified on hardware (`esp32dev`) with 7,400+ consecutive packets applied, 0 packets dropped, and 68.7 input FPS.
+
 ## [0.6.7-beta] - 2026-11-07
 
 ### Added
