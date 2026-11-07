@@ -29,14 +29,18 @@ The format is based on Keep a Changelog.
 - F1 and F2 completion recorded in `docs/CORE_FULL_BUILD_PLAN.md`.
 - Sync UI now separates LedFx external input usage from cluster sync usage to avoid ambiguous role/mode combinations.
 - F2 primitives/canvas rollout completed across visual-only effects (`fixed`, `gradient`, `blink_*`, `breath_*`, `diagnostic`, `lava_flow`, `polar_ice`, `random_color_pop`, `gradient_meteor`, `scanning_pulse`, `triple_chase`) for a unified frame pipeline.
+- Standardized periodic serial audio telemetry to 1 line per second under `debugEnabled`.
 - Firmware version markers bumped to `0.6.7-beta` (`platformio.ini`, `release-info.json`).
 
 ### Fixed
 - Fixed FreeRTOS stack overflow in `dux-control` task when serving `GET /api/v1/openapi.json`.
+- Fixed audio dynamic range compression by isolating the physical mono I2S channel (`i = 0, 2, 4...`) and removing DC offset per channel in `AudioService::calculateRMS()`, ignoring floating-bus noise spikes ($\pm 32768$).
+- Calibrated perceptual acoustic scale reference (`kAudioScaleRef = 24.0f`) and capped AGC baseline to 100 in `AudioService`, unlocking full dynamic response (0..255) for ambient voice, typing, whistling, and music.
 
 ### Validation
 - On esp32dev, OpenAPI stack overflow resolved and verified across multiple consecutive requests with 62 FPS and stable heap (>154 KB).
 - Phase F2 (home UI -> API parity) fully validated against real hardware: power on/off, brightness, effect selection, speed, sections, transition params, custom colors, palette application, startup effect persistence, sequence add/delete, and reboot recovery.
+- Audio capture and beat detection verified in real hardware with Gledopto GL-C-017WL MEMS I2S microphone across silence (0/255), typing/voice (40..100/255), and whistling/peaks (180..237/255 with `beat=YES`).
 - Pending manual validation in real LedFx environment for mDNS auto-discovery flow (`_ddp._udp` / `_e131._udp`) and end-to-end frame ingestion.
 
 ### Docs
