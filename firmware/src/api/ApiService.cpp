@@ -15,6 +15,7 @@
 
 #include <ArduinoJson.h>
 #include <LittleFS.h>
+#include <WiFi.h>
 #include <time.h>
 
 namespace {

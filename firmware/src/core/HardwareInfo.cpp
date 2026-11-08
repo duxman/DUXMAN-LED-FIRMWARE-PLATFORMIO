@@ -8,6 +8,7 @@
 #include "core/HardwareInfo.h"
 
 #include <ArduinoJson.h>
+#include <esp_chip_info.h>
 #include <esp_system.h>
 
 namespace {
