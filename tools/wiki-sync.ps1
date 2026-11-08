@@ -166,6 +166,8 @@ function Mirror-Directory {
     if ($exitCode -ge 8) {
         throw "robocopy failed with exit code $exitCode"
     }
+
+    $global:LASTEXITCODE = 0
 }
 
 if (-not (Get-Command git -ErrorAction SilentlyContinue)) {
