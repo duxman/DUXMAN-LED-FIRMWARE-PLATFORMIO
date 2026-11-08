@@ -40,11 +40,11 @@ Ejemplos:
 
 ## wiki-sync.ps1
 
-Sincroniza la Wiki de GitHub con un mirror local en `docs/wiki`.
+Sincroniza la Wiki de GitHub con `docs/wiki`. El directorio `docs/wiki` es la fuente de verdad: al publicar, su contenido reemplaza el contenido remoto de la Wiki.
 
 Ejemplos:
 
-1. Traer contenido desde la wiki remota a local:
+1. Traer contenido desde la wiki remota a local (solo para recuperar contenido):
 	powershell -ExecutionPolicy Bypass -File .\tools\wiki-sync.ps1 -Mode pull
 2. Enviar cambios locales a la wiki remota:
 	powershell -ExecutionPolicy Bypass -File .\tools\wiki-sync.ps1 -Mode push
@@ -56,11 +56,11 @@ Ejemplos:
 Integracion adicional:
 
 - Tasks de VS Code en `.vscode/tasks.json` para pull/push/check.
-- Workflow de CI en `.github/workflows/wiki-sync-check.yml` que falla si `docs/wiki` no refleja la wiki remota.
+- El workflow `.github/workflows/wiki-sync-check.yml` publica `docs/wiki` a la wiki remota en cada push a `main` y al ejecutarse manualmente.
 
 ## wiki-check-drift.ps1
 
-Ejecuta `wiki-sync.ps1 -Mode pull` y falla con mensaje claro si detecta drift en `docs/wiki`.
+Ejecuta `wiki-sync.ps1 -Mode pull` y compara la wiki remota con `docs/wiki`. Es una herramienta manual; no la usa el workflow de publicación.
 
 Ejemplo:
 	powershell -ExecutionPolicy Bypass -File .\tools\wiki-check-drift.ps1

@@ -1,14 +1,16 @@
 name: Wiki Sync Check
 
 on:
-  pull_request:
   push:
     branches:
       - main
   workflow_dispatch:
 
+permissions:
+  contents: write
+
 jobs:
-  check-wiki-sync:
+  sync-wiki:
     runs-on: windows-latest
 
     steps:
@@ -17,7 +19,7 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Check wiki/docs drift
+      - name: Publish docs/wiki to GitHub Wiki
         shell: pwsh
         run: |
-          ./tools/wiki-check-drift.ps1 -WikiUrl "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.wiki.git"
+          ./tools/wiki-sync.ps1 -Mode push -WikiUrl "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.wiki.git"
