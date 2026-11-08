@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DUXMAN LED — Firmware Modular de Iluminación para ESP32</title>
+  <meta name="description" content="Firmware de alto rendimiento para tiras LED direccionables en ESP32, ESP32-C3 y ESP32-S3. Arquitectura FreeRTOS dual-core a 60+ FPS, UI embebida LittleFS, sincronización DDP/E1.31 con LedFx y cluster multi-nodo.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- NAVEGACIÓN -->
+  <header class="navbar">
+    <div class="nav-container">
+      <a href="#" class="logo">
+        <span class="logo-led"></span>
+        <span class="logo-text">DUXMAN <strong>LED</strong> <span class="version-tag">v0.6.8-beta</span></span>
+      </a>
+      <nav class="nav-links">
+        <a href="#arquitectura">Arquitectura</a>
+        <a href="#capacidades">Capacidades</a>
+        <a href="#hardware">Hardware</a>
+        <a href="#sincronizacion">Sync & Audio</a>
+        <a href="#api">API REST</a>
+        <a href="#agradecimientos" class="nav-highlight">Agradecimientos</a>
+        <a href="https://github.com/duxman/DUXMAN-LED-FIRMWARE-PLATFORMIO" target="_blank" rel="noopener noreferrer" class="btn-github-nav">
+          <svg class="icon-gh" viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
+            <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/>
+          </svg>
+          GitHub Repo
+        </a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-glow"></div>
+    <div class="container hero-content">
+      <div class="badge-tag">Firmware Modular Open Source para ESP32</div>
+      <h1 class="hero-title">
+        Potencia, Control y Color en <span class="gradient-text">Tiempo Real</span>
+      </h1>
+      <p class="hero-subtitle">
+        Firmware de alto rendimiento para ESP32, ESP32-C3 y ESP32-S3. Render no bloqueante a <strong>~62.5 FPS</strong> con FreeRTOS dual-core, Web UI embebida en LittleFS, integración nativa con <strong>LedFx (DDP/E1.31)</strong> y clusterización multi-nodo.
+      </p>
+
+      <div class="hero-stats">
+        <div class="stat-pill">
+          <span class="stat-num">~62.5</span>
+          <span class="stat-label">FPS Render Core1</span>
+        </div>
+        <div class="stat-pill">
+          <span class="stat-num">4</span>
+          <span class="stat-label">Salidas LED Paralelas</span>
+        </div>
+        <div class="stat-pill">
+          <span class="stat-num">DDP & E1.31</span>
+          <span class="stat-label">Streaming en Vivo</span>
+        </div>
+        <div class="stat-pill">
+          <span class="stat-num">100%</span>
+          <span class="stat-label">Autónomo / Sin Nube</span>
+        </div>
+      </div>
+
+      <div class="hero-actions">
+        <a href="https://github.com/duxman/DUXMAN-LED-FIRMWARE-PLATFORMIO" target="_blank" rel="noopener noreferrer" class="btn btn-primary">
+          <svg class="icon-btn" viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+            <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/>
+          </svg>
+          Ver Repositorio en GitHub
+        </a>
+        <a href="#arquitectura" class="btn btn-secondary">Explorar Arquitectura</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ARQUITECTURA -->
+  <section id="arquitectura" class="section">
+    <div class="container">
+      <div class="section-header">
+        <span class="badge-sub">Bajo el Capó</span>
+        <h2 class="section-title">Ingeniería FreeRTOS Dual-Core</h2>
+        <p class="section-desc">
+          Separación estricta de responsabilidades entre el procesamiento de red/lógica y la generación visual para garantizar 0 stuttering en los LEDs.
+        </p>
+      </div>
+
+      <div class="arch-diagram">
+        <div class="arch-col">
+          <div class="arch-box core-0">
+            <div class="arch-tag">Core 0 · Cadencia ~10ms</div>
+            <h3>controlTask</h3>
+            <ul>
+              <li>Servidor Web HTTP Asíncrono (ESPAsyncWebServer)</li>
+              <li>API REST v1 (/api/v1) & Serial Protocol</li>
+              <li>WifiService (AP/STA/mDNS _ddp, _e131, _duxsync)</li>
+              <li>AudioService & análisis I2S/FFT</li>
+              <li>SyncService (DDP / E1.31 / Cluster Sync)</li>
+              <li>WatchdogService & Scheduler de persistencia</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="arch-sync-bridge">
+          <span>Estado Seguro Sin Bloqueos</span>
+          <div class="sync-arrows">⇄</div>
+        </div>
+
+        <div class="arch-col">
+          <div class="arch-box core-1">
+            <div class="arch-tag">Core 1 · Cadencia ~16ms (~62.5 FPS)</div>
+            <h3>renderTask</h3>
+            <ul>
+              <li>Motor de Efectos Visuales (EffectEngine)</li>
+              <li>Canvases 1D, Paletas dinámicas y transiciones</li>
+              <li>Limitador de potencia activa & seguridad térmica</li>
+              <li>Drivers LED intercambiables:
+                <div class="driver-tags">
+                  <span class="driver-badge">NeoPixelBus</span>
+                  <span class="driver-badge">FastLED</span>
+                  <span class="driver-badge">Digital</span>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CAPACIDADES -->
+  <section id="capacidades" class="section bg-alt">
+    <div class="container">
+      <div class="section-header">
+        <span class="badge-sub">Características</span>
+        <h2 class="section-title">Diseñado para Control Total</h2>
+        <p class="section-desc">Una suite completa de funciones integradas sin depender de apps cerradas.</p>
+      </div>
+
+      <div class="grid-cards">
+        <div class="card">
+          <div class="card-icon">⚡</div>
+          <h3 class="card-title">Gestión de Potencia & Seguridad</h3>
+          <p class="card-text">
+            Calculador dinámico de miliamperios (mA) y voltajes con protección térmica por software para evitar sobrecalentamiento de tiras y fuentes de alimentación.
+          </p>
+        </div>
+
+        <div class="card">
+          <div class="card-icon">🌐</div>
+          <h3 class="card-title">Interfaz Web en LittleFS</h3>
+          <p class="card-text">
+            Panel responsivo completo almacenado en la memoria flash interna del ESP32. Incluye páginas dedicadas para Efectos, Paletas, GPIOs, Red, Audio I2S, Perfiles y Diagnóstico.
+          </p>
+        </div>
+
+        <div class="card">
+          <div class="card-icon">🎛️</div>
+          <h3 class="card-title">Perfiles y Paletas de Usuario</h3>
+          <p class="card-text">
+            Guarda y clona configuraciones completas de hardware y escenas de luz personalizadas. Carga automática de perfiles por defecto al arranque.
+          </p>
+        </div>
+
+        <div class="card">
+          <div class="card-icon">🎙️</div>
+          <h3 class="card-title">Procesamiento de Audio I2S</h3>
+          <p class="card-text">
+            Soporte nativo para micrófonos digitales I2S con análisis FFT por bandas de frecuencia, suelo de ruido dinámico y ganancia configurable.
+          </p>
+        </div>
+
+        <div class="card">
+          <div class="card-icon">🔄</div>
+          <h3 class="card-title">Persistencia Inteligente</h3>
+          <p class="card-text">
+            Scheduler de escritura diferida en Flash (SPIFFS/LittleFS) para minimizar desgaste físico de memoria por escrituras repetitivas.
+          </p>
+        </div>
+
+        <div class="card">
+          <div class="card-icon">🔒</div>
+          <h3 class="card-title">100% Local & Privado</h3>
+          <p class="card-text">
+            Toda la operativa funciona dentro de tu red local. Sin telemetría oculta, sin registros externos ni caídas por falta de conexión a internet.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- HARDWARE SOPORTADO -->
+  <section id="hardware" class="section">
+    <div class="container">
+      <div class="section-header">
+        <span class="badge-sub">Ecosistema</span>
+        <h2 class="section-title">Hardware y Placas Soportadas</h2>
+        <p class="section-desc">Optimizado con perfiles precompilados de PlatformIO para distintas variantes de chips ESP32.</p>
+      </div>
+
+      <div class="table-responsive">
+        <table class="hardware-table">
+          <thead>
+            <tr>
+              <th>Perfil de Build</th>
+              <th>Placa MCU</th>
+              <th>Pin LED por Defecto</th>
+              <th>LEDs Iniciales</th>
+              <th>Propósito Recomendado</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code class="code-pill">esp32c3supermini</code></td>
+              <td>ESP32-C3 SuperMini (RISC-V)</td>
+              <td>GPIO 8</td>
+              <td>60</td>
+              <td>Instalaciones compactas, lámparas y wearables</td>
+            </tr>
+            <tr>
+              <td><code class="code-pill">esp32dev</code></td>
+              <td>ESP32 NodeMCU / DevKit v1</td>
+              <td>GPIO 5</td>
+              <td>60</td>
+              <td>Uso general, prototipado y hasta 4 salidas paralelas</td>
+            </tr>
+            <tr>
+              <td><code class="code-pill">esp32s3</code></td>
+              <td>ESP32-S3 DevKitC-1 (Dual-Core LX7)</td>
+              <td>GPIO 48</td>
+              <td>60</td>
+              <td>Instalaciones masivas de píxeles, alta velocidad y micro I2S</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- SINCRONIZACIÓN Y LEDFX -->
+  <section id="sincronizacion" class="section bg-alt">
+    <div class="container">
+      <div class="section-header">
+        <span class="badge-sub">Interoperabilidad</span>
+        <h2 class="section-title">Sincronización en Red & Streaming de Frames</h2>
+        <p class="section-desc">Recepción en tiempo real de protocolos estándar de iluminación y clusters sincronizados.</p>
+      </div>
+
+      <div class="sync-grid">
+        <div class="sync-card">
+          <div class="sync-header">
+            <h4>Streaming Externo con LedFx</h4>
+            <span class="badge-protocol">DDP & E1.31 / sACN</span>
+          </div>
+          <p>
+            Capacidad para recibir tramas UDP a alta tasa de refresco enviadas desde herramientas como <strong>LedFx</strong> o software de control DMX:
+          </p>
+          <ul class="sync-features">
+            <li><strong>Protocolo DDP (Distributed Display Protocol):</strong> En puerto 4048 UDP, con payload optimizado para microcontroladores.</li>
+            <li><strong>Protocolo E1.31 / sACN:</strong> Puerto 5568 UDP con asignación dinámica de universos y canales.</li>
+            <li><strong>Anuncio mDNS:</strong> Registro de servicios <code>_ddp._udp</code> y <code>_e131._udp</code> para autodetección.</li>
+          </ul>
+        </div>
+
+        <div class="sync-card">
+          <div class="sync-header">
+            <h4>Cluster Sync DUXMAN</h4>
+            <span class="badge-protocol">_duxsync._udp</span>
+          </div>
+          <p>
+            Sincronización nativa entre múltiples placas DUXMAN LED en la misma red local:
+          </p>
+          <ul class="sync-features">
+            <li><strong>Reloj de fase compartido:</strong> Efectos sincronizados con exactitud de milisegundos entre lámparas distintas.</li>
+            <li><strong>Rol Maestro / Esclavo:</strong> Cambia colores o escenas en un dispositivo y se replicarán en el grupo.</li>
+            <li><strong>Monitoreo de estado:</strong> Inspección de telemetría de nodos conectados vía API.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- API REST -->
+  <section id="api" class="section">
+    <div class="container">
+      <div class="section-header">
+        <span class="badge-sub">Integraciones Domóticas</span>
+        <h2 class="section-title">API REST v1 Documentada</h2>
+        <p class="section-desc">Control programático integral mediante peticiones HTTP estándar en formato JSON.</p>
+      </div>
+
+      <div class="api-grid">
+        <div class="api-endpoint">
+          <span class="method get">GET</span>
+          <span class="path">/api/v1/state</span>
+          <p class="endpoint-desc">Consulta de estado actual: brillo, color primario, efecto activo, FPS y telemetría de temperatura.</p>
+        </div>
+        <div class="api-endpoint">
+          <span class="method patch">PATCH</span>
+          <span class="path">/api/v1/state</span>
+          <p class="endpoint-desc">Modifica brillo, activa/desactiva tiras, cambia paleta o aplica efectos en tiempo real.</p>
+        </div>
+        <div class="api-endpoint">
+          <span class="method patch">PATCH</span>
+          <span class="path">/api/v1/sync/config</span>
+          <p class="endpoint-desc">Activa modo receptor LedFx (DDP/E1.31), timeout de fuente y asignación de universos.</p>
+        </div>
+        <div class="api-endpoint">
+          <span class="method get">GET</span>
+          <span class="path">/api/v1/openapi.json</span>
+          <p class="endpoint-desc">Especificación OpenAPI / Swagger completa embebida directamente en el firmware.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- AGRADECIMIENTOS ESPECIALES -->
+  <section id="agradecimientos" class="section section-tributes">
+    <div class="container">
+      <div class="section-header">
+        <span class="badge-tribute">Comunidad y Fuentes de Inspiración</span>
+        <h2 class="section-title">Agradecimientos Especiales</h2>
+        <p class="section-desc">
+          Este proyecto se nutre de la pasión, el conocimiento y las herramientas construidas por pioneros en el ecosistema del código abierto y la iluminación interactiva.
+        </p>
+      </div>
+
+      <!-- DESTACADO PRINCIPAL: WLED -->
+      <div class="tribute-highlight">
+        <div class="tribute-badge">Agradecimiento de Corazón</div>
+        <h3 class="tribute-title">A la comunidad y creadores de <a href="https://kno.wled.ge/" target="_blank" rel="noopener noreferrer">WLED</a></h3>
+        <p class="tribute-text">
+          Un agradecimiento infinito y muy especial a <strong>Christian Schwinne (Aircoookie)</strong> y a todo el maravilloso ecosistema de 
+          <a href="https://kno.wled.ge/" target="_blank" rel="noopener noreferrer" class="link-wled">kno.wled.ge</a>. 
+          Sin su trabajo pionero, su documentación exhaustiva y su generosidad al compartir código con el mundo, 
+          <strong>no habría aprendido tanto de este fascinante universo de luz, color y programación de firmware</strong>. 
+          WLED es el estándar de oro indiscutible y el faro de inspiración de este proyecto.
+        </p>
+        <div class="tribute-link-wrap">
+          <a href="https://kno.wled.ge/" target="_blank" rel="noopener noreferrer" class="btn-tribute">
+            Conoce WLED en kno.wled.ge ↗
+          </a>
+        </div>
+      </div>
+
+      <!-- OTROS PROYECTOS INSPIRADORES: LEDFx -->
+      <div class="tribute-cards-grid">
+        <div class="tribute-card">
+          <div class="tribute-card-header">
+            <h4>LedFx Project</h4>
+            <span class="tribute-tag">Audio Reactivo en Vivo</span>
+          </div>
+          <p class="tribute-card-desc">
+            Gracias al equipo y comunidad de <strong>LedFx</strong> por revolucionar la sincronización en tiempo real de iluminación LED con música y audio. Su pasión y su increíble software de efectos musicales son una inspiración constante.
+          </p>
+          <div class="tribute-card-links">
+            <a href="https://github.com/ledfx/ledfx" target="_blank" rel="noopener noreferrer" class="link-ext">
+              GitHub ledfx/ledfx ↗
+            </a>
+            <a href="https://www.instagram.com/ledfx_/" target="_blank" rel="noopener noreferrer" class="link-ext">
+              Instagram @ledfx_ ↗
+            </a>
+          </div>
+        </div>
+
+        <div class="tribute-card">
+          <div class="tribute-card-header">
+            <h4>Ecosistema Open Source</h4>
+            <span class="tribute-tag">Bibliotecas Clave</span>
+          </div>
+          <p class="tribute-card-desc">
+            A los desarrolladores y mantenedores de <strong>NeoPixelBus</strong> (Makuna), <strong>FastLED</strong>, <strong>ESPAsyncWebServer</strong>, <strong>ArduinoJson</strong> (Benoît Blanchon) y <strong>PlatformIO</strong>, cuyos motores hacen posible exprimir el silicio del ESP32 con estabilidad y elegancia.
+          </p>
+          <div class="tribute-card-links">
+            <span class="open-source-tag">#OpenSource #ESP32 #PlatformIO #FreeRTOS</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- LLAMADA A LA ACCIÓN FINAL -->
+  <section class="cta-section">
+    <div class="container cta-content">
+      <h2>¿Listo para iluminar tus proyectos?</h2>
+      <p>Explora el código fuente, la documentación técnica en la Wiki y compila el firmware para tu ESP32.</p>
+      <div class="cta-buttons">
+        <a href="https://github.com/duxman/DUXMAN-LED-FIRMWARE-PLATFORMIO" target="_blank" rel="noopener noreferrer" class="btn btn-primary btn-large">
+          Ir al Repositorio de GitHub
+        </a>
+        <a href="https://github.com/duxman/DUXMAN-LED-FIRMWARE-PLATFORMIO/wiki" target="_blank" rel="noopener noreferrer" class="btn btn-secondary btn-large">
+          Consultar la Wiki del Proyecto
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="container footer-content">
+      <p>© 2026 DUXMAN LED. Desarrollado con ❤️ para la comunidad de entusiastas de los LEDs.</p>
+      <div class="footer-links">
+        <a href="https://kno.wled.ge/" target="_blank" rel="noopener noreferrer">WLED</a>
+        <a href="https://github.com/ledfx/ledfx" target="_blank" rel="noopener noreferrer">LedFx</a>
+        <a href="https://github.com/duxman/DUXMAN-LED-FIRMWARE-PLATFORMIO" target="_blank" rel="noopener noreferrer">GitHub</a>
+        <a href="https://github.com/duxman/DUXMAN-LED-FIRMWARE-PLATFORMIO/wiki" target="_blank" rel="noopener noreferrer">Wiki</a>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>
