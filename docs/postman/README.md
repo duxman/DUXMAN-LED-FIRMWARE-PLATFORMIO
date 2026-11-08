@@ -15,7 +15,7 @@
 5. Ejecuta `04 - API completa: configuracion` para probar mutaciones de red, microfono, GPIO, general, debug y configuracion completa.
 6. Ejecuta `05 - API completa: sincronizacion` para probar estado, nodos, configuracion y modo.
 7. Ejecuta `06 - API completa: perfiles` para probar listar, consultar, guardar, aplicar, establecer default, clonar y eliminar.
-8. Ejecuta `07 - API completa: paletas, metricas y sistema` para probar CRUD de paletas, reset de metricas y reinicio.
+8. Ejecuta `07 - API completa: paletas, metricas y sistema` para probar CRUD de paletas, reset de metricas, marcas de depuracion en consola serial (`/marcalog`) y reinicio.
 
 Variables disponibles:
 

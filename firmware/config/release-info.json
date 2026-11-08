@@ -1,9 +1,15 @@
 {
-  "version": "0.6.8-beta",
-  "versionCode": 25,
-  "buildDate": "2026-11-07",
+  "version": "1.0.0-beta1",
+  "versionCode": 26,
+  "buildDate": "2026-11-08",
   "branch": "main",
   "features": [
+    "Client sync audio and effect suppression: automatic bypass of local microphone and EffectManager when receiving active LedFx or cluster frames",
+    "Debug REST endpoints /api/v1/marcalog and /api/v1/debug/log for serial console tracking",
+    "Enriched serial heartbeat telemetry with heap, fps and render timing",
+    "Automated API integration test suite (test-api.py / test-api.ps1) with user prompts and serial log synchronization",
+    "Integrated interactive technical wiki on web portal",
+    "PlatformIO custom monitor filter for automatic session logging to log/",
     "Fase 4A: FreeRTOS dual-core architecture (TaskControl + TaskRender)",
     "Fase 4B: Asynchronous persistence with coalescent queue (state, network, GPIO)",
     "Fase 4B.1: Profile service persistence decoupled from request path",

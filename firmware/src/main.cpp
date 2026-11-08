@@ -78,19 +78,35 @@ void controlTask(void *parameter) {
     watchdogService.feed();  // Reset watchdog timer
     apiService.handle();
     wifiService.handle();
-    audioService.handle(millis());
-    profileService.processPendingPersistence();
-    userPaletteService.processPendingPersistence();
-    persistenceSchedulerService.processPending();
 
     const unsigned long now = millis();
     syncService.tick(now, state);
+
+    // Si el nodo está en modo cliente recibiendo datos de sincronización (LedFx o cluster),
+    // se suspende el audio local para no reaccionar al micrófono ambiente ni alterar lo programado.
+    // Solo y exclusivamente en modo cliente; en modo servidor o master el audio local permanece activo.
+    const bool syncClientActive = syncService.isConnected();
+    audioService.setSuspended(syncClientActive);
+    audioService.handle(now);
+
+    profileService.processPendingPersistence();
+    userPaletteService.processPendingPersistence();
+    persistenceSchedulerService.processPending();
     effectPersistenceService.handle(now);
     const unsigned long heartbeatIntervalMs = debugConfig.heartbeatMs;
     if (heartbeatIntervalMs > 0 && now - lastHeartbeatAtMs >= heartbeatIntervalMs) {
       lastHeartbeatAtMs = now;
       Serial.print("[hb] alive ms=");
-      Serial.println(now);
+      Serial.print(now);
+      if (debugConfig.debugEnabled) {
+        Serial.print(" heap=");
+        Serial.print(ESP.getFreeHeap());
+        Serial.print(" fps=");
+        Serial.print(gRenderMetrics.fps());
+        Serial.print(" avgUs=");
+        Serial.print(gRenderMetrics.frameTimeAvgUs());
+      }
+      Serial.println();
     }
 
     vTaskDelayUntil(&lastWake, kControlIntervalTicks);
@@ -105,7 +121,10 @@ void renderTask(void *parameter) {
     watchdogService.feed();  // Reset watchdog timer
     gRenderMetrics.frameBegin();
     const CoreState stateSnapshot = state.snapshot();
-    if (!syncService.renderExternalFrame(ledDriver, stateSnapshot)) {
+    const bool isExternalStreamingClient = syncService.shouldRenderExternal();
+    if (isExternalStreamingClient) {
+      syncService.renderExternalFrame(ledDriver, stateSnapshot);
+    } else {
       effectManager.renderFrame();
     }
     gRenderMetrics.frameEnd();
@@ -208,12 +227,21 @@ void loop() {
     return;
   }
 
+  const unsigned long now = millis();
   apiService.handle();
   wifiService.handle();
-  syncService.tick(millis(), state);
-  effectPersistenceService.handle(millis());
+  syncService.tick(now, state);
+
+  const bool syncClientActive = syncService.isConnected();
+  audioService.setSuspended(syncClientActive);
+  audioService.handle(now);
+
+  effectPersistenceService.handle(now);
   const CoreState stateSnapshot = state.snapshot();
-  if (!syncService.renderExternalFrame(ledDriver, stateSnapshot)) {
+  const bool isExternalStreamingClient = syncService.shouldRenderExternal();
+  if (isExternalStreamingClient) {
+    syncService.renderExternalFrame(ledDriver, stateSnapshot);
+  } else {
     effectManager.renderFrame();
   }
   delay(16);

@@ -151,3 +151,18 @@ llamadas ni miden el margen real de `dux-control`.
 - **Validación en hardware (2026-11-07):** Confirmada recepción y renderizado continuo de 7.494 paquetes DDP desde LedFx (`192.168.0.115`), con 0 paquetes descartados (`packetsDropped = 0`), tasa de entrada de 68.7 FPS y reproducción visual en tiempo real en la tira de LEDs.
 - **Versión:** Bump a `v0.6.8-beta` (versionCode 25).
 - **Documentación actualizada:** `firmware/src/services/SyncService.h`, `firmware/src/services/SyncService.cpp`, `platformio.ini`, `release-info.json`, `README.md`, `CHANGELOG.md`, y esta memoria.
+
+### Release v1.0.0-beta1: Aislamiento de Audio en Sincronización Cliente, Endpoint de Marcas Serial y Suite de Pruebas Automatizada (2026-11-08)
+
+- **Decisión tomada:**
+  1. **Aislamiento de entrada y render en modo cliente:** Cuando el nodo opera como cliente activo de sincronización (`role == "client"` y `sourceAlive == true`), se suspende automáticamente el servicio de captura I2S local (`AudioService::setSuspended(true)`) y se desvía el renderizado para que `EffectManager` no ejecute efectos locales sobre el streaming recibido de LedFx o del nodo maestro. En modo servidor/master (`role == "server"`), el micrófono y los efectos programados continúan activos al 100%.
+  2. **Endpoint de depuración serial (`/api/v1/marcalog` y `/api/v1/debug/log`):** Inyección de marcas y mensajes arbitrarios directos a la consola serial vía HTTP `POST` (JSON/texto) o `GET` (`?msg=`), facilitando la correlación en vivo entre clientes externos y el monitor del microcontrolador.
+  3. **Telemetría de rendimiento en latido (Heartbeat):** Emisión en el monitor serie de memoria heap libre, FPS medidos en Core 1 y microsegundos promedio por fotograma cuando `debugEnabled` está activo.
+  4. **Filtro de monitor serie persistente en `log/`:** Implementación del filtro `monitor/filter_log2file.py` integrado en `platformio.ini` para archivar automáticamente la sesión del monitor serie en `log/device-monitor-*.log`.
+  5. **Suite de pruebas de integración completa y documentada:** Implementación de `tools/test-api.py` y `tools/test-api.ps1` con pausas interactivas para el usuario (Web UI y LedFx), exportación de logs detallados y 38 pruebas de contrato de API v1.
+  6. **Eliminación de advertencias de compilación:** Exclusión de la librería `I2S` de Arduino en `platformio.ini` y actualización a la constante `I2S_COMM_FORMAT_STAND_I2S`.
+- **Motivo:** Evitar que el sonido ambiente de la sala distorsione o interfiera con el streaming de música de LedFx cuando el dispositivo actúa como receptor esclavo; dotar al proyecto de un mecanismo reproducible para validar en hardware todo el firmware antes de cada release.
+- **Impacto:** Sistema completamente verificable, libre de warnings de compilación, con pruebas automatizadas e interactivas integradas, y rendimiento verificado a 62 FPS estables en hardware real.
+- **Validación en hardware (2026-11-08):** Ejecución en placa física ESP32 DevKit (`esp32dev`) con 37/38 pruebas superadas en el primer ciclo y 38/38 tras calibrar el validador de `chipModel`. Cero fugas de memoria (`heapFreeBytes` estable en ~152 KB) y rendimiento confirmado en `log/test-api-latest.log` y `logs/device-monitor-261108-183711.log`.
+- **Versión:** Bump a `v1.0.0-beta1` (versionCode 26).
+- **Documentación actualizada:** `platformio.ini`, `firmware/config/release-info.json`, `README.md`, `CHANGELOG.md`, `docs/wiki/Sync-Compatibility.md`, `docs/wiki/API-v1.md`, `web/index.html`, `tools/README.md` y esta memoria.

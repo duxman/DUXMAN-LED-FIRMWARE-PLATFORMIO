@@ -17,14 +17,15 @@
     <div class="nav-container">
       <a href="#" class="logo">
         <span class="logo-led"></span>
-        <span class="logo-text">DUXMAN <strong>LED</strong> <span class="version-tag">v0.6.8-beta</span></span>
+        <span class="logo-text">DUXMAN <strong>LED</strong> <span class="version-tag">v1.0.0-beta1</span></span>
       </a>
       <nav class="nav-links">
         <a href="#arquitectura">Arquitectura</a>
         <a href="#capacidades">Capacidades</a>
         <a href="#hardware">Hardware</a>
+        <a href="#efectos">Efectos</a>
         <a href="#sincronizacion">Sync & Audio</a>
-        <a href="#api">API REST</a>
+        <a href="#wiki" class="nav-wiki-btn">📚 Wiki Técnica</a>
         <a href="#agradecimientos" class="nav-highlight">Agradecimientos</a>
         <a href="https://github.com/duxman/DUXMAN-LED-FIRMWARE-PLATFORMIO" target="_blank" rel="noopener noreferrer" class="btn-github-nav">
           <svg class="icon-gh" viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
@@ -68,13 +69,60 @@
       </div>
 
       <div class="hero-actions">
-        <a href="https://github.com/duxman/DUXMAN-LED-FIRMWARE-PLATFORMIO" target="_blank" rel="noopener noreferrer" class="btn btn-primary">
-          <svg class="icon-btn" viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+        <a href="#wiki" class="btn btn-primary">
+          <span class="btn-icon">📚</span> Explorar la Wiki Integrada
+        </a>
+        <a href="#inicio-rapido" class="btn btn-secondary">Guía de Inicio Rápido</a>
+        <a href="https://github.com/duxman/DUXMAN-LED-FIRMWARE-PLATFORMIO" target="_blank" rel="noopener noreferrer" class="btn btn-secondary">
+          <svg class="icon-btn" viewBox="0 0 24 24" width="18" height="18" fill="currentColor">
             <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/>
           </svg>
-          Ver Repositorio en GitHub
+          GitHub
         </a>
-        <a href="#arquitectura" class="btn btn-secondary">Explorar Arquitectura</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- INICIO RÁPIDO / CÓMO FUNCIONA -->
+  <section id="inicio-rapido" class="section bg-alt">
+    <div class="container">
+      <div class="section-header">
+        <span class="badge-sub">Flujo de Uso</span>
+        <h2 class="section-title">¿Cómo se usa DUXMAN LED?</h2>
+        <p class="section-desc">De cero a iluminar en tres pasos comprobables.</p>
+      </div>
+
+      <div class="steps-container">
+        <div class="step-item">
+          <div class="step-num">01</div>
+          <h3 class="step-title">Compila y Flashea</h3>
+          <p class="step-desc">
+            Usa PlatformIO o el script PowerShell incluido para flashear el binario según tu placa:
+          </p>
+          <div class="code-box-mini">
+            <code>pio run -e esp32c3supermini -t upload</code>
+          </div>
+        </div>
+
+        <div class="step-arrow">→</div>
+
+        <div class="step-item">
+          <div class="step-num">02</div>
+          <h3 class="step-title">Conecta el Hardware</h3>
+          <p class="step-desc">
+            Alimenta tus tiras LED (5V o 12V con GND común) y conecta la línea de datos al GPIO asignado (por defecto GPIO 8 en C3, GPIO 5 en dev, GPIO 48 en S3).
+          </p>
+        </div>
+
+        <div class="step-arrow">→</div>
+
+        <div class="step-item">
+          <div class="step-num">03</div>
+          <h3 class="step-title">Accede a la Web UI</h3>
+          <p class="step-desc">
+            El microcontrolador levanta un punto de acceso Wi-Fi o se une a tu red. Abre su IP en el navegador y contrólalo desde cualquier PC o móvil.
+          </p>
+        </div>
       </div>
     </div>
   </section>
@@ -137,9 +185,9 @@
   <section id="capacidades" class="section bg-alt">
     <div class="container">
       <div class="section-header">
-        <span class="badge-sub">Características</span>
-        <h2 class="section-title">Diseñado para Control Total</h2>
-        <p class="section-desc">Una suite completa de funciones integradas sin depender de apps cerradas.</p>
+        <span class="badge-sub">Funcionalidades Implementadas</span>
+        <h2 class="section-title">Todo lo que el Firmware Ofrece</h2>
+        <p class="section-desc">Una suite completa de funciones probadas y verificadas en hardware real.</p>
       </div>
 
       <div class="grid-cards">
@@ -147,15 +195,15 @@
           <div class="card-icon">⚡</div>
           <h3 class="card-title">Gestión de Potencia & Seguridad</h3>
           <p class="card-text">
-            Calculador dinámico de miliamperios (mA) y voltajes con protección térmica por software para evitar sobrecalentamiento de tiras y fuentes de alimentación.
+            Calculador dinámico de consumo en miliamperios (mA) y voltajes con protección térmica por software para evitar sobrecalentamiento de tiras y fuentes de alimentación.
           </p>
         </div>
 
         <div class="card">
           <div class="card-icon">🌐</div>
-          <h3 class="card-title">Interfaz Web en LittleFS</h3>
+          <h3 class="card-title">Interfaz Web Completa en LittleFS</h3>
           <p class="card-text">
-            Panel responsivo completo almacenado en la memoria flash interna del ESP32. Incluye páginas dedicadas para Efectos, Paletas, GPIOs, Red, Audio I2S, Perfiles y Diagnóstico.
+            Panel responsivo completo almacenado en la memoria flash interna del ESP32. Incluye páginas dedicadas para Efectos, Paletas, GPIOs, Red, Audio I2S, Perfiles, Hardware y Diagnóstico.
           </p>
         </div>
 
@@ -163,7 +211,7 @@
           <div class="card-icon">🎛️</div>
           <h3 class="card-title">Perfiles y Paletas de Usuario</h3>
           <p class="card-text">
-            Guarda y clona configuraciones completas de hardware y escenas de luz personalizadas. Carga automática de perfiles por defecto al arranque.
+            Guarda, clona y aplica en caliente hasta 8 perfiles de hardware y decenas de paletas personalizadas con colores en degradado, todo persistido en LittleFS.
           </p>
         </div>
 
@@ -171,15 +219,15 @@
           <div class="card-icon">🎙️</div>
           <h3 class="card-title">Procesamiento de Audio I2S</h3>
           <p class="card-text">
-            Soporte nativo para micrófonos digitales I2S con análisis FFT por bandas de frecuencia, suelo de ruido dinámico y ganancia configurable.
+            Soporte nativo para micrófonos digitales I2S (INMP441 y compatibles) con pipeline FFT por bandas de frecuencia, suelo de ruido dinámico y ganancia configurable.
           </p>
         </div>
 
         <div class="card">
           <div class="card-icon">🔄</div>
-          <h3 class="card-title">Persistencia Inteligente</h3>
+          <h3 class="card-title">Persistencia Diferida (Flash Care)</h3>
           <p class="card-text">
-            Scheduler de escritura diferida en Flash (SPIFFS/LittleFS) para minimizar desgaste físico de memoria por escrituras repetitivas.
+            Scheduler de escritura diferida que agrupa cambios y evita el desgaste físico prematuro de los sectores Flash del ESP32 por mutaciones repetidas.
           </p>
         </div>
 
@@ -194,8 +242,49 @@
     </div>
   </section>
 
+  <!-- CATÁLOGO DE EFECTOS -->
+  <section id="efectos" class="section">
+    <div class="container">
+      <div class="section-header">
+        <span class="badge-sub">Efectos Integrados</span>
+        <h2 class="section-title">Motor de Efectos Visuales y Audio-Reactivos</h2>
+        <p class="section-desc">Generación procedimental a ~62.5 FPS aprovechando la potencia del ESP32.</p>
+      </div>
+
+      <div class="effects-showcase">
+        <div class="effects-block">
+          <div class="effects-badge visual">Efectos Visuales Puros</div>
+          <ul class="effects-list">
+            <li><strong>Lava Flow:</strong> Flujo térmico orgánico con degradados cálidos continuos.</li>
+            <li><strong>Polar Ice:</strong> Ondas glaciares frías con transiciones suaves en tonos cian y azul.</li>
+            <li><strong>Gradient Meteor:</strong> Estelas brillantes que recorren la tira desvaneciéndose en color.</li>
+            <li><strong>Scanning Pulse:</strong> Pulso rítmico oscilante estilo escáner bilateral.</li>
+            <li><strong>Triple Chase:</strong> Tres focos en movimiento relativo a distintas velocidades.</li>
+            <li><strong>Breath & Blink:</strong> Respiración luminosa y parpadeo tanto en color fijo como en gradiente.</li>
+            <li><strong>Random Color Pop:</strong> Destellos cromáticos aleatorios sobre fondo atenuado.</li>
+            <li><strong>Diagnostic:</strong> Modo de verificación de orden de color RGB/GRB y píxeles dañados.</li>
+          </ul>
+        </div>
+
+        <div class="effects-block">
+          <div class="effects-badge audio">Efectos Audio-Reactivos (I2S)</div>
+          <ul class="effects-list">
+            <li><strong>Audio Neon EQ:</strong> Ecualizador gráfico por bandas reactivo a frecuencias medias y agudos.</li>
+            <li><strong>Audio Spectrum:</strong> Espectro de frecuencias dinámico proyectado a lo largo de la tira.</li>
+            <li><strong>Audio Pulse:</strong> Impulso de brillo y onda de choque sincronizada con los graves (bajos).</li>
+            <li><strong>Spectrum Chase:</strong> Desplazamiento dinámico impulsado por el ritmo de la música.</li>
+            <li><strong>Audio Rainbow Wave:</strong> Arcoíris reactivo cuya velocidad y amplitud responden al volumen sonoro.</li>
+            <li><strong>Bouncing Physics:</strong> Simulación gravitatoria de partículas elásticas impulsadas por picos de sonido.</li>
+            <li><strong>Stellar Twinkle:</strong> Centelleo estelar modulado por las variaciones de intensidad acústica.</li>
+            <li><strong>Trig Ribbon:</strong> Modulación trigonométrica de color por energía acústica.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <!-- HARDWARE SOPORTADO -->
-  <section id="hardware" class="section">
+  <section id="hardware" class="section bg-alt">
     <div class="container">
       <div class="section-header">
         <span class="badge-sub">Ecosistema</span>
@@ -243,7 +332,7 @@
   </section>
 
   <!-- SINCRONIZACIÓN Y LEDFX -->
-  <section id="sincronizacion" class="section bg-alt">
+  <section id="sincronizacion" class="section">
     <div class="container">
       <div class="section-header">
         <span class="badge-sub">Interoperabilidad</span>
@@ -263,7 +352,7 @@
           <ul class="sync-features">
             <li><strong>Protocolo DDP (Distributed Display Protocol):</strong> En puerto 4048 UDP, con payload optimizado para microcontroladores.</li>
             <li><strong>Protocolo E1.31 / sACN:</strong> Puerto 5568 UDP con asignación dinámica de universos y canales.</li>
-            <li><strong>Anuncio mDNS:</strong> Registro de servicios <code>_ddp._udp</code> y <code>_e131._udp</code> para autodetección.</li>
+            <li><strong>Anuncio mDNS:</strong> Registro de servicios <code>_ddp._udp</code> y <code>_e131._udp</code> para autodetección inmediata.</li>
           </ul>
         </div>
 
@@ -285,36 +374,494 @@
     </div>
   </section>
 
-  <!-- API REST -->
-  <section id="api" class="section">
+  <!-- =====================================================================
+       WIKI TÉCNICA INTEGRADA
+       ===================================================================== -->
+  <section id="wiki" class="section section-wiki bg-alt">
     <div class="container">
       <div class="section-header">
-        <span class="badge-sub">Integraciones Domóticas</span>
-        <h2 class="section-title">API REST v1 Documentada</h2>
-        <p class="section-desc">Control programático integral mediante peticiones HTTP estándar en formato JSON.</p>
+        <span class="badge-wiki">Documentación Completa Embebida</span>
+        <h2 class="section-title">Wiki Técnica Oficial del Firmware</h2>
+        <p class="section-desc">
+          Toda la documentación arquitectónica, esquemas de configuración, contratos de API, tablas de pines y preguntas frecuentes directamente integrada en la web, sin necesidad de navegar a repositorios externos.
+        </p>
       </div>
 
-      <div class="api-grid">
-        <div class="api-endpoint">
-          <span class="method get">GET</span>
-          <span class="path">/api/v1/state</span>
-          <p class="endpoint-desc">Consulta de estado actual: brillo, color primario, efecto activo, FPS y telemetría de temperatura.</p>
-        </div>
-        <div class="api-endpoint">
-          <span class="method patch">PATCH</span>
-          <span class="path">/api/v1/state</span>
-          <p class="endpoint-desc">Modifica brillo, activa/desactiva tiras, cambia paleta o aplica efectos en tiempo real.</p>
-        </div>
-        <div class="api-endpoint">
-          <span class="method patch">PATCH</span>
-          <span class="path">/api/v1/sync/config</span>
-          <p class="endpoint-desc">Activa modo receptor LedFx (DDP/E1.31), timeout de fuente y asignación de universos.</p>
-        </div>
-        <div class="api-endpoint">
-          <span class="method get">GET</span>
-          <span class="path">/api/v1/openapi.json</span>
-          <p class="endpoint-desc">Especificación OpenAPI / Swagger completa embebida directamente en el firmware.</p>
-        </div>
+      <div class="wiki-layout">
+        <!-- NAVEGACIÓN LATERAL DE LA WIKI -->
+        <aside class="wiki-sidebar">
+          <div class="wiki-nav-title">Índice de la Wiki</div>
+          <nav class="wiki-nav">
+            <button class="wiki-tab-btn active" data-target="wiki-intro">
+              <span class="tab-icon">📖</span> Visión General & Inicio
+            </button>
+            <button class="wiki-tab-btn" data-target="wiki-arch">
+              <span class="tab-icon">⚙️</span> Arquitectura Interna
+            </button>
+            <button class="wiki-tab-btn" data-target="wiki-api">
+              <span class="tab-icon">🔌</span> API REST v1 & Serial
+            </button>
+            <button class="wiki-tab-btn" data-target="wiki-config">
+              <span class="tab-icon">📝</span> Esquema de Configuración
+            </button>
+            <button class="wiki-tab-btn" data-target="wiki-gpio">
+              <span class="tab-icon">📌</span> Perfiles GPIO & Potencia
+            </button>
+            <button class="wiki-tab-btn" data-target="wiki-palettes">
+              <span class="tab-icon">🎨</span> Paletas de Color
+            </button>
+            <button class="wiki-tab-btn" data-target="wiki-sync">
+              <span class="tab-icon">🔄</span> Sincronización & LedFx
+            </button>
+            <button class="wiki-tab-btn" data-target="wiki-roadmap">
+              <span class="tab-icon">🗺️</span> Roadmap & Evolución
+            </button>
+            <button class="wiki-tab-btn" data-target="wiki-faq">
+              <span class="tab-icon">❓</span> Preguntas Frecuentes
+            </button>
+          </nav>
+        </aside>
+
+        <!-- CONTENIDO DE LAS PESTAÑAS DE LA WIKI -->
+        <main class="wiki-content">
+
+          <!-- 1. INTRODUCCIÓN -->
+          <article id="wiki-intro" class="wiki-panel active">
+            <div class="wiki-panel-header">
+              <span class="wiki-badge">Wiki · General</span>
+              <h3>Visión General & Inicio Rápido</h3>
+            </div>
+            <p>
+              <strong>DUXMAN LED Firmware</strong> es un firmware modular para ESP32 desarrollado en C++ bajo el framework de Arduino y PlatformIO. Su objetivo es proporcionar control exhaustivo, seguro y de muy alta velocidad sobre tiras LED digitales direccionables sin intermediarios en la nube.
+            </p>
+
+            <h4>Comandos Básicos de Compilación y Flasheo</h4>
+            <div class="code-block">
+              <div class="code-header">PowerShell / PlatformIO CLI</div>
+              <pre><code># Compilar para ESP32-C3 Super Mini
+pio run -e esp32c3supermini
+
+# Compilar para ESP32 DevKit clásico
+pio run -e esp32dev
+
+# Compilar para ESP32-S3
+pio run -e esp32s3
+
+# Flashear directamente por puerto USB
+pio run -e esp32c3supermini -t upload
+
+# O mediante el script automatizado para Windows
+.\tools\flash.ps1 -Profile esp32c3supermini -Action upload -Port COM6</code></pre>
+            </div>
+
+            <h4>Particionamiento de Memoria</h4>
+            <p>
+              El proyecto utiliza una tabla de particiones <code>huge_app</code> diseñada para microcontroladores con al menos 4MB de memoria flash:
+            </p>
+            <ul>
+              <li><strong>App Binaria:</strong> ~3.0 MB asignados para albergar el stack completo de red, audio FFT y motores de render.</li>
+              <li><strong>LittleFS:</strong> ~960 KB dedicados al sistema de archivos donde se alojan las páginas web HTML/CSS/JS y los archivos de configuración JSON.</li>
+            </ul>
+          </article>
+
+          <!-- 2. ARQUITECTURA -->
+          <article id="wiki-arch" class="wiki-panel">
+            <div class="wiki-panel-header">
+              <span class="wiki-badge">Wiki · Arquitectura</span>
+              <h3>Arquitectura del Firmware & Servicios</h3>
+            </div>
+            <p>
+              El firmware implementa un diseño asíncrono y desacoplado mediante tareas de <strong>FreeRTOS</strong> fijadas a los núcleos del procesador:
+            </p>
+
+            <div class="table-responsive">
+              <table class="hardware-table">
+                <thead>
+                  <tr>
+                    <th>Tarea</th>
+                    <th>Núcleo (Core)</th>
+                    <th>Cadencia</th>
+                    <th>Responsabilidades</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><code>controlTask</code></td>
+                    <td>Core 0</td>
+                    <td>~10 ms</td>
+                    <td>Servidor Web HTTP, API REST, Wi-Fi, audio I2S, persistencia y watchdog.</td>
+                  </tr>
+                  <tr>
+                    <td><code>renderTask</code></td>
+                    <td>Core 1</td>
+                    <td>~16 ms (~62.5 FPS)</td>
+                    <td>Motor de efectos (EffectEngine), mezcla cromática, limitador de miliamperios y envío DMA.</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <h4 style="margin-top: 1.5rem;">Servicios Activos en el Arranque</h4>
+            <div class="services-list-grid">
+              <div class="service-chip"><strong>CoreState:</strong> Estado central de runtime y concurrencia segura.</div>
+              <div class="service-chip"><strong>StorageService:</strong> Gestión de lectura y escritura en LittleFS.</div>
+              <div class="service-chip"><strong>PersistenceSchedulerService:</strong> Escrituras diferidas para salvaguardar la Flash.</div>
+              <div class="service-chip"><strong>ProfileService:</strong> Carga y aplicación de configuraciones de hardware en caliente.</div>
+              <div class="service-chip"><strong>UserPaletteService:</strong> Almacén de paletas cromáticas creadas por el usuario.</div>
+              <div class="service-chip"><strong>WifiService:</strong> Conexión STA y punto de acceso de respaldo (AP).</div>
+              <div class="service-chip"><strong>AudioService:</strong> Muestreo I2S y cálculo de FFT por frecuencias en tiempo real.</div>
+              <div class="service-chip"><strong>EffectManager:</strong> Selección, secuencias y orquestación del render LED.</div>
+              <div class="service-chip"><strong>SyncService:</strong> Stack S1-S6: streaming DDP, E1.31 y cluster.</div>
+              <div class="service-chip"><strong>ApiService:</strong> Servidor HTTP y puente de comunicación por puerto Serial.</div>
+              <div class="service-chip"><strong>WatchdogService:</strong> Monitoreo de salud de hilos y prevención de bloqueos.</div>
+            </div>
+
+            <h4 style="margin-top: 1.5rem;">Cadena de Render</h4>
+            <div class="code-block">
+              <pre><code>EffectManager ──> EffectEngine ──> LedDriver ──> [ NeoPixelBus (DMA/RMT) | FastLED | Digital ]</code></pre>
+            </div>
+          </article>
+
+          <!-- 3. API REST V1 -->
+          <article id="wiki-api" class="wiki-panel">
+            <div class="wiki-panel-header">
+              <span class="wiki-badge">Wiki · API REST</span>
+              <h3>Referencia de la API REST v1</h3>
+            </div>
+            <p>
+              Base HTTP: <code>/api/v1</code>. Los métodos <code>PATCH</code> y <code>POST</code> se aceptan como equivalentes en todos los endpoints de mutación para facilitar integraciones con clientes domóticos.
+            </p>
+
+            <h4>Endpoints Principales</h4>
+            <div class="table-responsive">
+              <table class="hardware-table">
+                <thead>
+                  <tr>
+                    <th>Familia</th>
+                    <th>Método</th>
+                    <th>Ruta</th>
+                    <th>Descripción</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>Estado</td>
+                    <td><code>GET</code> / <code>PATCH</code></td>
+                    <td><code>/api/v1/state</code></td>
+                    <td>Consulta o modificación de brillo (0..255), color, efecto, velocidad y transiciones.</td>
+                  </tr>
+                  <tr>
+                    <td>Configuración</td>
+                    <td><code>GET</code> / <code>PATCH</code></td>
+                    <td><code>/api/v1/config/{network,gpio,microphone,general}</code></td>
+                    <td>Configuración modular por subsistema.</td>
+                  </tr>
+                  <tr>
+                    <td>Config Total</td>
+                    <td><code>GET</code> / <code>POST</code></td>
+                    <td><code>/api/v1/config/all</code></td>
+                    <td>Exportación o importación íntegra de <code>config.json</code>.</td>
+                  </tr>
+                  <tr>
+                    <td>Sincronización</td>
+                    <td><code>GET</code> / <code>PATCH</code></td>
+                    <td><code>/api/v1/sync/config</code></td>
+                    <td>Habilitar modo receptor LedFx (DDP/E1.31) o nodo cluster.</td>
+                  </tr>
+                  <tr>
+                    <td>Perfiles</td>
+                    <td><code>GET</code> / <code>POST</code></td>
+                    <td><code>/api/v1/profiles/{save,apply,default,delete,clone}</code></td>
+                    <td>Gestión en caliente de perfiles de hardware.</td>
+                  </tr>
+                  <tr>
+                    <td>Paletas</td>
+                    <td><code>GET</code> / <code>POST</code></td>
+                    <td><code>/api/v1/palettes/{apply,save,delete}</code></td>
+                    <td>Gestión de degradados y paletas cromáticas.</td>
+                  </tr>
+                  <tr>
+                    <td>Efectos</td>
+                    <td><code>GET</code> / <code>POST</code></td>
+                    <td><code>/api/v1/effects/sequence/{add,delete}</code></td>
+                    <td>Secuencias automáticas temporizadas.</td>
+                  </tr>
+                  <tr>
+                    <td>Sistema</td>
+                    <td><code>GET</code></td>
+                    <td><code>/api/v1/hardware</code>, <code>/api/v1/openapi.json</code></td>
+                    <td>Telemetría de chips, pines y especificación Swagger/OpenAPI.</td>
+                  </tr>
+                  <tr>
+                    <td>Depuración</td>
+                    <td><code>POST</code> / <code>GET</code></td>
+                    <td><code>/api/v1/debug/log</code>, <code>/api/v1/marcalog</code></td>
+                    <td>Imprime marcas y texto por consola Serial de depuración (<code>[MARCALOG] &lt;texto&gt;</code>).</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <h4 style="margin-top: 1.5rem;">Ejemplo: Cambiar Estado por HTTP</h4>
+            <div class="code-block">
+              <div class="code-header">HTTP Request</div>
+              <pre><code>PATCH /api/v1/state HTTP/1.1
+Content-Type: application/json
+
+{
+  "power": true,
+  "brightness": 190,
+  "effect": "lava_flow",
+  "effectSpeed": 65,
+  "primaryColor": "#ff4500"
+}</code></pre>
+            </div>
+          </article>
+
+          <!-- 4. ESQUEMA DE CONFIGURACIÓN -->
+          <article id="wiki-config" class="wiki-panel">
+            <div class="wiki-panel-header">
+              <span class="wiki-badge">Wiki · Configuración</span>
+              <h3>Esquema JSON Unificado (/config.json)</h3>
+            </div>
+            <p>
+              Toda la parametrización persistida reside en LittleFS bajo el archivo central <code>/config.json</code>, dividido en cinco secciones:
+            </p>
+            <div class="code-block">
+              <div class="code-header">Estructura del archivo /config.json</div>
+              <pre><code>{
+  "network": {
+    "wifi": {
+      "mode": "sta",                 // "ap", "sta", "ap_sta"
+      "apAvailability": "always",     // "always", "untilStaConnected"
+      "connection": {
+        "ssid": "Mi_Red_WiFi",
+        "password": "PasswordSegura"
+      }
+    },
+    "ip": {
+      "sta": { "mode": "dhcp" }
+    },
+    "dns": { "hostname": "duxman-led" },
+    "time": { "syncOnBoot": true, "ntpServer": "pool.ntp.org" }
+  },
+  "gpio": {
+    "outputs": [
+      {
+        "id": 0,
+        "pin": 8,
+        "ledCount": 60,
+        "ledType": "ws2812b",
+        "colorOrder": "GRB"
+      }
+    ],
+    "power": {
+      "powerLimitEnabled": true,
+      "maxTotalCurrentmA": 2000,
+      "milliAmpsPerLedBase": 20
+    }
+  },
+  "microphone": {
+    "enabled": true,
+    "i2s": {
+      "bckPin": 4,
+      "wsPin": 5,
+      "dinPin": 6,
+      "sampleRate": 22050,
+      "fftSize": 256
+    }
+  },
+  "general": {
+    "language": "es",
+    "debugEnabled": false,
+    "heartbeatMs": 5000
+  },
+  "sync": {
+    "enabled": false,
+    "mode": "standalone"
+  }
+}</code></pre>
+            </div>
+          </article>
+
+          <!-- 5. PERFILES GPIO -->
+          <article id="wiki-gpio" class="wiki-panel">
+            <div class="wiki-panel-header">
+              <span class="wiki-badge">Wiki · GPIO & Hardware</span>
+              <h3>Perfiles GPIO & Limitador de Corriente</h3>
+            </div>
+            <p>
+              Un perfil es una captura íntegra del estado y conexión de pines. Los perfiles permiten conmutar entre diferentes configuraciones físicas de lámparas o tiras en caliente sin necesidad de reiniciar el ESP32:
+            </p>
+            <ul>
+              <li><strong>Hasta 4 salidas LED independientes:</strong> Cada salida con su propio GPIO, número de LEDs, tipo de integrado (<code>ws2812b</code>, <code>sk6812</code>, <code>ws2815</code>, <code>digital</code>) y orden de color (<code>GRB</code>, <code>RGB</code>, <code>RGBW</code>, etc.).</li>
+              <li><strong>Limitador de potencia activa (Power Management):</strong> Calcula el consumo teórico en miliamperios y escala el brillo global automáticamente si se supera el umbral configurado (ej: 2000 mA), protegiendo la fuente de alimentación.</li>
+            </ul>
+
+            <div class="callout warning">
+              <strong>Nota de Seguridad de Hardware:</strong> La limitación de corriente por software es una capa de protección adicional; siempre debes asegurar fusibles o cables adecuados a la corriente máxima de tus fuentes de alimentación.
+            </div>
+          </article>
+
+          <!-- 6. PALETAS -->
+          <article id="wiki-palettes" class="wiki-panel">
+            <div class="wiki-panel-header">
+              <span class="wiki-badge">Wiki · Color</span>
+              <h3>Sistema de Paletas Cromáticas</h3>
+            </div>
+            <p>
+              El motor cromático admite tanto paletas integradas de fábrica como paletas creadas libremente por el usuario:
+            </p>
+            <ul>
+              <li><strong>Paletas del Sistema (ID positivo):</strong> Catálogo fijo clasificado por estilos: <code>warm</code>, <code>cold</code>, <code>neon</code>, <code>pastel</code>, <code>high-contrast</code> y <code>party</code>. Son de sólo lectura.</li>
+              <li><strong>Paletas de Usuario (ID negativo):</strong> Creadas interactivamente desde la web UI o vía API (<code>/api/v1/palettes/save</code>). Se guardan de manera permanente en <code>/user-palettes.json</code> en LittleFS.</li>
+            </ul>
+
+            <h4>Ejemplo de Definición de Paleta de Usuario</h4>
+            <div class="code-block">
+              <div class="code-header">JSON Payload</div>
+              <pre><code>{
+  "id": -101,
+  "label": "Neón Cyberpunk",
+  "primaryColors": ["#ff007f", "#00f0ff", "#7928ca"],
+  "style": "neon",
+  "description": "Gradiente de alto contraste rosa, cian y violeta"
+}</code></pre>
+            </div>
+          </article>
+
+          <!-- 7. SINCRONIZACIÓN -->
+          <article id="wiki-sync" class="wiki-panel">
+            <div class="wiki-panel-header">
+              <span class="wiki-badge">Wiki · Streaming</span>
+              <h3>Compatibilidad de Sincronización (LedFx & Cluster)</h3>
+            </div>
+            <p>
+              El stack de sincronización (fases S1 a S6) permite recibir streaming de fotogramas directamente por red UDP sin pausas:
+            </p>
+
+            <div class="table-responsive">
+              <table class="hardware-table">
+                <thead>
+                  <tr>
+                    <th>Integración / Protocolo</th>
+                    <th>Estado</th>
+                    <th>Modo Recomendado</th>
+                    <th>Detalles Clave</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><strong>LedFx vía DDP</strong></td>
+                    <td>Soportado</td>
+                    <td><code>mode=ledfx_realtime</code>, <code>inputProtocol=ddp</code></td>
+                    <td>Puerto DDP configurable (default 4048 UDP). Máximo rendimiento y menor sobrecarga.</td>
+                  </tr>
+                  <tr>
+                    <td><strong>LedFx vía E1.31 / sACN</strong></td>
+                    <td>Soportado</td>
+                    <td><code>mode=ledfx_realtime</code>, <code>inputProtocol=e131</code></td>
+                    <td>Puerto E1.31 fijo: 5568 UDP. Universos y canales asignables.</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Cluster DUXMAN LED</strong></td>
+                    <td>Soportado</td>
+                    <td><code>mode=cluster_sync</code> (Servidor / Cliente)</td>
+                    <td>Sincroniza estado y reloj de fase compartido mediante <code>_duxsync._udp</code>.</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="callout warning" style="margin-top: 1.5rem;">
+              <strong>Comportamiento en Modo Cliente:</strong> Al recibir streaming activo de LedFx o cluster (`role: client` y `connected: true`), el firmware suspende automáticamente el micrófono local y anula cualquier efecto programado en el nodo para evitar interferencias confusas con la música. En modo Servidor/Master (`role: server`), el micrófono y los efectos programados permanecen 100% operativos.
+            </div>
+
+            <h4 style="margin-top: 1.5rem;">Configuración para LedFx con DDP</h4>
+            <div class="code-block">
+              <div class="code-header">PATCH /api/v1/sync/config</div>
+              <pre><code>{
+  "sync": {
+    "enabled": true,
+    "mode": "ledfx_realtime",
+    "role": "client",
+    "inputProtocol": "ddp",
+    "ddpPort": 4048,
+    "sourceTimeoutMs": 1500
+  }
+}</code></pre>
+            </div>
+          </article>
+
+          <!-- 8. ROADMAP -->
+          <article id="wiki-roadmap" class="wiki-panel">
+            <div class="wiki-panel-header">
+              <span class="wiki-badge">Wiki · Progreso</span>
+              <h3>Roadmap & Evolución Técnica</h3>
+            </div>
+            <p>Estado consolidado de las fases de desarrollo:</p>
+
+            <div class="roadmap-grid">
+              <div class="roadmap-col done">
+                <h4>✅ Fases Completadas</h4>
+                <ul>
+                  <li><strong>Arquitectura FreeRTOS Dual-Core:</strong> Separación total de render y control.</li>
+                  <li><strong>Fase F1 & F2:</strong> API REST modularizada y paridad completa con la UI Home.</li>
+                  <li><strong>UI LittleFS:</strong> 12 páginas HTML/CSS/JS autónomas servidas por el ESP32.</li>
+                  <li><strong>Stack Sync S1-S6:</strong> DDP, E1.31, Cluster Sync y reloj de fase.</li>
+                  <li><strong>Pipeline Audio I2S:</strong> Análisis FFT con suelo de ruido adaptativo.</li>
+                  <li><strong>Gestión de Potencia:</strong> Algoritmo de limitación de corriente por software.</li>
+                </ul>
+              </div>
+
+              <div class="roadmap-col next">
+                <h4>🚀 En Desarrollo / Próximas Fases</h4>
+                <ul>
+                  <li><strong>Actualización OTA Segura:</strong> Carga de firmware por navegador con verificación y rollback.</li>
+                  <li><strong>Segmentos Virtuales:</strong> Dividir una misma tira en tramos independientes con efectos propios.</li>
+                  <li><strong>Editor Gráfico de Presets:</strong> Constructor interactivo de secuencias complejas.</li>
+                  <li><strong>Ampliación de Sensores:</strong> Soporte para sensores ambientales I2C y potenciómetros analógicos.</li>
+                </ul>
+              </div>
+            </div>
+          </article>
+
+          <!-- 9. FAQ -->
+          <article id="wiki-faq" class="wiki-panel">
+            <div class="wiki-panel-header">
+              <span class="wiki-badge">Wiki · FAQ</span>
+              <h3>Preguntas Frecuentes</h3>
+            </div>
+            
+            <div class="faq-list">
+              <div class="faq-item">
+                <h5>¿Qué placas ESP32 están soportadas oficialmente?</h5>
+                <p>El proyecto cuenta con perfiles de compilación dedicados para <code>esp32c3supermini</code> (RISC-V de 1 núcleo), <code>esp32dev</code> (ESP32 clásico Xtensa Dual-Core) y <code>esp32s3</code> (ESP32-S3 Dual-Core LX7).</p>
+              </div>
+
+              <div class="faq-item">
+                <h5>¿Cuántas salidas LED independientes puedo controlar?</h5>
+                <p>Puedes configurar hasta 4 salidas LED simultáneas en paralelo en distintos GPIOs, cada una con su cantidad de píxeles, chip controlador y orden de color.</p>
+              </div>
+
+              <div class="faq-item">
+                <h5>¿Requiere conexión a internet para funcionar?</h5>
+                <p>No. El firmware es 100% autónomo. Si no encuentra una red Wi-Fi configurada, levanta su propio punto de acceso (Access Point) para que puedas conectarte directamente desde tu teléfono u ordenador.</p>
+              </div>
+
+              <div class="faq-item">
+                <h5>¿Se puede sincronizar con la música del ordenador?</h5>
+                <p>Sí, activando el modo DDP o E1.31 puedes recibir en directo los canales de audio procesados por herramientas como <strong>LedFx</strong> sin retardo perceptible.</p>
+              </div>
+
+              <div class="faq-item">
+                <h5>¿Cómo se maneja el desgaste de la memoria Flash?</h5>
+                <p>Mediante el <code>PersistenceSchedulerService</code>, las mutaciones rápidas (como mover un deslizador de brillo) se agrupan en memoria RAM y solo se sincronizan a la memoria Flash tras un periodo de inactividad, evitando escrituras reiteradas.</p>
+              </div>
+            </div>
+          </article>
+
+        </main>
       </div>
     </div>
   </section>
@@ -394,8 +941,8 @@
         <a href="https://github.com/duxman/DUXMAN-LED-FIRMWARE-PLATFORMIO" target="_blank" rel="noopener noreferrer" class="btn btn-primary btn-large">
           Ir al Repositorio de GitHub
         </a>
-        <a href="https://github.com/duxman/DUXMAN-LED-FIRMWARE-PLATFORMIO/wiki" target="_blank" rel="noopener noreferrer" class="btn btn-secondary btn-large">
-          Consultar la Wiki del Proyecto
+        <a href="#wiki" class="btn btn-secondary btn-large">
+          Consultar la Wiki Integrada
         </a>
       </div>
     </div>
@@ -408,11 +955,34 @@
       <div class="footer-links">
         <a href="https://kno.wled.ge/" target="_blank" rel="noopener noreferrer">WLED</a>
         <a href="https://github.com/ledfx/ledfx" target="_blank" rel="noopener noreferrer">LedFx</a>
+        <a href="#wiki">Wiki Integrada</a>
         <a href="https://github.com/duxman/DUXMAN-LED-FIRMWARE-PLATFORMIO" target="_blank" rel="noopener noreferrer">GitHub</a>
-        <a href="https://github.com/duxman/DUXMAN-LED-FIRMWARE-PLATFORMIO/wiki" target="_blank" rel="noopener noreferrer">Wiki</a>
       </div>
     </div>
   </footer>
+
+  <!-- SCRIPT PARA INTERACTIVIDAD DE LA WIKI INTEGRADA -->
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const tabButtons = document.querySelectorAll('.wiki-tab-btn');
+      const panels = document.querySelectorAll('.wiki-panel');
+
+      tabButtons.forEach(button => {
+        button.addEventListener('click', () => {
+          const targetId = button.getAttribute('data-target');
+
+          tabButtons.forEach(btn => btn.classList.remove('active'));
+          panels.forEach(p => p.classList.remove('active'));
+
+          button.classList.add('active');
+          const targetPanel = document.getElementById(targetId);
+          if (targetPanel) {
+            targetPanel.classList.add('active');
+          }
+        });
+      });
+    });
+  </script>
 
 </body>
 </html>

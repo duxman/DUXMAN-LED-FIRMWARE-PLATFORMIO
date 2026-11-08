@@ -79,6 +79,15 @@ public:
     return hasError_;
   }
 
+  /**
+   * Suspende o reanuda el procesamiento de audio local.
+   * Utilizado cuando el nodo está en modo sincronización cliente recibiendo datos.
+   */
+  void setSuspended(bool suspended);
+  bool isSuspended() const {
+    return isSuspended_;
+  }
+
 private:
   MicrophoneConfig &microphoneConfig_;
   CoreState &coreState_;
@@ -87,6 +96,7 @@ private:
   i2s_port_t i2sPort_ = I2S_NUM_0;
   bool isActive_ = false;
   bool hasError_ = false;
+  bool isSuspended_ = false;
 
   // Métricas de audio
   uint8_t audioLevel_ = 0;

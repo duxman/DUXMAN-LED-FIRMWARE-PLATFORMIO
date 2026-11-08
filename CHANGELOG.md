@@ -6,6 +6,21 @@ The format is based on Keep a Changelog.
 
 ## [Unreleased]
 
+## [1.0.0-beta1] - 2026-11-08
+
+### Added
+- Debug REST and Serial logging endpoints (`/api/v1/marcalog` and `/api/v1/debug/log`) to write arbitrary debug marks and messages directly to the serial console.
+- Enhanced serial heartbeat telemetry (`[hb] alive ms=... heap=... fps=... avgUs=...`) when `debugEnabled=true`.
+- PlatformIO custom serial monitor filter (`monitor/filter_log2file.py` and `platformio.ini`) to log serial output directly to `log/device-monitor-*.log` and `log/device-monitor-latest.log`.
+- Execution and results logging to `log/test-api-*.log` and `log/test-api-latest.log` across Python (`tools/test-api.py`) and PowerShell (`tools/test-api.ps1`) test runners.
+- Updated Postman collection (`DUXMAN-LED-API-F1.postman_collection.json`) with tests for `/api/v1/marcalog` via POST (JSON) and GET (query parameters).
+- Automated end-to-end API integration test suites in Python (`tools/test-api.py`) and PowerShell (`tools/test-api.ps1`) with interactive user prompts (Web UI and LedFx streaming) and serial marcalog synchronization.
+- Interactive embedded technical documentation wiki in the web portal (`web/index.html`) covering all API schemas, architecture, and hardware configurations.
+
+### Changed
+- Automatic local audio and effect suppression when in active client sync mode (`role: "client"` and `sourceAlive: true`): `AudioService` is suspended and local `EffectManager` execution is bypassed to prevent room noise and local effects from interfering with LedFx or master node streaming. When in server/master mode (`role: "server"`), local microphone and effects remain fully active.
+- Replaced deprecated Arduino `I2S_COMM_FORMAT_I2S_MSB` with `I2S_COMM_FORMAT_STAND_I2S` and excluded obsolete Arduino `I2S` framework library via `lib_ignore` in `platformio.ini` to ensure zero compilation warnings.
+
 ## [0.6.8-beta] - 2026-11-07
 
 ### Added

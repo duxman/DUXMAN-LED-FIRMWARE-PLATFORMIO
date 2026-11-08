@@ -63,7 +63,29 @@ void AudioService::end() {
   Serial.println("[audio] AudioService stopped");
 }
 
+void AudioService::setSuspended(bool suspended) {
+  if (isSuspended_ == suspended) {
+    return;
+  }
+  isSuspended_ = suspended;
+  if (isSuspended_) {
+    audioLevel_ = 0;
+    peakHold_ = 0;
+    smoothedLevel_ = 0.0f;
+    if (coreState_.lock(pdMS_TO_TICKS(1))) {
+      coreState_.beatDetected = false;
+      coreState_.audioLevel = 0;
+      coreState_.audioPeakHold = 0;
+      coreState_.unlock();
+    }
+  }
+}
+
 void AudioService::handle(unsigned long nowMs) {
+  if (isSuspended_) {
+    return;
+  }
+
   if (nowMs - lastLogMs_ >= 1000UL) {
     lastLogMs_ = nowMs;
     if (debugConfig_.debugEnabled && isActive_) {
@@ -98,7 +120,7 @@ bool AudioService::initializeI2S() {
       .sample_rate = microphoneConfig_.sampleRate,
       .bits_per_sample = I2S_BITS_PER_SAMPLE_16BIT,
       .channel_format = I2S_CHANNEL_FMT_RIGHT_LEFT,
-      .communication_format = I2S_COMM_FORMAT_I2S_MSB,
+      .communication_format = I2S_COMM_FORMAT_STAND_I2S,
       .intr_alloc_flags = ESP_INTR_FLAG_LEVEL1,
       // Menor buffering DMA para reducir retardo extremo en efectos reactivos.
       .dma_buf_count = 3,

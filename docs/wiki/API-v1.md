@@ -87,6 +87,7 @@ Ejecuta esas operaciones solo con valores revisados y hardware de laboratorio.
 | GET | `/state` | Estado runtime completo |
 | PATCH, POST | `/state` | Actualizar estado (power, brightness, effectId, speed...) |
 | POST | `/system/restart` | Reiniciar dispositivo |
+| POST, GET | `/debug/log`, `/marcalog` | Imprime mensaje por consola Serial de depuración (`[MARCALOG] <texto>`) |
 | GET | `/diag` | Diagnostico de memoria y sistema |
 
 ## Configuracion

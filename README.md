@@ -1,6 +1,6 @@
 # DUXMAN-LED-FIRMWARE-PLATFORMIO
 
-**v0.6.8-beta** — Firmware modular para control LED en ESP32 con API REST/Serial, UI embebida, motor de efectos visual/audio y sincronizacion multi-nodo.
+**v1.0.0-beta1** — Firmware modular para control LED en ESP32 con API REST/Serial, UI embebida, motor de efectos visual/audio y sincronizacion multi-nodo.
 
 Repositorio activo y prioritario del proyecto.
 
@@ -77,7 +77,7 @@ Base: `http://<ip>/api/v1`
 
 | Grupo | Rutas principales |
 |---|---|
-| Estado | `GET/PATCH /state`, `POST /system/restart`, `GET /diag` |
+| Estado | `GET/PATCH /state`, `POST /system/restart`, `GET /diag`, `POST /debug/log` (`/marcalog`) |
 | Config | `GET/PATCH /config/{network,gpio,microphone,general}`, `GET/PATCH /config/debug`, `GET/POST /config/all` |
 | Sync | `GET /sync/state`, `GET/PATCH /sync/config`, `PATCH /sync/mode` |
 | Perfiles | `GET /profiles`, `/profiles/{save,apply,default,delete,clone}` |
@@ -110,6 +110,8 @@ data/
   ui/                 # UI embebida (LittleFS)
 tools/
   flash.ps1           # Script build/flash Windows
+  test-api.py         # Suite de pruebas automatizadas API (Python)
+  test-api.ps1        # Suite de pruebas automatizadas API (PowerShell)
 docs/
   MEMORIA_PROYECTO.md
   CONTEXT_TRANSFER_FROM_MONOREPO.md

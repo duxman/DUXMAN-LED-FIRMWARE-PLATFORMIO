@@ -218,6 +218,7 @@ void ApiService::begin() {
   Serial.println("[api] ready: GET /api/v1/effects | POST /api/v1/effects/startup/save | POST /api/v1/effects/sequence/add|delete");
   Serial.println("[api] ready: GET /api/v1/palettes | POST /api/v1/palettes/apply {json} | POST /api/v1/palettes/save {json} | POST /api/v1/palettes/delete {json}");
   Serial.println("[api] ready: POST /api/v1/system/restart");
+  Serial.println("[api] ready: POST /api/v1/debug/log | POST /api/v1/marcalog {json|text}");
   Serial.println("[api] ready: GET /api/v1/hardware");
   Serial.println("[api] ready: GET /api/v1/metrics | POST /api/v1/metrics/reset");
   Serial.println("[api] ready: GET /api/v1/release");
@@ -503,6 +504,43 @@ void ApiService::processCommand(const String &command) {
     Serial.flush();
     delay(150);
     ESP.restart();
+    return;
+  }
+
+  if (command.startsWith("POST /api/v1/debug/log") ||
+      command.startsWith("POST /api/v1/marcalog")) {
+    const int payloadPos = command.indexOf('{');
+    String msg = "";
+    String tag = "MARCALOG";
+    if (payloadPos >= 0) {
+      JsonDocument doc;
+      if (!deserializeJson(doc, command.substring(payloadPos))) {
+        if (doc["message"].is<const char*>()) {
+          msg = doc["message"].as<String>();
+        } else if (doc["text"].is<const char*>()) {
+          msg = doc["text"].as<String>();
+        } else if (doc["marca"].is<const char*>()) {
+          msg = doc["marca"].as<String>();
+        }
+        if (doc["tag"].is<const char*>()) {
+          tag = doc["tag"].as<String>();
+        }
+      }
+    } else {
+      const int spacePos = command.indexOf(' ', 5);
+      if (spacePos > 0) {
+        msg = command.substring(spacePos + 1);
+        msg.trim();
+      }
+    }
+    if (msg.isEmpty()) {
+      msg = "(marca)";
+    }
+    Serial.print("[");
+    Serial.print(tag);
+    Serial.print("] ");
+    Serial.println(msg);
+    Serial.println("{\"ok\":true,\"logged\":true}");
     return;
   }
 
@@ -1018,6 +1056,14 @@ void ApiService::setupHttpRoutes() {
 
   httpServer_.on("/api/v1/system/restart", HTTP_ANY, [this]() {
     handleHttpRestartRoute();
+  });
+
+  httpServer_.on("/api/v1/debug/log", HTTP_ANY, [this]() {
+    handleHttpDebugLogRoute();
+  });
+
+  httpServer_.on("/api/v1/marcalog", HTTP_ANY, [this]() {
+    handleHttpDebugLogRoute();
   });
 
   httpServer_.on("/api/v1/config/debug", HTTP_ANY, [this]() {
@@ -1744,6 +1790,72 @@ void ApiService::handleHttpRestartRoute() {
   httpServer_.send(200, "application/json", "{\"ok\":true,\"restart\":true}");
   delay(150);
   ESP.restart();
+}
+
+void ApiService::handleHttpDebugLogRoute() {
+  const HTTPMethod method = httpServer_.method();
+  if (method != HTTP_POST && method != HTTP_PATCH && method != HTTP_GET) {
+    httpServer_.send(405, "application/json", errorResponse("method_not_allowed"));
+    return;
+  }
+
+  String message;
+  String tag = "MARCALOG";
+
+  const String rawPayload = httpServer_.arg("plain");
+  if (rawPayload.isEmpty()) {
+    if (httpServer_.hasArg("msg")) {
+      message = httpServer_.arg("msg");
+    } else if (httpServer_.hasArg("text")) {
+      message = httpServer_.arg("text");
+    } else if (httpServer_.hasArg("message")) {
+      message = httpServer_.arg("message");
+    } else if (httpServer_.hasArg("marca")) {
+      message = httpServer_.arg("marca");
+    }
+    if (httpServer_.hasArg("tag")) {
+      tag = httpServer_.arg("tag");
+    }
+  } else {
+    JsonDocument doc;
+    const DeserializationError err = deserializeJson(doc, rawPayload);
+    if (!err && doc.is<JsonObject>()) {
+      JsonObjectConst obj = doc.as<JsonObjectConst>();
+      if (obj["tag"].is<const char*>()) {
+        tag = obj["tag"].as<String>();
+      }
+      if (obj["message"].is<const char*>()) {
+        message = obj["message"].as<String>();
+      } else if (obj["text"].is<const char*>()) {
+        message = obj["text"].as<String>();
+      } else if (obj["log"].is<const char*>()) {
+        message = obj["log"].as<String>();
+      } else if (obj["marca"].is<const char*>()) {
+        message = obj["marca"].as<String>();
+      }
+    } else {
+      message = rawPayload;
+    }
+  }
+
+  if (message.isEmpty()) {
+    message = "(marca)";
+  }
+
+  Serial.print("[");
+  Serial.print(tag);
+  Serial.print("] ");
+  Serial.println(message);
+
+  JsonDocument respDoc;
+  respDoc["ok"] = true;
+  respDoc["logged"] = true;
+  respDoc["tag"] = tag;
+  respDoc["message"] = message;
+
+  String resp;
+  serializeJson(respDoc, resp);
+  httpServer_.send(200, "application/json", resp);
 }
 
 void ApiService::handleHttpDebugRoute() {

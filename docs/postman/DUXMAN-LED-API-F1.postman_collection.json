@@ -276,6 +276,16 @@
           "event": [{ "listen": "test", "script": { "exec": ["pm.test('HTTP 200', function () { pm.response.to.have.status(200); });", "pm.test('Reset succeeded', function () { pm.expect(pm.response.json().ok).to.eql(true); });"] } }]
         },
         {
+          "name": "Enviar marca de log (POST JSON)",
+          "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"tag\": \"POSTMAN\",\n  \"message\": \"Marca de depuracion enviada desde coleccion\"\n}" }, "url": { "raw": "{{baseUrl}}/api/v1/marcalog", "host": ["{{baseUrl}}"], "path": ["api", "v1", "marcalog"] } },
+          "event": [{ "listen": "test", "script": { "exec": ["pm.test('HTTP 200', function () { pm.response.to.have.status(200); });", "pm.test('Log accepted', function () { var res = pm.response.json(); pm.expect(res.ok).to.eql(true); pm.expect(res.logged).to.eql(true); });"] } }]
+        },
+        {
+          "name": "Enviar marca de log (GET Query)",
+          "request": { "method": "GET", "header": [], "url": { "raw": "{{baseUrl}}/api/v1/marcalog?msg=Test_GET_Browser&tag=DEBUG_QUICK", "host": ["{{baseUrl}}"], "path": ["api", "v1", "marcalog"], "query": [{ "key": "msg", "value": "Test_GET_Browser" }, { "key": "tag", "value": "DEBUG_QUICK" }] } },
+          "event": [{ "listen": "test", "script": { "exec": ["pm.test('HTTP 200', function () { pm.response.to.have.status(200); });", "pm.test('Log accepted', function () { var res = pm.response.json(); pm.expect(res.ok).to.eql(true); pm.expect(res.logged).to.eql(true); });"] } }]
+        },
+        {
           "name": "Reiniciar dispositivo (DISRUPTIVO)",
           "request": { "method": "POST", "header": [], "url": { "raw": "{{baseUrl}}/api/v1/system/restart", "host": ["{{baseUrl}}"], "path": ["api", "v1", "system", "restart"] } },
           "event": [{ "listen": "test", "script": { "exec": ["pm.test('HTTP 200', function () { pm.response.to.have.status(200); });", "pm.test('Restart requested', function () { pm.expect(pm.response.json().ok).to.eql(true); });"] } }]
