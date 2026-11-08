@@ -50,6 +50,14 @@ public:
   // No resetea frameCount ni uptimeMs.
   void reset();
 
+  // Getters rápidos de rendimiento
+  uint32_t fps() const { return fpsCurrent_; }
+  uint32_t frameTimeAvgUs() const { return frameTimeAvgUs_; }
+  uint32_t frameTimeMinUs() const { return frameTimeMinUs_; }
+  uint32_t frameTimeMaxUs() const { return frameTimeMaxUs_; }
+  uint32_t frameCount() const { return frameCount_; }
+  uint32_t heapFreeBytes() const { return heapFreeBytes_; }
+
   // Devuelve un JSON con todas las metricas.
   String toJson() const;
 

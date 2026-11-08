@@ -55,6 +55,7 @@ public:
   Stats statsSnapshot() const;
   bool isEnabled() const;
   bool isConnected() const;
+  bool shouldRenderExternal() const;
   String normalizedRole() const;
   bool renderExternalFrame(LedDriver &ledDriver, const CoreState &stateSnapshot);
   String buildStateJson() const;
@@ -99,7 +100,6 @@ private:
   bool shouldListenForE131() const;
   bool shouldReceiveCluster() const;
   bool shouldPublishCluster() const;
-  bool shouldRenderExternal() const;
   bool parseDdpPacket(const uint8_t *packet, size_t packetLength, const IPAddress &remoteIp, uint32_t nowMs);
   bool parseE131Packet(const uint8_t *packet, size_t packetLength, const IPAddress &remoteIp, uint32_t nowMs);
   bool parseClusterPacket(const uint8_t *packet, size_t packetLength, const IPAddress &remoteIp, uint32_t nowMs,

@@ -21,6 +21,13 @@ Tambien soporta sincronizacion de estado entre nodos del propio firmware mediant
 | MQTT para streaming/sync de pixeles | No implementado | N/A | No hay transporte MQTT en el stack de Sync actual |
 | Cluster entre nodos DUXMAN | Soportado | `cluster_sync` + `server/client` | Sync de estado + reloj de fase + grupo |
 
+## Supresion de Audio/Efectos Locales en Modo Cliente
+
+Cuando el dispositivo opera en **modo cliente** (`role: "client"`) y está recibiendo datos de sincronización activos (`sourceAlive: true`):
+- **Aislamiento de entrada:** El servicio de captura de micrófono local (`AudioService`) se suspende automáticamente para evitar que el ruido ambiente del entorno interfiera o compita con el streaming de LedFx o del nodo maestro.
+- **Prioridad de render:** El motor de efectos local (`EffectManager`) no se ejecuta mientras el buffer de streaming externo esté activo, garantizando que los LEDs respondan exclusivamente a los frames recibidos sin parpadeos ni mezclas con efectos programados localmente.
+- **Modo Servidor/Master intacto:** En modo servidor o maestro (`role: "server"`), el micrófono y los efectos programados localmente permanecen 100% operativos para poder dirigir y alimentar el espectáculo hacia los demás nodos del cluster.
+
 ## Requisitos para LedFx (deteccion y recepcion)
 
 Para recibir datos de LedFx de forma estable:

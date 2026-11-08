@@ -9,5 +9,10 @@
 .github
 .github/agents
 .github/instructions
+/web/
+/landing/
+/log/
+/logs/
+*.log
 
 

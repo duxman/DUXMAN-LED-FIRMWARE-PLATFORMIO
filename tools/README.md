@@ -64,3 +64,30 @@ Ejecuta `wiki-sync.ps1 -Mode pull` y compara la wiki remota con `docs/wiki`. Es 
 
 Ejemplo:
 	powershell -ExecutionPolicy Bypass -File .\tools\wiki-check-drift.ps1
+
+## test-api.py & test-api.ps1 (Suite de Pruebas de Integración)
+
+Scripts de verificación automatizada extremo a extremo de toda la API REST v1 del firmware.
+Valida: descubrimiento, metadatos, diagnóstico, `/api/v1/marcalog`, control en tiempo real, CRUD de paletas, CRUD de perfiles, configuración modular, pruebas interactivas (Web UI y LedFx) y manejo de errores (400, 405).
+Envía marcas en tiempo real vía `/api/v1/marcalog` para que el monitor serie refleje la prueba exacta en ejecución.
+Guarda automáticamente todo el historial de peticiones, respuestas y resultados en la carpeta `log/`:
+- `log/test-api-YYYYMMDD-HHMMSS.log` (historial fechado).
+- `log/test-api-latest.log` (acceso directo a la última ejecución).
+
+Ejemplos en Python (sin librerías externas):
+	python .\tools\test-api.py --url http://192.168.4.1
+	python .\tools\test-api.py --url http://192.168.1.150 --verbose
+	python .\tools\test-api.py --url http://192.168.1.150 --non-interactive
+
+Ejemplos en PowerShell:
+	powershell -ExecutionPolicy Bypass -File .\tools\test-api.ps1 -BaseUrl "http://192.168.4.1"
+	powershell -ExecutionPolicy Bypass -File .\tools\test-api.ps1 -BaseUrl "http://192.168.1.150" -NonInteractive
+
+## Registro del Monitor Serie en log/
+
+Configurado en `platformio.ini` mediante:
+- `monitor_dir = monitor`
+- `monitor_filters = time, log2file`
+Guarda automáticamente todo el tráfico del puerto serie en:
+- `log/device-monitor-YYYYMMDD-HHMMSS.log`
+- `log/device-monitor-latest.log`
