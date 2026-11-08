@@ -152,6 +152,7 @@ Tambien tienes tasks de VS Code en `.vscode/tasks.json`:
 - `Wiki: Check sync drift`
 
 Y validacion automatica en CI con `.github/workflows/wiki-sync-check.yml`.
+El workflow usa la identidad de GitHub Actions solo para los commits de publicacion; el script local conserva la identidad Git del usuario.
 Ademas, el PR template en `.github/pull_request_template.md` incluye checklist de sincronizacion de wiki.
 
 ## Repos relacionados
