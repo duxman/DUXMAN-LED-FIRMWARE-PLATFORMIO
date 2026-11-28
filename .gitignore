@@ -14,5 +14,11 @@
 /log/
 /logs/
 *.log
-
+venv
+tools
+.vscode
+.claude
+.agentes
+.github
+CLAUDE.md
 
